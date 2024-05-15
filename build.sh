@@ -20,8 +20,6 @@ for i in cjuniorfox/hyprland-shell solopasha/hyprland Tofik/sway; do
     "https://copr.fedorainfracloud.org/coprs/${MAINTAINER}/${REPOSITORY}/repo/fedora-${RELEASE}/${MAINTAINER}-${REPOSITORY}-fedora-${RELEASE}.repo"
 done;
 
-rpm-ostree refresh-md --force
-
 rpm-ostree install adwaita-blue-gtk-theme \
 	adwaita-gtk2-theme \
 	adwaita-icon-theme \
