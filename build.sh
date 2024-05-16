@@ -79,5 +79,5 @@ rpm-ostree override remove rofi --install rofi-wayland
 
 systemctl enable podman.socket
 
-plymouth-set-default-theme bgrt -R
+plymouth-set-default-theme bgrt
 systemctl set-default graphical.target 
