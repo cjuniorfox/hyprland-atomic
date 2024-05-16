@@ -13,7 +13,7 @@ RELEASE="$(rpm -E %fedora)"
 # https://mirrors.rpmfusion.org/mirrorlist?path=free/fedora/updates/39/x86_64/repoview/index.html&protocol=https&redirect=1
 
 # this installs a package from fedora repos
-for i in cjuniorfox/hyprland-shell solopasha/hyprland Tofik/sway; do
+for i in cjuniorfox/hyprland-shell solopasha/hyprland tofik/sway; do
     MAINTAINER="${i%%/*}"
     REPOSITORY="${i##*/}"
     curl --output-dir "/etc/yum.repos.d/" --remote-name \
