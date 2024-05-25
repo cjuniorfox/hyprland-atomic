@@ -25,7 +25,7 @@ rpm-ostree install adwaita-blue-gtk-theme \
 	adwaita-icon-theme \
 	adwaita-qt5 \
 	azote \
-    bash-completion \
+	bash-completion \
 	blueman \
 	breeze-cursor-theme \
 	breeze-gtk \
@@ -62,13 +62,11 @@ rpm-ostree install adwaita-blue-gtk-theme \
 	xdg-user-dirs-gtk \
 	wlr-randr \
 	yaru-{gtk2,gtk3,gtk4,icon,sound}-theme \
-    cliphist \
-    hyprshot \
-    wl-clipboard \
-    hyprland-shell-waybar \
-	rofi-shutdown-menu \
-	wol-changer \
-    sway-audio-idle-inhibit
+	cliphist \
+	hyprshot \
+	wl-clipboard \
+	hyprland-shell-config \
+	sway-audio-idle-inhibit
 
 rpm-ostree override remove rofi --install rofi-wayland
 
