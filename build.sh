@@ -69,13 +69,46 @@ rpm-ostree install adwaita-blue-gtk-theme \
 	sway-audio-idle-inhibit
 
 rpm-ostree override remove rofi --install rofi-wayland
+rpm-ostree override remove firefox-langpacks firefox
 
-# this would install a package from rpmfusion
-# rpm-ostree install vlc
+cat << EOF > /var/lib/first-boot-flatpak-setup.sh
+#!/bin/bash
+if [ -f /var/lib/flatpak-setup-done ]; then
+    echo "Flatpak setup has already been completed. Exiting."
+    exit 0
+fi
+flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 
-#### Example for enabling a System Unit File
+flatpak install -y \
+	com.github.tchx84.Flatseal \
+	org.gnome.Calculator \
+	org.gnome.Evince \
+	org.gnome.FileRoller \
+	org.gnome.FontManager \
+	org.gnome.Loupe \
+	org.gnome.TextEditor \
+	org.mozilla.firefox \
+	org.freedesktop.Platform.ffmpeg-full/x86_64/22.08 \
+	org.freedesktop.Platform.openh264/x86_64/2.3.1
+touch /var/lib/flatpak-setup-done
+EOF
+cat << EOF > /etc/systemd/system/flatpak-setup.service
+[Unit]
+Description=First Boot Flatpak Setup
+After=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/var/lib/first-boot-flatpak-setup.sh
+RemainAfterExit=true
+
+[Install]
+WantedBy=multi-user.target
+
+EOF
+chmod +x /var/lib/first-boot-flatpak-setup.sh
 
 systemctl enable podman.socket
+systemctl enable flatpak-setup.service
 
-plymouth-set-default-theme bgrt
 systemctl set-default graphical.target 
