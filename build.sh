@@ -68,11 +68,15 @@ rpm-ostree install adwaita-blue-gtk-theme \
 	hyprland-shell-config \
 	sway-audio-idle-inhibit
 
-rpm-ostree override remove rofi --install rofi-wayland
-rpm-ostree override remove firefox-langpacks firefox
+#rpm-ostree override remove rofi --install rofi-wayland
+#rpm-ostree override remove firefox-langpacks firefox
 
 cat << EOF > /var/lib/first-boot-flatpak-setup.sh
-
+#!/bin/bash
+if [ -f /var/lib/flatpak-setup-done ]; then
+    echo "Flatpak setup has already been completed. Exiting."
+    exit 0
+fi
 flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 
 flatpak install -y \
@@ -86,9 +90,7 @@ flatpak install -y \
 	org.mozilla.firefox \
 	org.freedesktop.Platform.ffmpeg-full/x86_64/22.08 \
 	org.freedesktop.Platform.openh264/x86_64/2.3.1
-systemctl disable flatpak-setup.service
-rm /etc/systemd/system/flatpak-setup.service
-rm /var/lib/first-boot-flatpak-setup.sh
+touch /var/lib/flatpak-setup-done
 EOF
 cat << EOF > /etc/systemd/system/flatpak-setup.service
 [Unit]
@@ -97,7 +99,7 @@ After=network-online.target
 
 [Service]
 Type=oneshot
-ExecStart=/var/lib/first-boot-flatpak-setup.sh
+ExecStart=/var/lib/first-boot-flatpak-setup.shA
 RemainAfterExit=true
 
 [Install]
