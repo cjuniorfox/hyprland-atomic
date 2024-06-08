@@ -72,14 +72,10 @@ rpm-ostree install adwaita-blue-gtk-theme \
 #rpm-ostree override remove rofi --install rofi-wayland
 rpm-ostree override remove firefox-langpacks firefox
 
-cat << EOF > /var/lib/first-boot-flatpak-setup.sh
-#!/bin/bash
-if [ -f /var/lib/flatpak-setup-done ]; then
-    echo "Flatpak setup has already been completed. Exiting."
-    exit 0
-fi
+cat << EOF > /usr/bin/flatpak-setup.sh
+#!/usr/bin/bash
 flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-
+flatpak remote-delete fedora
 flatpak install -y \
 	com.github.tchx84.Flatseal \
 	org.gnome.Calculator \
@@ -92,12 +88,13 @@ flatpak install -y \
 	org.freedesktop.Platform.ffmpeg-full/x86_64/22.08 \
 	org.freedesktop.Platform.openh264/x86_64/2.3.1
 
-systemct disable first-boot-flatpak-setup.service
+systemctl disable first-boot-flatpak-setup.service
 rm /etc/systemd/system/flatpak-setup.service
-rm /var/lib/first-boot-flatpak-setup.sh
-
-touch /var/lib/flatpak-setup-done
+rm /usr/bin/flatpak-setup.sh
 EOF
+chmod +x /usr/bin/flatpak-setup.sh
+chown root:root /usr/bin/flatpak-setup.sh
+
 cat << EOF > /etc/systemd/system/flatpak-setup.service
 [Unit]
 Description=First Boot Flatpak Setup
@@ -105,14 +102,13 @@ After=network-online.target
 
 [Service]
 Type=oneshot
-ExecStart=/var/lib/first-boot-flatpak-setup.sh
+ExecStart=/usr/bin/flatpak-setup.sh
 RemainAfterExit=true
 
 [Install]
 WantedBy=multi-user.target
-
 EOF
-chmod +x /var/lib/first-boot-flatpak-setup.sh
+chown root:root /etc/systemd/system/flatpak-setup.service
 
 systemctl enable podman.socket
 systemctl enable flatpak-setup.service

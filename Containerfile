@@ -36,7 +36,7 @@ ARG SOURCE_IMAGE="base"
 ARG SOURCE_SUFFIX="-main"
 
 ## SOURCE_TAG arg must be a version built for the specific image: eg, 39, 40, gts, latest
-ARG SOURCE_TAG="latest"
+ARG SOURCE_TAG="40"
 
 
 ### 2. SOURCE IMAGE
