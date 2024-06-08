@@ -70,7 +70,7 @@ rpm-ostree install adwaita-blue-gtk-theme \
 
 #ibus-panel removed
 #rpm-ostree override remove rofi --install rofi-wayland
-#rpm-ostree override remove firefox-langpacks firefox
+rpm-ostree override remove firefox-langpacks firefox
 
 cat << EOF > /var/lib/first-boot-flatpak-setup.sh
 #!/bin/bash
@@ -91,6 +91,11 @@ flatpak install -y \
 	org.mozilla.firefox \
 	org.freedesktop.Platform.ffmpeg-full/x86_64/22.08 \
 	org.freedesktop.Platform.openh264/x86_64/2.3.1
+
+systemct disable first-boot-flatpak-setup.service
+rm /etc/systemd/system/flatpak-setup.service
+rm /var/lib/first-boot-flatpak-setup.sh
+
 touch /var/lib/flatpak-setup-done
 EOF
 cat << EOF > /etc/systemd/system/flatpak-setup.service
@@ -100,7 +105,7 @@ After=network-online.target
 
 [Service]
 Type=oneshot
-ExecStart=/var/lib/first-boot-flatpak-setup.shA
+ExecStart=/var/lib/first-boot-flatpak-setup.sh
 RemainAfterExit=true
 
 [Install]
