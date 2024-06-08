@@ -43,13 +43,13 @@ rpm-ostree install adwaita-blue-gtk-theme \
 	gvfs-nfs \
 	htop \
 	hyprland \
-	ibus-panel \
 	kitty \
 	liberation-fonts \
 	nautilus \
 	network-manager-applet \
 	pavucontrol \
 	pulseaudio-utils \
+	rofi-wayland \
 	sddm \
 	seahorse \
 	socat \
@@ -68,6 +68,7 @@ rpm-ostree install adwaita-blue-gtk-theme \
 	hyprland-shell-config \
 	sway-audio-idle-inhibit
 
+#ibus-panel removed
 #rpm-ostree override remove rofi --install rofi-wayland
 #rpm-ostree override remove firefox-langpacks firefox
 
