@@ -30,6 +30,7 @@ rpm-ostree install adwaita-blue-gtk-theme \
 	breeze-cursor-theme \
 	breeze-gtk \
 	breeze-icon-theme \
+	chrony \
 	dunst \
 	firewall-config \
 	flatpak \
@@ -74,22 +75,36 @@ rpm-ostree override remove firefox-langpacks firefox
 
 cat << EOF > /usr/bin/flatpak-setup.sh
 #!/usr/bin/bash
-flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+
 flatpak remote-delete fedora
-flatpak install --from flathub -y \
-	com.github.tchx84.Flatseal \
-	org.gnome.Calculator \
-	org.gnome.Evince \
-	org.gnome.FileRoller \
-	org.gnome.FontManager \
-	org.gnome.Loupe \
-	org.gnome.TextEditor \
-	org.mozilla.firefox \
-	org.freedesktop.Platform.ffmpeg-full/x86_64/22.08 \
-	org.freedesktop.Platform.openh264/x86_64/2.3.1 && \
-	systemctl disable flatpak-setup.service && \
-	rm /etc/systemd/system/flatpak-setup.service && \
-	rm /usr/bin/flatpak-setup.sh
+flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+packages=(
+	com.github.tchx84.Flatseal
+	org.gnome.Calculator
+	org.gnome.Evince
+	org.gnome.FileRoller
+	org.gnome.FontManager
+	org.gnome.Loupe
+	org.gnome.TextEditor
+	org.mozilla.firefox
+	org.freedesktop.Platform.ffmpeg-full/x86_64/22.08
+	org.freedesktop.Platform.openh264/x86_64/2.3.1
+)
+
+# Install the packages and check for success
+for package in "${packages[@]}"; do
+  flatpak install --noninteractive flathub "$package"
+  if [ $? -eq 0 ]; then
+    echo "Package $package installed successfully."
+  else
+    echo "Error: Failed to install package $package."
+    exit 1  # Exit the script if installation fails
+  fi
+done
+
+systemctl disable flatpak-setup.service
+rm /etc/systemd/system/flatpak-setup.service
+rm /usr/bin/flatpak-setup.sh
 EOF
 chmod +x /usr/bin/flatpak-setup.sh
 chown root:root /usr/bin/flatpak-setup.sh
@@ -98,6 +113,7 @@ cat << EOF > /etc/systemd/system/flatpak-setup.service
 [Unit]
 Description=First Boot Flatpak Setup
 After=network-online.target
+Wants=network-online.target
 
 [Service]
 Type=oneshot
@@ -106,6 +122,7 @@ RemainAfterExit=true
 
 [Install]
 WantedBy=multi-user.target
+
 EOF
 chown root:root /etc/systemd/system/flatpak-setup.service
 
