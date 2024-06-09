@@ -4,6 +4,7 @@ on:
   pull_request:
     branches:
       - main
+      - develop
   schedule:
     - cron: '05 10 * * *'  # 10:05am UTC everyday
   push:
