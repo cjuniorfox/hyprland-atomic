@@ -88,7 +88,7 @@ flatpak install -y \
 	org.freedesktop.Platform.ffmpeg-full/x86_64/22.08 \
 	org.freedesktop.Platform.openh264/x86_64/2.3.1
 
-systemctl disable first-boot-flatpak-setup.service
+systemctl disable flatpak-setup.service
 rm /etc/systemd/system/flatpak-setup.service
 rm /usr/bin/flatpak-setup.sh
 EOF
