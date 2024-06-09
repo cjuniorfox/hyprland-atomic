@@ -86,11 +86,10 @@ flatpak install --from flathub -y \
 	org.gnome.TextEditor \
 	org.mozilla.firefox \
 	org.freedesktop.Platform.ffmpeg-full/x86_64/22.08 \
-	org.freedesktop.Platform.openh264/x86_64/2.3.1
-
-systemctl disable flatpak-setup.service
-rm /etc/systemd/system/flatpak-setup.service
-rm /usr/bin/flatpak-setup.sh
+	org.freedesktop.Platform.openh264/x86_64/2.3.1 && \
+	systemctl disable flatpak-setup.service && \
+	rm /etc/systemd/system/flatpak-setup.service && \
+	rm /usr/bin/flatpak-setup.sh
 EOF
 chmod +x /usr/bin/flatpak-setup.sh
 chown root:root /usr/bin/flatpak-setup.sh
