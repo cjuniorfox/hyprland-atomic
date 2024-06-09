@@ -68,8 +68,15 @@ rpm-ostree install \
 rpm-ostree override remove firefox-langpacks firefox
 
 # Create flatpak-setup.sh
-cat << EOF > /usr/local/bin/flatpak-setup.sh
+cat << 'EOF' > /usr/bin/flatpak-setup.sh
 #!/usr/bin/bash
+
+LOCK_FILE="/var/lib/flatpak-setup-done"
+
+if [ -f "$LOCK_FILE" ]; then
+    echo "The Flatpak setup has been previously completed and does not need to be executed again. If you wish to run it again, delete the file '$LOCK_FILE'."
+    exit 0
+fi
 
 # Function to check internet connectivity
 check_internet() {
@@ -83,6 +90,7 @@ check_internet
 
 flatpak remote-delete fedora
 flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+
 packages=(
     com.github.tchx84.Flatseal
     org.gnome.Calculator
@@ -97,24 +105,25 @@ packages=(
 )
 
 # Install the packages and check for success
-for package in "\${packages[@]}"; do
-    flatpak install --noninteractive flathub "\$package"
-    if [ \$? -eq 0 ]; then
-        echo "Package \$package installed successfully."
+for package in "${packages[@]}"; do
+    flatpak install --noninteractive flathub "$package"
+    if [ $? -eq 0 ]; then
+        echo "Package $package installed successfully."
     else
-        echo "Error: Failed to install package \$package."
+        echo "Error: Failed to install package $package."
         exit 1  # Exit the script if installation fails
     fi
 done
 
+# Mark the setup as done
+touch "$LOCK_FILE"
+
 # Clean up after successful installation
 systemctl disable flatpak-setup.service
-rm /etc/systemd/system/flatpak-setup.service
-rm /usr/local/bin/flatpak-setup.sh
 EOF
 
-chmod +x /usr/local/bin/flatpak-setup.sh
-chown root:root /usr/local/bin/flatpak-setup.sh
+chmod +x /usr/bin/flatpak-setup.sh
+chown root:root /usr/bin/flatpak-setup.sh
 
 # Create flatpak-setup.service
 cat << EOF > /etc/systemd/system/flatpak-setup.service
@@ -125,7 +134,7 @@ Wants=network-online.target
 
 [Service]
 Type=oneshot
-ExecStart=/usr/local/bin/flatpak-setup.sh
+ExecStart=/usr/bin/flatpak-setup.sh
 RemainAfterExit=true
 
 [Install]
@@ -135,7 +144,6 @@ EOF
 chown root:root /etc/systemd/system/flatpak-setup.service
 
 # Enable necessary services
-systemctl enable podman.socket
 systemctl enable flatpak-setup.service
 
 # Set default target to graphical
