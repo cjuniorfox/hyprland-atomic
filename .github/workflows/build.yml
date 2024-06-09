@@ -163,9 +163,6 @@ jobs:
       VARIANT: default
 
     steps:
-      - name: Extract first tag
-        id: extract_first_tag
-        run: echo "first_tag=$(echo ${{ steps.generate-tags.outputs.alias_tags }} | cut -d' ' -f1)" >> $GITHUB_ENV
       - name: Checkout repository
         uses: actions/checkout@v4
 
