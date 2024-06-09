@@ -158,20 +158,34 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Podman
-        uses: redhat-actions/podman-setup@v1
+      - name: Set environment variables
+        run: |
+          echo "ARCH=x86_64" >> $GITHUB_ENV
+          echo "IMAGE_NAME=hyprland-atomic" >> $GITHUB_ENV
+          echo "IMAGE_REPO=ghcr.io/cjuniorfox" >> $GITHUB_ENV
+          echo "IMAGE_TAG=latest" >> $GITHUB_ENV
+          echo "VERSION=$(date +%Y%m%d)" >> $GITHUB_ENV
+          echo "VARIANT=default" >> $GITHUB_ENV
 
       - name: Build ISO
-        run: |
-          mkdir -p ./iso-output
-          sudo podman run --rm --privileged --volume ./iso-output:/build-container-installer/build --security-opt label=disable --pull=newer \
-            ghcr.io/jasonn3/build-container-installer:latest \
-            IMAGE_REPO=ghcr.io/cjuniorfox \
-            IMAGE_NAME=hyprland-atomic \
-            IMAGE_TAG=latest
-
-      - name: Upload ISO to GitHub Artifacts
-        uses: actions/upload-artifact@v3
+        uses: jasonn3/build-container-installer@main
+        id: build
         with:
-          name: deploy-iso
-          path: ./iso-output/deploy.iso
+          arch: ${{ env.ARCH }}
+          image_name: ${{ env.IMAGE_NAME }}
+          image_repo: ${{ env.IMAGE_REPO }}
+          image_tag: ${{ env.IMAGE_TAG }}
+          version: ${{ env.VERSION }}
+          variant: ${{ env.VARIANT }}
+          iso_name: ${{ env.IMAGE_NAME }}-${{ env.IMAGE_TAG }}-${{ env.VERSION }}.iso
+
+      - name: Upload ISO as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.build.outputs.iso_name }}
+          path: |
+            ${{ steps.build.outputs.iso_path }}
+            ${{ steps.build.outputs.iso_path }}-CHECKSUM
+          if-no-files-found: error
+          retention-days: 0
+          compression-level: 0
