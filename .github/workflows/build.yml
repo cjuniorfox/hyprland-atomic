@@ -155,18 +155,19 @@ jobs:
     runs-on: ubuntu-latest
     needs: build_push
 
+    env:
+      ARCH: x86_64
+      IMAGE_NAME: hyprland-atomic
+      IMAGE_REPO: ghcr.io/cjuniorfox
+      IMAGE_TAG: latest
+      VARIANT: default
+
     steps:
+      - name: Extract first tag
+        id: extract_first_tag
+        run: echo "first_tag=$(echo ${{ steps.generate-tags.outputs.alias_tags }} | cut -d' ' -f1)" >> $GITHUB_ENV
       - name: Checkout repository
         uses: actions/checkout@v4
-
-      - name: Set environment variables
-        run: |
-          echo "ARCH=x86_64" >> $GITHUB_ENV
-          echo "IMAGE_NAME=hyprland-atomic" >> $GITHUB_ENV
-          echo "IMAGE_REPO=ghcr.io/cjuniorfox" >> $GITHUB_ENV
-          echo "IMAGE_TAG=latest" >> $GITHUB_ENV
-          echo "VERSION=$(date +%Y%m%d)" >> $GITHUB_ENV
-          echo "VARIANT=default" >> $GITHUB_ENV
 
       - name: Build ISO
         uses: jasonn3/build-container-installer@main
