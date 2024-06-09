@@ -153,6 +153,7 @@ jobs:
   build_iso:
     name: Build Installer ISO
     runs-on: ubuntu-latest
+    needs: build_push
 
     steps:
       - name: Checkout repository
