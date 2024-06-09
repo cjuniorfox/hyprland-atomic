@@ -103,3 +103,29 @@ jobs:
         env:
           COSIGN_PRIVATE_KEY: ${{ secrets.SIGNING_SECRET }}
           COSIGN_EXPERIMENTAL: false
+
+  build_iso:
+    name: Build Installer ISO
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Podman
+        uses: redhat-actions/podman-setup@v1
+
+      - name: Build ISO
+        run: |
+          mkdir -p ./iso-output
+          sudo podman run --rm --privileged --volume ./iso-output:/build-container-installer/build --security-opt label=disable --pull=newer \
+            ghcr.io/jasonn3/build-container-installer:latest \
+            IMAGE_REPO=ghcr.io/cjuniorfox \
+            IMAGE_NAME=hyprland-atomic \
+            IMAGE_TAG=latest
+
+      - name: Upload ISO to GitHub Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: deploy-iso
+          path: ./iso-output/deploy.iso
