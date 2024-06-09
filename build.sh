@@ -68,8 +68,18 @@ rpm-ostree install \
 rpm-ostree override remove firefox-langpacks firefox
 
 # Create flatpak-setup.sh
-cat << EOF > /usr/bin/flatpak-setup.sh
+cat << EOF > /usr/local/bin/flatpak-setup.sh
 #!/usr/bin/bash
+
+# Function to check internet connectivity
+check_internet() {
+  while ! curl -s --head https://flathub.org | head -n 1 | grep "200" > /dev/null; do
+    echo "Waiting for internet connection..."
+    sleep 5
+  done
+}
+
+check_internet
 
 flatpak remote-delete fedora
 flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
@@ -100,11 +110,11 @@ done
 # Clean up after successful installation
 systemctl disable flatpak-setup.service
 rm /etc/systemd/system/flatpak-setup.service
-rm /usr/bin/flatpak-setup.sh
+rm /usr/local/bin/flatpak-setup.sh
 EOF
 
-chmod +x /usr/bin/flatpak-setup.sh
-chown root:root /usr/bin/flatpak-setup.sh
+chmod +x /usr/local/bin/flatpak-setup.sh
+chown root:root /usr/local/bin/flatpak-setup.sh
 
 # Create flatpak-setup.service
 cat << EOF > /etc/systemd/system/flatpak-setup.service
@@ -115,7 +125,7 @@ Wants=network-online.target
 
 [Service]
 Type=oneshot
-ExecStart=/usr/bin/flatpak-setup.sh
+ExecStart=/usr/local/bin/flatpak-setup.sh
 RemainAfterExit=true
 
 [Install]
