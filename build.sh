@@ -76,7 +76,7 @@ cat << EOF > /usr/bin/flatpak-setup.sh
 #!/usr/bin/bash
 flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 flatpak remote-delete fedora
-flatpak install -y \
+flatpak install --from flathub -y \
 	com.github.tchx84.Flatseal \
 	org.gnome.Calculator \
 	org.gnome.Evince \
