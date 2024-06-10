@@ -75,7 +75,13 @@ jobs:
             ${{ steps.generate-tags.outputs.alias_tags }}
           labels: ${{ steps.meta.outputs.labels }}
           oci: false
-
+      # Workaround bug where capital letters in your GitHub username make it impossible to push to GHCR.
+      # https://github.com/macbre/push-to-ghcr/issues/12
+      - name: Lowercase Registry
+        id: registry_case
+        uses: ASzc/change-string-case-action@v6
+        with:
+          string: ${{ env.IMAGE_REGISTRY }}
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
         with:
@@ -89,21 +95,22 @@ jobs:
         with:
           image: ${{ steps.build_image.outputs.image }}
           tags: ${{ steps.generate-tags.outputs.alias_tags }}
-          registry: ${{ env.IMAGE_REGISTRY }}
+          registry: ${{ steps.registry_case.outputs.lowercase }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Install Cosign
-        uses: sigstore/cosign-installer@v3.5.0
+      # Sign container
+      - uses: sigstore/cosign-installer@v3.5.0
         if: github.event_name != 'pull_request'
 
       - name: Sign container image
         if: github.event_name != 'pull_request'
         run: |
-          cosign sign -y --key env://COSIGN_PRIVATE_KEY ${{ steps.push.outputs.image }}
+          cosign sign -y --key env://COSIGN_PRIVATE_KEY ${{ steps.registry_case.outputs.lowercase }}/${{ steps.build_image.outputs.image }}@${TAGS}
         env:
-          COSIGN_PRIVATE_KEY: ${{ secrets.SIGNING_SECRET }}
+          TAGS: ${{ steps.push.outputs.digest }}
           COSIGN_EXPERIMENTAL: false
+          COSIGN_PRIVATE_KEY: ${{ secrets.SIGNING_SECRET }}
 
   build_iso:
     name: Build Installer ISO
