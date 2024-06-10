@@ -40,17 +40,18 @@ jobs:
           # Generate a timestamp for creating an image version history
           TIMESTAMP="$(date +%Y%m%d)"
           SHA_SHORT="${GITHUB_SHA::7}"
-
+      
           BUILD_TAGS=("${TIMESTAMP}" "latest")
           COMMIT_TAGS=("pr-${{ github.event.number }}" "${SHA_SHORT}")
-
+      
           echo "Generated the following build tags: ${BUILD_TAGS[@]}"
           echo "Generated the following commit tags: ${COMMIT_TAGS[@]}"
-
-          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+      
+          if [[ "${GITHUB_EVENT_NAME}" == "pull_request" ]]; then
               echo "alias_tags=${COMMIT_TAGS[*]}" >> $GITHUB_OUTPUT
           else
               echo "alias_tags=${BUILD_TAGS[*]}" >> $GITHUB_OUTPUT
+          fi
 
       - name: Image Metadata
         uses: docker/metadata-action@v5
