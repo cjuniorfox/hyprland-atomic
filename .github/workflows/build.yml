@@ -145,7 +145,15 @@ jobs:
           name: ${{ steps.build.outputs.iso_name }}
           path: |
             ${{ steps.build.outputs.iso_path }}
-            ${{ steps.build.outputs.iso_path }}-CHECKSUM
+          if-no-files-found: error
+          retention-days: 0
+          compression-level: 0
+      - name: Upload Checksum as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.build.outputs.iso_name }}.iso-CHECKSUM
+          path: |
+            ${{ steps.build.outputs.iso_path }}
           if-no-files-found: error
           retention-days: 0
           compression-level: 0
@@ -156,8 +164,8 @@ jobs:
           AWS_REGION: sa-east-1  # Change this to your AWS region
           S3_BUCKET: juniorfox-net-isos
         run: |
-          aws s3 cp ${{ steps.build.outputs.iso_path }} s3://${{ env.S3_BUCKET }}/
-          aws s3 cp ${{ steps.build.outputs.iso_path }}-CHECKSUM s3://${{ env.S3_BUCKET }}/
+          aws s3 cp ${{ steps.build.outputs.iso_path }}/${{ steps.build.outputs.iso_name }} s3://${{ env.S3_BUCKET }}/
+          aws s3 cp ${{ steps.build.outputs.iso_path }}/${{ steps.build.outputs.iso_name }}-CHECKSUM s3://${{ env.S3_BUCKET }}/
 
       - name: Make ISO Public
         run: |
