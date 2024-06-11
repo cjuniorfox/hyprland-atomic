@@ -142,16 +142,7 @@ jobs:
       - name: Upload ISO as artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ steps.build.outputs.iso_name }}
-          path: |
-            ${{ steps.build.outputs.iso_path }}
-          if-no-files-found: error
-          retention-days: 0
-          compression-level: 0
-      - name: Upload Checksum as artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ steps.build.outputs.iso_name }}.iso-CHECKSUM
+          name: iso-artifact
           path: |
             ${{ steps.build.outputs.iso_path }}
           if-no-files-found: error
