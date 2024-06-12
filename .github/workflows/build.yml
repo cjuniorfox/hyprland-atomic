@@ -191,8 +191,8 @@ jobs:
         run: |
           ISO_FILE=$(basename $(ls ./iso-output/*.iso))
           CHECKSUM_FILE="${ISO_FILE}-CHECKSUM"
-          echo "iso_url=https://${{ env.S3_BUCKET }}.s3.amazonaws.com/$ISO_FILE" >> $GITHUB_OUTPUT
-          echo "iso_checksum_url=https://${{ env.S3_BUCKET }}.s3.amazonaws.com/$CHECKSUM_FILE" >> $GITHUB_OUTPUT
+          echo "iso_url=https://${{ env.S3_BUCKET }}.s3.${{env.AWS_REGION}}.amazonaws.com/$ISO_FILE" >> $GITHUB_OUTPUT
+          echo "iso_checksum_url=https://${{ env.S3_BUCKET }}.s3.$${{env.AWS_REGION}}.amazonaws.com/$CHECKSUM_FILE" >> $GITHUB_OUTPUT
 
   notify:
     runs-on: ubuntu-latest
