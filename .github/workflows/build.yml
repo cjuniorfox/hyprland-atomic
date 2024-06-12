@@ -70,12 +70,18 @@ jobs:
         with:
           containerfiles: |
             ./Containerfile
-          image: ${{ env.IMAGE_REGISTRY }}/${{ env.MY_IMAGE_NAME }}
+          image: ${{ env.MY_IMAGE_NAME }}
           tags: |
             ${{ steps.generate-tags.outputs.alias_tags }}
           labels: ${{ steps.meta.outputs.labels }}
           oci: false
-
+      # Workaround bug where capital letters in your GitHub username make it impossible to push to GHCR.
+      # https://github.com/macbre/push-to-ghcr/issues/12
+      - name: Lowercase Registry
+        id: registry_case
+        uses: ASzc/change-string-case-action@v6
+        with:
+          string: ${{ env.IMAGE_REGISTRY }}
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
         with:
@@ -89,21 +95,22 @@ jobs:
         with:
           image: ${{ steps.build_image.outputs.image }}
           tags: ${{ steps.generate-tags.outputs.alias_tags }}
-          registry: ${{ env.IMAGE_REGISTRY }}
+          registry: ${{ steps.registry_case.outputs.lowercase }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Install Cosign
-        uses: sigstore/cosign-installer@v3.5.0
+      # Sign container
+      - uses: sigstore/cosign-installer@v3.5.0
         if: github.event_name != 'pull_request'
 
       - name: Sign container image
         if: github.event_name != 'pull_request'
         run: |
-          cosign sign -y --key env://COSIGN_PRIVATE_KEY ${{ steps.push.outputs.image }}
+          cosign sign -y --key env://COSIGN_PRIVATE_KEY ${{ steps.registry_case.outputs.lowercase }}/${{ steps.build_image.outputs.image }}@${TAGS}
         env:
-          COSIGN_PRIVATE_KEY: ${{ secrets.SIGNING_SECRET }}
+          TAGS: ${{ steps.push.outputs.digest }}
           COSIGN_EXPERIMENTAL: false
+          COSIGN_PRIVATE_KEY: ${{ secrets.SIGNING_SECRET }}
 
   build_iso:
     name: Build Installer ISO
@@ -135,10 +142,52 @@ jobs:
       - name: Upload ISO as artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ steps.build.outputs.iso_name }}
+          name: iso-artifact
           path: |
             ${{ steps.build.outputs.iso_path }}
-            ${{ steps.build.outputs.iso_path }}-CHECKSUM
           if-no-files-found: error
           retention-days: 0
           compression-level: 0
+          
+  upload_iso_to_s3:
+    name: Publish ISO Installer
+    runs-on: ubuntu-latest
+    needs: build_iso
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      S3_BUCKET: juniorfox-net-isos
+      AWS_REGION: sa-east-1
+    
+    steps:
+      - name: Download ISO Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: iso-artifact
+          path: ./iso-output
+        
+      - name: Install AWS CLI
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y awscli
+        
+      - name: Upload ISO to S3
+        id: upload
+        run: |
+          ISO_FILE=$(basename $(ls ./iso-output/*.iso))
+          CHECKSUM_FILE="${ISO_FILE}-CHECKSUM"
+          echo "uploading ${ISO_FILE}"
+          aws s3 cp "./iso-output/${ISO_FILE}" "s3://${{ env.S3_BUCKET }}/${ISO_FILE}"
+          aws s3 cp "./iso-output/${CHECKSUM_FILE}" "s3://${{ env.S3_BUCKET }}/${CHECKSUM_FILE}"
+          echo "iso_url=https://${{ env.S3_BUCKET }}.s3.${{env.AWS_REGION}}.amazonaws.com/$ISO_FILE" >> $GITHUB_OUTPUT
+          echo "iso_checksum_url=https://${{ env.S3_BUCKET }}.s3.$${{env.AWS_REGION}}.amazonaws.com/$CHECKSUM_FILE" >> $GITHUB_OUTPUT
+
+  notify:
+    runs-on: ubuntu-latest
+    needs: upload_iso_to_s3
+    steps:
+      - name: Notify ISO URL
+        run: |
+          echo "ISO URL: ${{ steps.upload.outputs.iso_url }}"
+          echo "ISO CHECKSUM URL: ${{ steps.upload.outputs.iso_checksum_url }}"
+        
