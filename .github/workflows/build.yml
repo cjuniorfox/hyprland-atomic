@@ -165,12 +165,7 @@ jobs:
         with:
           name: iso-artifact
           path: ./iso-output
-        
-      - name: Install AWS CLI
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y awscli
-        
+      
       - name: Upload ISO to S3
         id: upload
         run: |
@@ -179,15 +174,19 @@ jobs:
           echo "uploading ${ISO_FILE}"
           aws s3 cp "./iso-output/${ISO_FILE}" "s3://${{ env.S3_BUCKET }}/${ISO_FILE}"
           aws s3 cp "./iso-output/${CHECKSUM_FILE}" "s3://${{ env.S3_BUCKET }}/${CHECKSUM_FILE}"
-          echo "iso_url=https://${{ env.S3_BUCKET }}.s3.${{env.AWS_REGION}}.amazonaws.com/$ISO_FILE" >> $GITHUB_OUTPUT
-          echo "iso_checksum_url=https://${{ env.S3_BUCKET }}.s3.$${{env.AWS_REGION}}.amazonaws.com/$CHECKSUM_FILE" >> $GITHUB_OUTPUT
-
-  notify:
-    runs-on: ubuntu-latest
-    needs: upload_iso_to_s3
-    steps:
-      - name: Notify ISO URL
-        run: |
-          echo "ISO URL: ${{ steps.upload.outputs.iso_url }}"
-          echo "ISO CHECKSUM URL: ${{ steps.upload.outputs.iso_checksum_url }}"
-        
+      
+      - name: Make ISO public
+        id: make_public
+        run : |
+          ISO_FILE=$(basename $(ls ./iso-output/*.iso))
+          CHECKSUM_FILE="${ISO_FILE}-CHECKSUM"
+          aws s3api put-object-acl --bucket ${{ env.S3_BUCKET }} --key "${ISO_FILE}" --acl public-read
+          aws s3api put-object-acl --bucket ${{ env.S3_BUCKET }} --key "${CHECKSUM_FILE}" --acl public-read
+      
+      - name: Output ISO url
+        id: upload_iso_url
+        run : |
+          ISO_FILE=$(basename $(ls ./iso-output/*.iso))
+          CHECKSUM_FILE="${ISO_FILE}-CHECKSUM"
+          echo "https://${{ env.S3_BUCKET }}.s3.${{ env.AWS_REGION }}.amazonaws.com/${ISO_FILE}"
+          echo "https://${{ env.S3_BUCKET }}.s3.${{ env.AWS_REGION }}.amazonaws.com/${CHECKSUM_FILE}"
