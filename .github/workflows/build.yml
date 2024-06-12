@@ -174,16 +174,11 @@ jobs:
       - name: Upload ISO to S3
         id: upload
         run: |
-          for FILE in ./iso-output/*; do
-            echo "Uploading $FILE"
-            aws s3 cp "$FILE" "s3://${{ env.S3_BUCKET }}/$(basename "$FILE")"
-          done
-        
-      - name: Output ISO URL
-        id: output_iso_url
-        run: |
           ISO_FILE=$(basename $(ls ./iso-output/*.iso))
           CHECKSUM_FILE="${ISO_FILE}-CHECKSUM"
+          echo "uploading ${ISO_FILE}"
+          aws s3 cp "./iso-output/${ISO_FILE}" "s3://${{ env.S3_BUCKET }}/${ISO_FILE}"
+          aws s3 cp "./iso-output/${CHECKSUM_FILE}" "s3://${{ env.S3_BUCKET }}/${CHECKSUM_FILE}"
           echo "iso_url=https://${{ env.S3_BUCKET }}.s3.${{env.AWS_REGION}}.amazonaws.com/$ISO_FILE" >> $GITHUB_OUTPUT
           echo "iso_checksum_url=https://${{ env.S3_BUCKET }}.s3.$${{env.AWS_REGION}}.amazonaws.com/$CHECKSUM_FILE" >> $GITHUB_OUTPUT
 
@@ -193,6 +188,6 @@ jobs:
     steps:
       - name: Notify ISO URL
         run: |
-          echo "ISO URL: ${{ needs.upload_iso_to_s3.outputs.iso_url }}"
-          echo "ISO CHECKSUM URL: ${{ needs.upload_iso_to_s3.outputs.iso_checksum_url }}"
+          echo "ISO URL: ${{ steps.upload.outputs.iso_url }}"
+          echo "ISO CHECKSUM URL: ${{ steps.upload.outputs.iso_checksum_url }}"
         
