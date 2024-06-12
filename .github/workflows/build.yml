@@ -176,14 +176,7 @@ jobs:
         run: |
           for FILE in ./iso-output/*; do
             echo "Uploading $FILE"
-            aws s3 cp "$FILE" "s3://${{ env.S3_BUCKET }}/$(basename "$FILE")" --acl public-read
-          done
-        
-      - name: Make ISO Public
-        id: make_public
-        run: |
-          for FILE in ./iso-output/*; do
-            aws s3api put-object-acl --bucket ${{ env.S3_BUCKET }} --key "$(basename "$FILE")" --acl public-read
+            aws s3 cp "$FILE" "s3://${{ env.S3_BUCKET }}/$(basename "$FILE")"
           done
         
       - name: Output ISO URL
