@@ -159,7 +159,7 @@ jobs:
 
     steps:
       - name: Build ISO
-        uses: jasonn3/build-container-installer@main
+        uses: jasonn3/build-container-installer@v1.2.0
         id: build
         with:
           arch: ${{ env.ARCH}}
@@ -168,7 +168,7 @@ jobs:
           image_tag: ${{ env.IMAGE_TAG }}
           version: ${{ env.VERSION }}
           variant: ${{ env.VARIANT }}
-          iso_name: ${{ env.IMAGE_NAME }}-${{ env.IMAGE_TAG }}-${{ env.VERSION }}.iso
+          iso_name: ${{ env.IMAGE_NAME }}-${{env.ARCH}}-${{ env.IMAGE_TAG }}-${{ env.VERSION }}.iso
         
       # This example is for uploading your ISO as a Github artifact. You can do something similar using any cloud storage, so long as you copy the output
       - name: Upload ISO as artifact
@@ -182,6 +182,9 @@ jobs:
           if-no-files-found: error
           retention-days: 0
           compression-level: 0
+      - name: Pass ISO Name
+        id: pass_iso_name
+        run: echo "set-output name=iso_name::${{ steps.build.outputs.iso_name }}"
           
   upload_iso_to_s3:
     name: Publish ISO Installer
@@ -197,7 +200,7 @@ jobs:
       - name: Download ISO Artifact
         uses: actions/download-artifact@v4
         with:
-          name: iso-artifact
+          name: ${{ needs.build_iso.outputs.iso_name}}
           path: ./iso-output
       
       - name: Upload ISO to S3
