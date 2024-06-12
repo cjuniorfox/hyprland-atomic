@@ -156,7 +156,8 @@ jobs:
       IMAGE_TAG: latest
       VARIANT: base-main
       VERSION: 40
-
+    outputs:
+      iso_name: ${{ steps.build.outputs.iso_name }}
     steps:
       - name: Build ISO
         uses: jasonn3/build-container-installer@v1.2.0
@@ -182,9 +183,6 @@ jobs:
           if-no-files-found: error
           retention-days: 0
           compression-level: 0
-      - name: Pass ISO Name
-        id: pass_iso_name
-        run: echo "set-output name=iso_name::${{ steps.build.outputs.iso_name }}"
           
   upload_iso_to_s3:
     name: Publish ISO Installer
