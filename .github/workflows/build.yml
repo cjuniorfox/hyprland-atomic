@@ -131,11 +131,6 @@ jobs:
           extra-args: |
             --disable-content-trust
 
-      # This section is optional and only needs to be enabled in you plan on distributing
-      # your project to others to consume. You will need to create a public and private key
-      # using Cosign and save the private key as a repository secret in Github for this workflow
-      # to consume. For more details, review the image signing section of the README.
-
       # Sign container
       - uses: sigstore/cosign-installer@v3.5.0
         if: github.event_name != 'pull_request'
@@ -159,6 +154,7 @@ jobs:
       IMAGE_NAME: hyprland-atomic
       IMAGE_REPO: ghcr.io/cjuniorfox
       IMAGE_TAG: latest
+      VARIANT: base-main
 
     steps:
       - name: Checkout repository
@@ -172,6 +168,7 @@ jobs:
           image_name: ${{ env.IMAGE_NAME }}
           image_repo: ${{ env.IMAGE_REPO }}
           image_tag: ${{ env.IMAGE_TAG }}
+          variant: ${{ env.VARIANT }}
           iso_name: ${{ env.IMAGE_NAME }}-${{ env.IMAGE_TAG }}.iso
 
       - name: Upload ISO as artifact
