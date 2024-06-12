@@ -131,11 +131,6 @@ jobs:
           extra-args: |
             --disable-content-trust
 
-      # This section is optional and only needs to be enabled in you plan on distributing
-      # your project to others to consume. You will need to create a public and private key
-      # using Cosign and save the private key as a repository secret in Github for this workflow
-      # to consume. For more details, review the image signing section of the README.
-
       # Sign container
       - uses: sigstore/cosign-installer@v3.5.0
         if: github.event_name != 'pull_request'
@@ -159,29 +154,33 @@ jobs:
       IMAGE_NAME: hyprland-atomic
       IMAGE_REPO: ghcr.io/cjuniorfox
       IMAGE_TAG: latest
-      VARIANT: default
-
+      VARIANT: base-main
+      VERSION: 40
+    outputs:
+      iso_name: ${{ steps.build.outputs.iso_name }}
+      checksum: ${{ steps.build.outputs.iso_name }}-CHECKSUM
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
       - name: Build ISO
-        uses: jasonn3/build-container-installer@main
+        uses: jasonn3/build-container-installer@v1.2.0
         id: build
         with:
-          arch: ${{ env.ARCH }}
-          image_name: ${{ env.IMAGE_NAME }}
-          image_repo: ${{ env.IMAGE_REPO }}
+          arch: ${{ env.ARCH}}
+          image_name: ${{ env.IMAGE_NAME}}
+          image_repo: ${{ env.IMAGE_REPO}}
           image_tag: ${{ env.IMAGE_TAG }}
+          version: ${{ env.VERSION }}
           variant: ${{ env.VARIANT }}
-          iso_name: ${{ env.IMAGE_NAME }}-${{ env.IMAGE_TAG }}.iso
-
+          iso_name: ${{ env.IMAGE_NAME }}-${{env.ARCH}}-${{ env.IMAGE_TAG }}-${{ env.VERSION }}.iso
+        
+      # This example is for uploading your ISO as a Github artifact. You can do something similar using any cloud storage, so long as you copy the output
       - name: Upload ISO as artifact
+        id: upload
         uses: actions/upload-artifact@v4
         with:
-          name: iso-artifact
+          name: ${{ steps.build.outputs.iso_name }}
           path: |
             ${{ steps.build.outputs.iso_path }}
+            ${{ steps.build.outputs.iso_path }}-CHECKSUM
           if-no-files-found: error
           retention-days: 0
           compression-level: 0
@@ -195,35 +194,31 @@ jobs:
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       S3_BUCKET: juniorfox-net-isos
       AWS_REGION: sa-east-1
+      ISO_NAME: ${{ needs.build_iso.outputs.iso_name }}
+      CHECKSUM: ${{ needs.build_iso.outputs.checksum }}
     
     steps:
       - name: Download ISO Artifact
         uses: actions/download-artifact@v4
         with:
-          name: iso-artifact
+          name: ${{ env.ISO_NAME}}
           path: ./iso-output
       
       - name: Upload ISO to S3
         id: upload
         run: |
-          ISO_FILE=$(basename $(ls ./iso-output/*.iso))
-          CHECKSUM_FILE="${ISO_FILE}-CHECKSUM"
-          echo "uploading ${ISO_FILE}"
-          aws s3 cp "./iso-output/${ISO_FILE}" "s3://${{ env.S3_BUCKET }}/${ISO_FILE}"
-          aws s3 cp "./iso-output/${CHECKSUM_FILE}" "s3://${{ env.S3_BUCKET }}/${CHECKSUM_FILE}"
+          echo "uploading ${{ env.ISO_NAME }}"
+          aws s3 cp "./iso-output/${{ env.ISO_NAME }}" "s3://${{ env.S3_BUCKET }}/${{ env.ISO_NAME }}"
+          aws s3 cp "./iso-output/${{ env.CHECKSUM }}" "s3://${{ env.S3_BUCKET }}/${{ env.CHECKSUM }}"
       
       - name: Make ISO public
         id: make_public
         run : |
-          ISO_FILE=$(basename $(ls ./iso-output/*.iso))
-          CHECKSUM_FILE="${ISO_FILE}-CHECKSUM"
-          aws s3api put-object-acl --bucket ${{ env.S3_BUCKET }} --key "${ISO_FILE}" --acl public-read
-          aws s3api put-object-acl --bucket ${{ env.S3_BUCKET }} --key "${CHECKSUM_FILE}" --acl public-read
+          aws s3api put-object-acl --bucket ${{ env.S3_BUCKET }} --key "${{ env.ISO_NAME }}" --acl public-read
+          aws s3api put-object-acl --bucket ${{ env.S3_BUCKET }} --key "${{ env.CHECKSUM }}" --acl public-read
       
       - name: Output ISO url
         id: upload_iso_url
         run : |
-          ISO_FILE=$(basename $(ls ./iso-output/*.iso))
-          CHECKSUM_FILE="${ISO_FILE}-CHECKSUM"
-          echo "https://${{ env.S3_BUCKET }}.s3.${{ env.AWS_REGION }}.amazonaws.com/${ISO_FILE}"
-          echo "https://${{ env.S3_BUCKET }}.s3.${{ env.AWS_REGION }}.amazonaws.com/${CHECKSUM_FILE}"
+          echo "https://${{ env.S3_BUCKET }}.s3.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ISO_NAME }}"
+          echo "https://${{ env.S3_BUCKET }}.s3.${{ env.AWS_REGION }}.amazonaws.com/${{ env.CHECKSUM }}"
