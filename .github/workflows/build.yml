@@ -160,6 +160,9 @@ jobs:
       iso_name: ${{ steps.build.outputs.iso_name }}
       checksum: ${{ steps.build.outputs.iso_name }}-CHECKSUM
     steps:
+      - name: Checkout Push to Registry action
+        uses: actions/checkout@v4
+        
       - name: Set Flatpaks Directory Shortname
         id: generate-flatpak-dir-shortname
         shell: bash
