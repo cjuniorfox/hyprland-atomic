@@ -162,44 +162,6 @@ jobs:
     steps:
       - name: Checkout Push to Registry action
         uses: actions/checkout@v4
-        
-      - name: Set Flatpaks Directory Shortname
-        id: generate-flatpak-dir-shortname
-        shell: bash
-        run: |
-          FLATPAK_DIR_SHORTNAME="installer/hyprland_flatpaks"
-          echo "flatpak-dir-shortname=${FLATPAK_DIR_SHORTNAME}" >> $GITHUB_OUTPUT
-
-      - name: Determine Flatpak Dependencies
-        id: flatpak_dependencies
-        shell: bash
-        run: |
-          set -ex
-          image="ghcr.io/ublue-os/base-main:40"
-          # Make temp space
-          TEMP_FLATPAK_INSTALL_DIR=$(mktemp -d -p ${{ github.workspace }} flatpak.XXX)
-          # Get list of refs from directory
-          FLATPAK_REFS_DIR=${{ github.workspace }}/${{ steps.generate-flatpak-dir-shortname.outputs.flatpak-dir-shortname }}
-          FLATPAK_REFS_DIR_LIST=$(cat ${FLATPAK_REFS_DIR}/* | tr '\n' ' ' )
-          # Generate install script
-          cat << EOF > ${TEMP_FLATPAK_INSTALL_DIR}/script.sh
-          cat /temp_flatpak_install_dir/script.sh
-          mkdir -p /flatpak/flatpak /flatpak/triggers
-          mkdir /var/tmp || true
-          chmod -R 1777 /var/tmp
-          flatpak config --system --set languages "*"
-          flatpak remote-add --system flathub https://flathub.org/repo/flathub.flatpakrepo
-          flatpak install --system -y ${FLATPAK_REFS_DIR_LIST}
-          ostree refs --repo=\${FLATPAK_SYSTEM_DIR}/repo | grep '^deploy/' | grep -v 'org\.freedesktop\.Platform\.openh264' | sed 's/^deploy\///g' > /output/flatpaks_with_deps
-          EOF
-          docker run --rm --privileged \
-            --entrypoint bash \
-            -e FLATPAK_SYSTEM_DIR=/flatpak/flatpak \
-            -e FLATPAK_TRIGGERSDIR=/flatpak/triggers \
-            --volume ${FLATPAK_REFS_DIR}:/output \
-            --volume ${TEMP_FLATPAK_INSTALL_DIR}:/temp_flatpak_install_dir \
-            ${image} /temp_flatpak_install_dir/script.sh
-          docker rmi ${image}
 
       - name: Build ISO
         uses: jasonn3/build-container-installer@v1.2.0
@@ -216,8 +178,18 @@ jobs:
           enrollment_password: 'ublue-os'
           enable_cache_dnf: "false"
           enable_cache_skopeo: "false"
-          flatpak_remote_refs_dir: ${{ steps.generate-flatpak-dir-shortname.outputs.flatpak-dir-shortname }}
+          flatpak_remote_refs: "app/com.github.tchx84.Flatseal  app/org.gnome.Calculator  app/org.gnome.Evince  app/org.gnome.FileRoller  app/org.gnome.FontManager  app/org.gnome.Loupe  app/org.gnome.TextEditor  app/org.mozilla.firefox  runtime/org.freedesktop.Platform.ffmpeg-full"
           enable_flatpak_dependencies: "false"
+
+      - name: Move ISOs to Upload Directory
+        id: upload-directory
+        shell: bash
+        run: |
+          ISO_UPLOAD_DIR=${{ github.workspace }}/upload
+          mkdir ${ISO_UPLOAD_DIR}
+          mv ${{ steps.build.outputs.iso_path }}/${{ steps.build.outputs.iso_name }} ${ISO_UPLOAD_DIR}
+          mv ${{ steps.build.outputs.iso_path }}/${{ steps.build.outputs.iso_name }}-CHECKSUM ${ISO_UPLOAD_DIR}
+          echo "iso-upload-dir=${ISO_UPLOAD_DIR}" >> $GITHUB_OUTPUT
         
       # This example is for uploading your ISO as a Github artifact. You can do something similar using any cloud storage, so long as you copy the output
       - name: Upload ISO as artifact
@@ -225,9 +197,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ${{ steps.build.outputs.iso_name }}
-          path: |
-            ${{ steps.build.outputs.iso_path }}
-            ${{ steps.build.outputs.iso_path }}-CHECKSUM
+          path: ${{ steps.upload-directory.outputs.iso-upload-dir }}
           if-no-files-found: error
           retention-days: 0
           compression-level: 0
