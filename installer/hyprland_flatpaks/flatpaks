@@ -1,0 +1,10 @@
+app/com.github.tchx84.Flatseal 
+app/org.gnome.Calculator 
+app/org.gnome.Evince 
+app/org.gnome.FileRoller 
+app/org.gnome.FontManager 
+app/org.gnome.Loupe 
+app/org.gnome.TextEditor 
+app/org.mozilla.firefox 
+runtime/org.freedesktop.Platform.ffmpeg-full/x86_64/22.08 
+runtime/org.freedesktop.Platform.openh264/x86_64/2.3.1
