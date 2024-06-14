@@ -54,6 +54,7 @@ rpm-ostree install \
     swaylock \
     system-config-printer \
     polkit-gnome \
+    tldr \
     xdg-user-dirs \
     xdg-user-dirs-gtk \
     wlr-randr \
