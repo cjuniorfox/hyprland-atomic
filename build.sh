@@ -19,7 +19,6 @@ rpm-ostree install \
     adwaita-gtk2-theme \
     adwaita-icon-theme \
     adwaita-qt5 \
-    azote \
     bash-completion \
     blueman \
     breeze-cursor-theme \
@@ -61,6 +60,7 @@ rpm-ostree install \
     yaru-{gtk2,gtk3,gtk4,icon,sound}-theme \
     cliphist \
     hyprshot \
+    waypaper \
     wl-clipboard \
     hyprland-shell-config \
     sway-audio-idle-inhibit
