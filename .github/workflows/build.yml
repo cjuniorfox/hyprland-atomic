@@ -164,7 +164,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Build ISO
-        uses: jasonn3/build-container-installer@v1.2.0
+        uses: jasonn3/build-container-installer@v1.2.1
         id: build
         with:
           arch: ${{ env.ARCH }}
