@@ -8,7 +8,7 @@ echo "building release $RELEASE and variation $HYPRLAND_BUILD"
 
 ### Install packages
 # Add COPR repositories
-for i in cjuniorfox/hyprland-shell tofik/sway; do
+for i in cjuniorfox/hyprland-shell solopasha/hyprland tofik/sway; do
     MAINTAINER="${i%%/*}"
     REPOSITORY="${i##*/}"
     curl --output-dir "/etc/yum.repos.d/" --remote-name \
