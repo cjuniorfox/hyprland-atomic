@@ -56,6 +56,7 @@ rpm-ostree install \
     tldr \
     xdg-user-dirs \
     xdg-user-dirs-gtk \
+    xdg-desktop-portal-hyprland \
     wlr-randr \
     yaru-{gtk2,gtk3,gtk4,icon,sound}-theme \
     cliphist \
