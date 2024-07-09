@@ -4,15 +4,6 @@ set -ouex pipefail
 
 RELEASE="$(rpm -E %fedora)"
 
-### Install packages
-# Add COPR repositories
-for i in cjuniorfox/hyprland-shell solopasha/hyprland tofik/sway; do
-    MAINTAINER="${i%%/*}"
-    REPOSITORY="${i##*/}"
-    curl --output-dir "/etc/yum.repos.d/" --remote-name \
-    "https://copr.fedorainfracloud.org/coprs/${MAINTAINER}/${REPOSITORY}/repo/fedora-${RELEASE}/${MAINTAINER}-${REPOSITORY}-fedora-${RELEASE}.repo"
-done
-
 # Install RPM packages
 rpm-ostree install \
     adwaita-blue-gtk-theme \
@@ -59,12 +50,18 @@ rpm-ostree install \
     xdg-desktop-portal-hyprland \
     wlr-randr \
     yaru-{gtk2,gtk3,gtk4,icon,sound}-theme \
-    cliphist \
-    hyprshot \
-    waypaper \
-    wl-clipboard \
-    hyprland-shell-config \
-    sway-audio-idle-inhibit
+    wl-clipboard
+
+# Add COPR repositories
+for i in cjuniorfox/hyprland-shell solopasha/hyprland tofik/sway; do
+    MAINTAINER="${i%%/*}"
+    REPOSITORY="${i##*/}"
+    curl --output-dir "/etc/yum.repos.d/" --remote-name \
+    "https://copr.fedorainfracloud.org/coprs/${MAINTAINER}/${REPOSITORY}/repo/fedora-${RELEASE}/${MAINTAINER}-${REPOSITORY}-fedora-${RELEASE}.repo"
+done
+
+#Install COPR packages
+rpm-ostree install cliphist hyprland-shell-config hyprshot sway-audio-idle-inhibit waypaper
 
 # Remove unnecessary packages
 rpm-ostree override remove firefox-langpacks firefox
