@@ -61,7 +61,7 @@ for i in cjuniorfox/hyprland-shell solopasha/hyprland tofik/sway; do
 done
 
 #Install COPR packages
-rpm-ostree install cliphist hyprland-shell-config hyprshot sway-audio-idle-inhibit waypaper
+rpm-ostree install cliphist hyprland-shell-config wol-changer hyprshot sway-audio-idle-inhibit waypaper
 
 # Remove unnecessary packages
 rpm-ostree override remove firefox-langpacks firefox
