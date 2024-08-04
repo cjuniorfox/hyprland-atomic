@@ -47,6 +47,7 @@ rpm-ostree install \
     xdg-user-dirs \
     xdg-user-dirs-gtk \
     xdg-desktop-portal-hyprland \
+    vulkan-headers vulkan-loader vulkan-tools \
     wlr-randr \
     yaru-{gtk2,gtk3,gtk4,icon,sound}-theme \
     wl-clipboard
@@ -59,8 +60,8 @@ for i in cjuniorfox/hyprland-shell solopasha/hyprland tofik/sway; do
     "https://copr.fedorainfracloud.org/coprs/${MAINTAINER}/${REPOSITORY}/repo/fedora-${RELEASE}/${MAINTAINER}-${REPOSITORY}-fedora-${RELEASE}.repo"
 done
 
-#Install COPR packages
-rpm-ostree install cliphist hyprland-shell-config wol-changer hyprshot sway-audio-idle-inhibit waypaper
+#Install COPR packages from solopasha
+rpm-ostree install cliphist eww-git hyprshot waypaper
 
 if [[ "${VIRTUALIZATION}" == "yes" ]]; then
     rpm-ostree install virt-install \
