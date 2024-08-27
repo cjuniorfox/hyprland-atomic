@@ -8,6 +8,12 @@ You can download the latest version of the distribution and its checksum from th
 - [Hyprland Atomic ISO](https://juniorfox-net-isos.s3.sa-east-1.amazonaws.com/hyprland-atomic-x86_64-40-latest.iso)
 - [Hyprland Atomic ISO Checksum](https://juniorfox-net-isos.s3.sa-east-1.amazonaws.com/hyprland-atomic-x86_64-40-latest.iso-CHECKSUM)
 
+## Rebase
+If you're using Silverblue or alike, you can rebase to this repository doing the following:
+```sh
+rpm-ostree rebase ostree-unverified-registry:ghcr.io/cjuniorfox/hyprland-atomic:20240827
+```
+
 ## Features
 - **Immutable System**: Built on Fedora Atomic, ensuring a stable and secure environment.
 - **Hyprland Compositor**: Utilizes Hyprland for a modern and efficient desktop experience.
