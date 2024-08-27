@@ -41,6 +41,12 @@ If you're using Silverblue or alike, you can rebase to this repository doing the
 rpm-ostree rebase ostree-unverified-registry:ghcr.io/cjuniorfox/hyprland-atomic-fedora:latest
 ```
 
+## Rebase
+If you're using Silverblue or alike, you can rebase to this repository doing the following:
+```sh
+rpm-ostree rebase ostree-unverified-registry:ghcr.io/cjuniorfox/hyprland-atomic:20240827
+```
+
 ## Features
 
 - **Immutable System**: Built on Fedora Atomic, ensuring a stable and secure environment.
