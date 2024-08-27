@@ -44,7 +44,7 @@ rpm-ostree rebase ostree-unverified-registry:ghcr.io/cjuniorfox/hyprland-atomic-
 ## Rebase
 If you're using Silverblue or alike, you can rebase to this repository doing the following:
 ```sh
-rpm-ostree rebase ostree-unverified-registry:ghcr.io/cjuniorfox/hyprland-atomic:20240827
+rpm-ostree rebase ostree-unverified-registry:ghcr.io/cjuniorfox/hyprland-atomic:latest
 ```
 
 ## Features
