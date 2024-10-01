@@ -20,6 +20,10 @@ env:
 
 jobs:
   build_push:
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
     uses: ./.github/workflows/build-push.yml
   build_iso:
     uses: ./.github/workflows/build-iso.yml
