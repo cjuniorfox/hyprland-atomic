@@ -1,0 +1,22 @@
+name: build-ublue-hyprland
+on:
+  pull_request:
+    branches:
+      - main
+  schedule:
+    - cron: '00 10 * * *'  # 10:00am UTC everyday
+
+env:
+  MY_IMAGE_NAME: "${{ github.event.repository.name }}"
+  MY_IMAGE_DESC: "Hyprland Shell Blue Image"
+  IMAGE_REGISTRY: "ghcr.io/${{ github.repository_owner }}"  # do not edit
+
+jobs:
+  build_push:
+    uses: ./.github/workflows/build-push.yml
+  build_iso:
+    uses: ./.github/workflows/build-iso.yml
+    needs: build_push
+  upload_iso_to_s3:
+    uses: ./.github/workflows/upload-iso-to-s3.yml
+    needs: build_iso
