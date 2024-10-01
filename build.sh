@@ -64,7 +64,7 @@ rpm-ostree install \
     hyprland-shell-config \
     sway-audio-idle-inhibit
 
-if [[ "${VIRTUALIZATION}" == "yes"]]; then
+if [[ "${VIRTUALIZATION}" == "yes" ]]; then
     rpm-ostree install virt-install \
     libvirt-daemon-config-network \
     libvirt-daemon-kvm \
@@ -97,7 +97,6 @@ if [[ "${HYPRLAND_BUILD}" == "git" ]]; then
 elif [[ "${HYPRLAND_BUILD}" == "solopasha" ]]; then
     rpm-ostree install hyprland
 fi
-
 
 #Install COPR packages from cjuniorfox/hyprland-shell
 rpm-ostree install hyprland-shell-config wol-changer  
