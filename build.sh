@@ -2,6 +2,8 @@
 
 set -ouex pipefail
 
+RELEASE="$(rpm -E %fedora)"
+
 echo "building release $RELEASE and variation $HYPRLAND_BUILD"
 
 ### Install packages
