@@ -21,6 +21,10 @@
           image_name: "${{ github.event.repository.name }}"  # the name of the image produced by this build, matches repo names 
           image_desc: "Hyprland Shell Blue Image"
           image_registry: "ghcr.io/${{ github.repository_owner }}"  # do not edit
+        permissions:
+          contents: read
+          packages: write
+          id-token: write
     
       build_iso:
         uses: ./.github/workflows/build-iso.yml
