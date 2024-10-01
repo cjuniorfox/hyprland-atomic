@@ -9,6 +9,8 @@
             type: string
           image_registry:
             type: string
+          cosign:
+            type: string
     
     jobs:
       build_push:
@@ -123,4 +125,4 @@
             env:
               TAGS: ${{ steps.push.outputs.digest }}
               COSIGN_EXPERIMENTAL: false
-              COSIGN_PRIVATE_KEY: ${{ secrets.SIGNING_SECRET }}
+              COSIGN_PRIVATE_KEY: ${{ inputs.cosign }}

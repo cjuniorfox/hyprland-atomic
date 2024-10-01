@@ -18,9 +18,10 @@
       build_push:
         uses: ./.github/workflows/build-push.yml
         with:
-          image_name: "${{ github.event.repository.name }}"  # the name of the image produced by this build, matches repo names 
+          image_name: "${{ github.event.repository.name }}"
           image_desc: "Hyprland Shell Blue Image"
-          image_registry: "ghcr.io/${{ github.repository_owner }}"  # do not edit
+          image_registry: "ghcr.io/${{ github.repository_owner }}"
+          cosign: ${{ secrets.SIGNING_SECRET }}
         permissions:
           contents: read
           packages: write
