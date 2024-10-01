@@ -222,7 +222,7 @@ jobs:
       - uses: sigstore/cosign-installer@v3.5.0
         if: github.event_name != 'pull_request'
 
-      - name: Sign container fedora image
+      - name: Sign container git image
         if: github.event_name != 'pull_request'
         run: |
           cosign sign -y --key env://COSIGN_PRIVATE_KEY ${{ steps.registry_case.outputs.lowercase }}/${{ steps.build_git_image.outputs.image }}@${TAGS}
@@ -234,12 +234,12 @@ jobs:
       - uses: sigstore/cosign-installer@v3.5.0
         if: github.event_name != 'pull_request'
 
-      - name: Sign container git image
+      - name: Sign container Solopasha image
         if: github.event_name != 'pull_request'
         run: |
-          cosign sign -y --key env://COSIGN_PRIVATE_KEY ${{ steps.registry_case.outputs.lowercase }}/${{ steps.build_git_image.outputs.image }}@${TAGS}
+          cosign sign -y --key env://COSIGN_PRIVATE_KEY ${{ steps.registry_case.outputs.lowercase }}/${{ steps.build_solopasha_image.outputs.image }}@${TAGS}
         env:
-          TAGS: ${{ steps.push_git_image.outputs.digest }}
+          TAGS: ${{ steps.push_solopasha_image.outputs.digest }}
           COSIGN_EXPERIMENTAL: false
           COSIGN_PRIVATE_KEY: ${{ secrets.SIGNING_SECRET }}
 
