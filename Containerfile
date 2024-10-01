@@ -35,14 +35,14 @@ ARG SOURCE_IMAGE="base"
 # - (and the above with testing rather than stable)
 ARG SOURCE_SUFFIX="-main"
 
-## SOURCE_TAG arg must be a version built for the specific image: eg, 39, 40, gts, latest
-ARG SOURCE_TAG="40"
+## RELEASE arg must be a version built for the specific image: eg, 39, 40, gts, latest
+ARG RELEASE="40"
 ARG HYPRLAND_BUILD="fedora"
 ARG VIRTUALIZATION="no"
 
 ### 2. SOURCE IMAGE
 ## this is a standard Containerfile FROM using the build ARGs above to select the right upstream image
-FROM ghcr.io/ublue-os/${SOURCE_IMAGE}${SOURCE_SUFFIX}:${SOURCE_TAG}
+FROM ghcr.io/ublue-os/${SOURCE_IMAGE}${SOURCE_SUFFIX}:${RELEASE}
 
 
 ### 3. MODIFICATIONS

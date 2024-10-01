@@ -2,9 +2,7 @@
 
 set -ouex pipefail
 
-RELEASE=${SOURCE_TAG}
-
-echo "building release $SOURCE_TAG and variation $HYPRLAND_BUILD"
+echo "building release $RELEASE and variation $HYPRLAND_BUILD"
 
 ### Install packages
 # Add COPR repositories
