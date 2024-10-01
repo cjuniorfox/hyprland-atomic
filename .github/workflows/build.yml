@@ -14,8 +14,12 @@ on:
   workflow_dispatch:
 
 env:
-  MY_IMAGE_NAME: "${{ github.event.repository.name }}"  # the name of the image produced by this build, matches repo names
-  MY_IMAGE_DESC: "Hyprland Shell Blue Image"
+  BASE_IMAGE_NAME: "${{ github.event.repository.name }}-base"
+  BASE_IMAGE_DESC: "Hyprland Shell Blue Image with Fedora Hyprland"
+  GIT_IMAGE_NAME: "${{ github.event.repository.name }}-git"
+  GIT_IMAGE_DESC: "Hyprland Shell Blue Image with Git Hyprland"
+  SOLOPASHA_IMAGE_NAME: "${{ github.event.repository.name }}-solopasha"
+  SOLOPASHA_IMAGE_DESC: "Hyprland Shell Blue Image with Solopasha Hyprland"
   IMAGE_REGISTRY: "ghcr.io/${{ github.repository_owner }}"  # do not edit
 
 jobs:
@@ -79,30 +83,66 @@ jobs:
         id: meta
         with:
           images: |
-            ${{ env.MY_IMAGE_NAME }}
+            ${{ env.BASE_IMAGE_NAME }}
+            ${{ env.GIT_IMAGE_NAME }}
+            ${{ env.SOLOPASHA_IMAGE_NAME }}
 
           labels: |
+            # Base Image Metadata
             io.artifacthub.package.readme-url=https://raw.githubusercontent.com/${{ github.repository }}/main/README.md
-            org.opencontainers.image.description=${{ env.MY_IMAGE_DESC }}
-            org.opencontainers.image.title=${{ env.MY_IMAGE_NAME }}
+            org.opencontainers.image.description=${{ env.BASE_IMAGE_DESC }}
+            org.opencontainers.image.title=${{ env.BASE_IMAGE_NAME }}
 
+            # Git Image Metadata
+            io.artifacthub.package.readme-url=https://raw.githubusercontent.com/${{ github.repository }}/main/README.md
+            org.opencontainers.image.description=${{ env.GIT_IMAGE_DESC }}
+            org.opencontainers.image.title=${{ env.GIT_IMAGE_NAME }}
+
+            # Solopasha Image Metadata
+            io.artifacthub.package.readme-url=https://raw.githubusercontent.com/${{ github.repository }}/main/README.md
+            org.opencontainers.image.description=${{ env.SOLOPASHA_IMAGE_DESC }}
+            org.opencontainers.image.title=${{ env.SOLOPASHA_IMAGE_NAME }}
       # Build image using Buildah action
-      - name: Build Image
-        id: build_image
+      - name: Build Base Image
+        id: build_base_image
         uses: redhat-actions/buildah-build@v2
         with:
           containerfiles: |
             ./Containerfile
-          # Postfix image name with -custom to make it a little more descriptive
-          # Syntax: https://docs.github.com/en/actions/learn-github-actions/expressions#format
-          image: ${{ env.MY_IMAGE_NAME }}
+          build-args : |
+            HYPRLAND_BUILD=git
+          image: ${{ env.BASE_IMAGE_NAME }}
+          tags: |
+            ${{ steps.generate-tags.outputs.alias_tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          oci: false
+      - name: Build git Image
+        id: build_git_image
+        uses: redhat-actions/buildah-build@v2
+        with:
+          containerfiles: |
+            ./Containerfile
+          build-args : |
+            HYPRLAND_BUILD=git
+          image: ${{ env.GIT_IMAGE_NAME }}
+          tags: |
+            ${{ steps.generate-tags.outputs.alias_tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          oci: false
+      - name: Build Solopasha Image
+        id: build_solopasha_image
+        uses: redhat-actions/buildah-build@v2
+        with:
+          containerfiles: |
+            ./Containerfile
+          build-args : |
+            HYPRLAND_BUILD=solopasha
+          image: ${{ env.SOLOPASHA_IMAGE_NAME }}
           tags: |
             ${{ steps.generate-tags.outputs.alias_tags }}
           labels: ${{ steps.meta.outputs.labels }}
           oci: false
 
-      # Workaround bug where capital letters in your GitHub username make it impossible to push to GHCR.
-      # https://github.com/macbre/push-to-ghcr/issues/12
       - name: Lowercase Registry
         id: registry_case
         uses: ASzc/change-string-case-action@v6
@@ -116,31 +156,89 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Push Image to GHCR
+      # Push Base Image
+      - name: Push Base Image to GHCR
         uses: redhat-actions/push-to-registry@v2
-        id: push
+        id: push_base_image
         env:
           REGISTRY_USER: ${{ github.actor }}
           REGISTRY_PASSWORD: ${{ github.token }}
         with:
-          image: ${{ steps.build_image.outputs.image }}
-          tags: ${{ steps.build_image.outputs.tags }}
-          registry: ${{ steps.registry_case.outputs.lowercase }}
+          image: ${{ steps.build_base_image.outputs.image }}
+          tags: ${{ steps.build_base_image.outputs.tags }}
+          registry: ghcr.io
           username: ${{ env.REGISTRY_USER }}
           password: ${{ env.REGISTRY_PASSWORD }}
           extra-args: |
             --disable-content-trust
 
+      # Push Git Image
+      - name: Push Git Image to GHCR
+        uses: redhat-actions/push-to-registry@v2
+        id: push_git_image
+        env:
+          REGISTRY_USER: ${{ github.actor }}
+          REGISTRY_PASSWORD: ${{ github.token }}
+        with:
+          image: ${{ steps.build_git_image.outputs.image }}
+          tags: ${{ steps.build_git_image.outputs.tags }}
+          registry: ghcr.io
+          username: ${{ env.REGISTRY_USER }}
+          password: ${{ env.REGISTRY_PASSWORD }}
+          extra-args: |
+            --disable-content-trust
+
+      # Push Solopasha Image
+      - name: Push Solopasha Image to GHCR
+        uses: redhat-actions/push-to-registry@v2
+        id: push_solopasha_image
+        env:
+          REGISTRY_USER: ${{ github.actor }}
+          REGISTRY_PASSWORD: ${{ github.token }}
+        with:
+          image: ${{ steps.build_solopasha_image.outputs.image }}
+          tags: ${{ steps.build_solopasha_image.outputs.tags }}
+          registry: ghcr.io
+          username: ${{ env.REGISTRY_USER }}
+          password: ${{ env.REGISTRY_PASSWORD }}
+          extra-args: |
+            --disable-content-trust
+
+
       # Sign container
       - uses: sigstore/cosign-installer@v3.5.0
         if: github.event_name != 'pull_request'
 
-      - name: Sign container image
+      - name: Sign container base image
         if: github.event_name != 'pull_request'
         run: |
-          cosign sign -y --key env://COSIGN_PRIVATE_KEY ${{ steps.registry_case.outputs.lowercase }}/${{ steps.build_image.outputs.image }}@${TAGS}
+          cosign sign -y --key env://COSIGN_PRIVATE_KEY ${{ steps.registry_case.outputs.lowercase }}/${{ steps.build_base_image.outputs.image }}@${TAGS}
         env:
-          TAGS: ${{ steps.push.outputs.digest }}
+          TAGS: ${{ steps.push_base_image.outputs.digest }}
+          COSIGN_EXPERIMENTAL: false
+          COSIGN_PRIVATE_KEY: ${{ secrets.SIGNING_SECRET }}
+
+      - uses: sigstore/cosign-installer@v3.5.0
+        if: github.event_name != 'pull_request'
+
+      - name: Sign container fedora image
+        if: github.event_name != 'pull_request'
+        run: |
+          cosign sign -y --key env://COSIGN_PRIVATE_KEY ${{ steps.registry_case.outputs.lowercase }}/${{ steps.build_git_image.outputs.image }}@${TAGS}
+        env:
+          TAGS: ${{ steps.push_git_image.outputs.digest }}
+          COSIGN_EXPERIMENTAL: false
+          COSIGN_PRIVATE_KEY: ${{ secrets.SIGNING_SECRET }}
+
+      - uses: sigstore/cosign-installer@v3.5.0
+        if: github.event_name != 'pull_request'
+
+      - name: Sign container git image
+        if: github.event_name != 'pull_request'
+        run: |
+          cosign sign -y --key env://COSIGN_PRIVATE_KEY ${{ steps.registry_case.outputs.lowercase }}/${{ steps.build_git_image.outputs.image }}@${TAGS}
+        env:
+          TAGS: ${{ steps.push_git_image.outputs.digest }}
           COSIGN_EXPERIMENTAL: false
           COSIGN_PRIVATE_KEY: ${{ secrets.SIGNING_SECRET }}
 
