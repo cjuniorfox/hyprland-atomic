@@ -8,26 +8,28 @@ on:
   push:
     branches:
       - main
-        develop
+      - develop  # This should be aligned with 'main'
     paths-ignore:
       - '**/README.md'
   workflow_dispatch:
 
-env:
-  MY_IMAGE_NAME: "${{ github.event.repository.name }}"
-  MY_IMAGE_DESC: "Hyprland Shell Blue Image"
-  IMAGE_REGISTRY: "ghcr.io/${{ github.repository_owner }}"  # do not edit
+permissions:
+  contents: read
+  packages: write
+  id-token: write
 
 jobs:
-  build_push:
-    permissions:
-      contents: read
-      packages: write
-      id-token: write
+  build_push:    
     uses: ./.github/workflows/build-push.yml
+    with:
+      image_name: "${{ github.event.repository.name }}"
+      image_desc: "Hyprland Shell Blue Image"
+      image_registry: "ghcr.io/${{ github.repository_owner }}"
+      
   build_iso:
     uses: ./.github/workflows/build-iso.yml
     needs: build_push
+    
   upload_iso_to_s3:
     uses: ./.github/workflows/upload-iso-to-s3.yml
     needs: build_iso
