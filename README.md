@@ -20,8 +20,8 @@ You can download the latest version of the distribution and its checksum from th
 
 ### Hyperland Solopasha Git Build 40
 
-- [Hyprland Atomic Solopasha ISO](https://juniorfox-net-isos.s3.sa-east-1.amazonaws.com/hyprland-atomic-git-x86_64-40-latest.iso)
-- [Hyprland Atomic Solopasha ISO Checksum](https://juniorfox-net-isos.s3.sa-east-1.amazonaws.com/hyprland-atomic-git-x86_64-40-latest.iso-CHECKSUM)
+- [Hyprland Atomic Solopasha/Git ISO](https://juniorfox-net-isos.s3.sa-east-1.amazonaws.com/hyprland-atomic-git-x86_64-40-latest.iso)
+- [Hyprland Atomic Solopasha/Git ISO Checksum](https://juniorfox-net-isos.s3.sa-east-1.amazonaws.com/hyprland-atomic-git-x86_64-40-latest.iso-CHECKSUM)
 
 ## Rebase
 
