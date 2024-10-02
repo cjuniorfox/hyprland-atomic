@@ -43,7 +43,6 @@ rpm-ostree install \
     seahorse \
     socat \
     swaybg \
-    swayidle \
     system-config-printer \
     polkit-gnome \
     tldr \
@@ -71,7 +70,7 @@ fi
 
 # Hyprland from Fedora repository
 if [[ "${HYPRLAND_BUILD}" == "fedora" ]]; then
-    rpm-ostree install hyprland hyprlock
+    rpm-ostree install hyprland
 fi
 
 # Add COPR repositories
@@ -83,13 +82,13 @@ for i in cjuniorfox/hyprland-shell solopasha/hyprland tofik/sway; do
 done
 
 #Install COPR packages from solopasha
-rpm-ostree install cliphist eww-git hyprshot waypaper
+rpm-ostree install cliphist eww-git hypridle hyprlock hyprshot waypaper 
 
 # Hyprland from solopasha
 if [[ "${HYPRLAND_BUILD}" == "git" ]]; then
-    rpm-ostree install hyprland-git hyprlock
+    rpm-ostree install hyprland-git
 elif [[ "${HYPRLAND_BUILD}" == "solopasha" ]]; then
-    rpm-ostree install hyprland hyprlock
+    rpm-ostree install hyprland
 fi
 
 #Install COPR packages from cjuniorfox/hyprland-shell
