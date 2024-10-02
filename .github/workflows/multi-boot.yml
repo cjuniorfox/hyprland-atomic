@@ -21,6 +21,10 @@ jobs:
       variation: "fedora"
       version: 40
       virtualization: "no"
+    secrets:
+      SIGNING_SECRET: ${{ secrets.SIGNING_SECRET }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
     permissions:
       contents: read
       packages: write
@@ -33,6 +37,10 @@ jobs:
       variation: "solopasha"
       version: 40
       virtualization: "no"
+    secrets:
+      SIGNING_SECRET: ${{ secrets.SIGNING_SECRET }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
     permissions:
       contents: read
       packages: write
@@ -45,6 +53,10 @@ jobs:
       variation: "git"
       version: 40
       virtualization: "no"
+    secrets:
+      SIGNING_SECRET: ${{ secrets.SIGNING_SECRET }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
     permissions:
       contents: read
       packages: write
@@ -57,6 +69,10 @@ jobs:
       variation: "fedora"
       version: 40
       virtualization: "yes"
+    secrets:
+      SIGNING_SECRET: ${{ secrets.SIGNING_SECRET }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
     permissions:
       contents: read
       packages: write
@@ -69,6 +85,10 @@ jobs:
       variation: "solopasha"
       version: 40
       virtualization: "yes"
+    secrets:
+      SIGNING_SECRET: ${{ secrets.SIGNING_SECRET }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
     permissions:
       contents: read
       packages: write
@@ -81,6 +101,10 @@ jobs:
       variation: "git"
       version: 40
       virtualization: "yes"
+    secrets:
+      SIGNING_SECRET: ${{ secrets.SIGNING_SECRET }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
     permissions:
       contents: read
       packages: write
