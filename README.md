@@ -1,81 +1,77 @@
-# image-template
+# Hyprland Atomic Image
 
-# Purpose
+## Purpose
 
-This repository is meant to be a template for building your own custom Universal Blue image. This template is the recommended way to make customizations to any image published by the Universal Blue Project:
-- [Aurora](https://getaurora.dev/)
-- [Bazzite](https://bazzite.gg/)
-- [Bluefin](https://projectbluefin.io/)
-- [uCore](https://projectucore.io/)
-- [main](https://github.com/ublue-os/main/)
-- [hwe](https://github.com/ublue-os/hwe/) 
+This repository is dedicated to building and customizing a Universal Blue image using Hyprland as the desktop compositor. The goal is to create a Fedora Atomic-based distribution with Hyprland, providing a modern and efficient desktop environment.
 
-This template includes a Containerfile and a Github workflow for building the container image. As soon as the workflow is enabled in your repository, it will build the container image and push it to the Github Container Registry.
+## Download Links
 
-# Prerequisites
+You can download the latest version of the distribution and its checksum from the following links:
 
-Working knowledge in the following topics:
+### Hyperland Fedora 40
 
-- Containers
-  - https://www.youtube.com/watch?v=SnSH8Ht3MIc
-  - https://www.mankier.com/5/Containerfile
-- rpm-ostree
-  - https://coreos.github.io/rpm-ostree/container/
-- Fedora Silverblue (and other Fedora Atomic variants)
-  - https://docs.fedoraproject.org/en-US/fedora-silverblue/
-- Github Workflows
-  - https://docs.github.com/en/actions/using-workflows
+- [Hyprland Atomic Fedora ISO](https://juniorfox-net-isos.s3.sa-east-1.amazonaws.com/hyprland-atomic-fedora-x86_64-40-latest.iso)
+- [Hyprland Atomic Fedora ISO Checksum](https://juniorfox-net-isos.s3.sa-east-1.amazonaws.com/hyprland-atomic-fedora-x86_64-40-latest.iso-CHECKSUM)
 
-# How to Use
+### Hyperland Solopasha 40
 
-## Template
+- [Hyprland Atomic Solopasha ISO](https://juniorfox-net-isos.s3.sa-east-1.amazonaws.com/hyprland-atomic-solopasha-x86_64-40-latest.iso)
+- [Hyprland Atomic Solopasha ISO Checksum](https://juniorfox-net-isos.s3.sa-east-1.amazonaws.com/hyprland-atomic-solopasha-x86_64-40-latest.iso-CHECKSUM)
 
-Select `Use this Template` and create a new repository from it. To enable the workflows, you may need to go the `Actions` tab of the new repository and click to enable workflows.
+### Hyperland Solopasha Git Build 40
 
-## Containerfile
+- [Hyprland Atomic Solopasha ISO](https://juniorfox-net-isos.s3.sa-east-1.amazonaws.com/hyprland-atomic-git-x86_64-40-latest.iso)
+- [Hyprland Atomic Solopasha ISO Checksum](https://juniorfox-net-isos.s3.sa-east-1.amazonaws.com/hyprland-atomic-git-x86_64-40-latest.iso-CHECKSUM)
 
-This file defines the operations used to customize the selected image. It contains examples of possible modifications, including how to:
-- change the upstream from which the custom image is derived
-- add additional RPM packages
-- add binaries as a layer from other images
+### Hyperland Solopasha 40 with Virtualization
 
-## Workflows
+- [Hyprland Atomic Solopasha ISO](https://juniorfox-net-isos.s3.sa-east-1.amazonaws.com/hyprland-atomic-solopasha-virt-x86_64-40-latest.iso)
+- [Hyprland Atomic Solopasha ISO Checksum](https://juniorfox-net-isos.s3.sa-east-1.amazonaws.com/hyprland-atomic-solopasha-virt-x86_64-40-latest.iso-CHECKSUM)
 
-### build.yml
+### Hyperland Git Build 40 with Virtualization
 
-This workflow creates your custom OCI image and publishes it to the Github Container Registry (GHCR). By default, the image name will match the Github repository name.
+- [Hyprland Atomic Solopasha ISO](https://juniorfox-net-isos.s3.sa-east-1.amazonaws.com/hyprland-atomic-git-virt-x86_64-40-latest.iso)
+- [Hyprland Atomic Solopasha ISO Checksum](https://juniorfox-net-isos.s3.sa-east-1.amazonaws.com/hyprland-atomic-git-virt-x86_64-40-latest.iso-CHECKSUM)
 
-#### Container Signing
+## Rebase
 
-Container signing is important for end-user security and is enabled on all Universal Blue images. It is recommended you set this up, and by default the image builds *will fail* if you don't.
+If you're using Silverblue or alike, you can rebase to this repository doing the following:
 
-This provides users a method of verifying the image.
+```sh
+rpm-ostree rebase ostree-unverified-registry:ghcr.io/cjuniorfox/hyprland-atomic-fedora:latest
+```
 
-1. Install the [cosign CLI tool](https://edu.chainguard.dev/open-source/sigstore/cosign/how-to-install-cosign/#installing-cosign-with-the-cosign-binary)
+## Features
 
-2. Run inside your repo folder:
+- **Immutable System**: Built on Fedora Atomic, ensuring a stable and secure environment.
+- **Hyprland Compositor**: Utilizes Hyprland for a modern and efficient desktop experience.
+- **Pre-installed Packages**: Comes with a set of pre-installed packages tailored for a seamless user experience.
+- **Containerized Applications**: Leverages container technology for application management and isolation.
 
-    ```bash
-    cosign generate-key-pair
-    ```
+## Prerequisites
 
-    
-    - Do NOT put in a password when it asks you to, just press enter. The signing key will be used in GitHub Actions and will not work if it is encrypted.
+To fully utilize this distribution, it is recommended to have a working knowledge in the following areas:
 
-> [!WARNING]
-> Be careful to *never* accidentally commit `cosign.key` into your git repo.
+- Containers: [Introduction to Containers](https://www.youtube.com/watch?v=SnSH8Ht3MIc)
+- rpm-ostree: [rpm-ostree Documentation](https://coreos.github.io/rpm-ostree/container/)
+- Fedora Silverblue: [Fedora Silverblue Documentation](https://docs.fedoraproject.org/en-US/fedora-silverblue/)
+- GitHub Workflows: [GitHub Actions Documentation](https://docs.github.com/en/actions/using-workflows)
 
-3. Add the private key to GitHub
+## How to Use
 
-    - This can also be done manually. Go to your repository settings, under Secrets and Variables -> Actions
-    ![image](https://user-images.githubusercontent.com/1264109/216735595-0ecf1b66-b9ee-439e-87d7-c8cc43c2110a.png)
-    Add a new secret and name it `SIGNING_SECRET`, then paste the contents of `cosign.key` into the secret and save it. Make sure it's the .key file and not the .pub file. Once done, it should look like this:
-    ![image](https://user-images.githubusercontent.com/1264109/216735690-2d19271f-cee2-45ac-a039-23e6a4c16b34.png)
+1. **Download the ISO**: Use the download links provided above to get the latest version of the Hyprland Atomic ISO.
+2. **Verify the ISO**: Use the checksum link to verify the integrity of the downloaded ISO.
+3. **Create a Bootable USB**: Use tools like `dd` or `Rufus` to create a bootable USB drive from the ISO.
+4. **Install the Distribution**: Boot from the USB drive and follow the installation instructions to set up Hyprland Atomic on your system.
 
-    - (CLI instructions) If you have the `github-cli` installed, run:
+## Contributing
 
-    ```bash
-    gh secret set SIGNING_SECRET < cosign.key
-    ```
+We welcome contributions to improve this project. Feel free to open issues or submit pull requests on our GitHub repository.
 
-4. Commit the `cosign.pub` file into your git repository
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
+
+## Acknowledgements
+
+This project is inspired by the Universal Blue Project and leverages various open-source technologies to deliver a robust and modern desktop experience.
