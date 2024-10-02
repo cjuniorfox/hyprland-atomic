@@ -20,7 +20,7 @@
         contents: read
         packages: write
         id-token: write
-      name: "Build and Push Fedora Version"
+      name: "Build Fedora"
       uses: ./.github/workflows/build-push.yml
       with:
         image_name: "${{ github.event.repository.name }}-fedora"
@@ -36,7 +36,7 @@
         contents: read
         packages: write
         id-token: write
-      name: "Build and Push"
+      name: "Build Solopasha"
       uses: ./.github/workflows/build-push.yml
       with:
         image_name: "${{ github.event.repository.name }}-solopasha"  
@@ -52,7 +52,7 @@
         contents: read
         packages: write
         id-token: write
-      name: "Build and Push"
+      name: "Build Git"
       uses: ./.github/workflows/build-push.yml
       with:
         image_name: "${{ github.event.repository.name }}-git"  
@@ -68,7 +68,7 @@
         contents: read
         packages: write
         id-token: write
-      name: "Build and Push"
+      name: "Build Solopasha Virtualization"
       uses: ./.github/workflows/build-push.yml
       with:
         image_name: "${{ github.event.repository.name }}-solopasha-virtualization"  
@@ -85,7 +85,7 @@
         contents: read
         packages: write
         id-token: write
-      name: "Build and Push"
+      name: "Build Git Virtualization"
       uses: ./.github/workflows/build-push.yml
       with:
         image_name: "${{ github.event.repository.name }}-solopasha-virtualization"  
