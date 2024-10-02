@@ -9,6 +9,9 @@
             type: string
           image_registry:
             type: string
+        secrets:
+            SIGNING_SECRET:
+                required: true
     
     jobs:
       build_push:
