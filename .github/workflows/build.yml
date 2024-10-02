@@ -97,7 +97,8 @@
       secrets:
         SIGNING_SECRET: ${{ secrets.SIGNING_SECRET }}
   
-    build_iso:
+    build_fedora_iso:
+      name: "Build ISO for Fedora"
       uses: ./.github/workflows/build-iso.yml
       needs: build_fedora
       with:
@@ -106,14 +107,15 @@
         image_tag: "latest"
         version: 40
   
-    upload_iso_to_s3:
+    upload_fedora_iso_to_s3:
+      name: "Upload Fedora ISO to S3"
       uses: ./.github/workflows/upload-iso-to-s3.yml
-      needs: build_iso
+      needs: build_fedora_iso
       secrets:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       with:
         s3_bucket: juniorfox-net-isos
         aws_region: sa-east-1
-        iso_name: ${{ needs.build_iso.outputs.iso_name }}
-        checksum: ${{ needs.build_iso.outputs.checksum }}
+        iso_name: ${{ needs.build_fedora_iso.outputs.iso_name }}
+        checksum: ${{ needs.build_fedora_iso.outputs.checksum }}
