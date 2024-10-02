@@ -2,9 +2,25 @@
   name: build-iso
   on: 
     workflow_call:
-
+      inputs:
+        arch:
+          type: string
+          default: x86_64
+        image_name:
+          type: string
+          required: true
+        image_repo:
+          type: string
+          required: true
+        image_tag:
+          type: string
+          default: latest
+        variant:
+          type: string
+          default: base-main
+        version:
+          type: number
   jobs:
-    
     build_iso:
       name: Build Installer ISO
       runs-on: ubuntu-latest
@@ -13,12 +29,12 @@
         checksum: ${{ steps.build_iso.outputs.iso_name }}-CHECKSUM
   
       env:
-        ARCH: x86_64
-        IMAGE_NAME: hyprland-atomic
-        IMAGE_REPO: ghcr.io/cjuniorfox
-        IMAGE_TAG: latest
-        VARIANT: base-main
-        VERSION: 40
+        ARCH: ${{ inputs.arch }}
+        IMAGE_NAME: ${{ inputs.image_name }}
+        IMAGE_REPO: ${{ inputs.image_repo }} #ghcr.io/cjuniorfox
+        IMAGE_TAG: ${{ inputs.image_tag }}
+        VARIANT: ${{ inputs.variant }}
+        VERSION: ${{ inputs.version }}
 
       steps:
         - name: Checkout Push to Registry action

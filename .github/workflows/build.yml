@@ -15,23 +15,46 @@
     workflow_dispatch:
   
   jobs:
-    build_push:
+    build_fedora:
+      name: "Build and Push Fedora Version"
+      uses: ./.github/workflows/build-push.yml
+      with:
+        image_name: "${{ github.event.repository.name }}-fedora"
+        image_desc: "Hyprland Shell Blue Image"
+        image_registry: "ghcr.io/${{ github.repository_owner }}"
+        hyprland_build: "fedora"
+      secrets:
+        SIGNING_SECRET: ${{ secrets.SIGNING_SECRET }}
+
+    build_solopasha:
       name: "Build and Push"
       uses: ./.github/workflows/build-push.yml
       with:
-        image_name: "${{ github.event.repository.name }}"  
+        image_name: "${{ github.event.repository.name }}-solopasha"  
         image_desc: "Hyprland Shell Blue Image"
         image_registry: "ghcr.io/${{ github.repository_owner }}"
+        hyprland_build: "solopasha"
       secrets:
         SIGNING_SECRET: ${{ secrets.SIGNING_SECRET }}
-      permissions:
-        contents: read
-        packages: write
-        id-token: write
+      
+    build_git:
+      name: "Build and Push"
+      uses: ./.github/workflows/build-push.yml
+      with:
+        image_name: "${{ github.event.repository.name }}-git"  
+        image_desc: "Hyprland Shell Blue Image"
+        image_registry: "ghcr.io/${{ github.repository_owner }}"
+        hyprland_build: "gut"
+      secrets:
+        SIGNING_SECRET: ${{ secrets.SIGNING_SECRET }}
   
     build_iso:
       uses: ./.github/workflows/build-iso.yml
-      needs: build_push
+      needs: build_fedora
+      with:
+        image_name: "${{ github.event.repository.name }}-fedora"
+        image_repo: "ghcr.io/cjuniorfox"
+        image_tag: "latest"
   
     upload_iso_to_s3:
       uses: ./.github/workflows/upload-iso-to-s3.yml
