@@ -4,6 +4,10 @@ set -ouex pipefail
 
 RELEASE="$(rpm -E %fedora)"
 
+echo "Hyprland Build: ${HYPRLAND_BUILD}"
+echo "Virtualization: ${VIRTUALIZATION}"
+echo "Fedora version: ${RELEASE}"
+
 # Install RPM packages
 rpm-ostree install \
     adwaita-blue-gtk-theme \
