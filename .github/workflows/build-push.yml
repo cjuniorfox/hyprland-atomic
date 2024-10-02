@@ -26,10 +26,6 @@ jobs:
   build_push:
     name: Build and push image
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
-      id-token: write
 
     env:
       MY_IMAGE_NAME: "${{ inputs.image_name }}"

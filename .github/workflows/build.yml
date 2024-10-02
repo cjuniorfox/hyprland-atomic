@@ -16,6 +16,10 @@
   
   jobs:
     build_fedora:
+      permissions:
+        contents: read
+        packages: write
+        id-token: write
       name: "Build and Push Fedora Version"
       uses: ./.github/workflows/build-push.yml
       with:
@@ -28,6 +32,10 @@
         SIGNING_SECRET: ${{ secrets.SIGNING_SECRET }}
 
     build_solopasha:
+      permissions:
+        contents: read
+        packages: write
+        id-token: write
       name: "Build and Push"
       uses: ./.github/workflows/build-push.yml
       with:
@@ -40,6 +48,10 @@
         SIGNING_SECRET: ${{ secrets.SIGNING_SECRET }}
       
     build_git:
+      permissions:
+        contents: read
+        packages: write
+        id-token: write
       name: "Build and Push"
       uses: ./.github/workflows/build-push.yml
       with:
