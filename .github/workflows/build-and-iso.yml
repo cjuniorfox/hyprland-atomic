@@ -16,7 +16,7 @@ on:
 jobs:
   set_image_name:
     outputs:
-        image_name: ${{ steps.image_name.outputs.image_name }}
+      image_name: ${{ steps.image_name.outputs.image_name }}
     name: "Set image name"
     runs-on: ubuntu-latest
     steps:
@@ -24,10 +24,11 @@ jobs:
         id: image_name
         run: |
           if [ "${{ inputs.virtualization }}" == "yes" ]; then
-            echo "image_name=${{ github.event.repository.name }}-${{ inputs.variation }}-virt" >> $GITHUB_ENV
+            IMAGE_NAME="${{ github.event.repository.name }}-${{ inputs.variation }}-virt"
           else
-            echo "image_name=${{ github.event.repository.name }}-${{ inputs.variation }}" >> $GITHUB_ENV
+            IMAGE_NAME="${{ github.event.repository.name }}-${{ inputs.variation }}"
           fi
+          echo "image_name=$IMAGE_NAME" >> $GITHUB_OUTPUT  # Set the output for the step
 
   build:
     permissions:
@@ -41,7 +42,7 @@ jobs:
       image_name: "${{ needs.set_image_name.outputs.image_name }}"
       image_desc: "Hyprland Shell Blue Image ${{ inputs.variation }}"
       image_registry: "ghcr.io/${{ github.repository_owner }}"
-      hyprland_build: ${{inputs.variation}}
+      hyprland_build: ${{ inputs.variation }}
       source_tag: ${{ inputs.version }}
       virtualization: ${{ inputs.virtualization }}
     secrets:
@@ -50,7 +51,7 @@ jobs:
   build_iso:
     name: "Build ISO for Fedora"
     uses: ./.github/workflows/build-iso.yml
-    needs: 
+    needs:
       - build
       - set_image_name
     with:
