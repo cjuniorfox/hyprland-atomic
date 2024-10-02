@@ -23,6 +23,7 @@
         image_desc: "Hyprland Shell Blue Image"
         image_registry: "ghcr.io/${{ github.repository_owner }}"
         hyprland_build: "fedora"
+        source_tag: 40
       secrets:
         SIGNING_SECRET: ${{ secrets.SIGNING_SECRET }}
 
@@ -34,6 +35,7 @@
         image_desc: "Hyprland Shell Blue Image"
         image_registry: "ghcr.io/${{ github.repository_owner }}"
         hyprland_build: "solopasha"
+        source_tag: 40
       secrets:
         SIGNING_SECRET: ${{ secrets.SIGNING_SECRET }}
       
@@ -44,7 +46,8 @@
         image_name: "${{ github.event.repository.name }}-git"  
         image_desc: "Hyprland Shell Blue Image"
         image_registry: "ghcr.io/${{ github.repository_owner }}"
-        hyprland_build: "gut"
+        hyprland_build: "git"
+        source_tag: 40
       secrets:
         SIGNING_SECRET: ${{ secrets.SIGNING_SECRET }}
   
@@ -55,6 +58,7 @@
         image_name: "${{ github.event.repository.name }}-fedora"
         image_repo: "ghcr.io/cjuniorfox"
         image_tag: "latest"
+        version: 40
   
     upload_iso_to_s3:
       uses: ./.github/workflows/upload-iso-to-s3.yml
