@@ -43,11 +43,11 @@ jobs:
           aws s3 cp "./iso-output/${{ env.ISO_NAME }}" "s3://${{ env.S3_BUCKET }}/${{ env.ISO_NAME }}"
           aws s3 cp "./iso-output/${{ env.CHECKSUM }}" "s3://${{ env.S3_BUCKET }}/${{ env.CHECKSUM }}"
 
-          - name: Make ISO public
-          id: make_public
-          run : |
-            aws s3api put-object-acl --bucket ${{ env.S3_BUCKET }} --key "${{ env.ISO_NAME }}" --acl public-read
-            aws s3api put-object-acl --bucket ${{ env.S3_BUCKET }} --key "${{ env.CHECKSUM }}" --acl public-read
+      - name: Make ISO public
+        id: make_public
+        run : |
+          aws s3api put-object-acl --bucket ${{ env.S3_BUCKET }} --key "${{ env.ISO_NAME }}" --acl public-read
+          aws s3api put-object-acl --bucket ${{ env.S3_BUCKET }} --key "${{ env.CHECKSUM }}" --acl public-read
         
       - name: Output ISO url
         id: upload_iso_url
