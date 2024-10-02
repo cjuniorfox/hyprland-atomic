@@ -1,0 +1,142 @@
+---
+name: "Container image"
+on: 
+  workflow_call:
+    inputs:
+      image_name:
+        type: string
+      image_desc:
+        type: string
+      image_registry:
+        type: string
+      hyprland_build:
+        type: string
+        default: "fedora"
+      virtualization:
+        type: string
+        default: "no"
+      source_tag:
+        type: number
+        default: 40
+    secrets:
+        SIGNING_SECRET:
+            required: true
+
+jobs:
+  image:
+    name: Build and push Image
+    runs-on: ubuntu-latest
+
+    env:
+      MY_IMAGE_NAME: "${{ inputs.image_name }}"
+      MY_IMAGE_DESC: "${{ inputs.image_desc }}"
+      IMAGE_REGISTRY: "${{ inputs.image_registry }}"
+
+    steps:
+      # Checkout push-to-registry action GitHub repository
+      - name: Checkout Push to Registry action
+        uses: actions/checkout@v4  
+
+      - name: Generate tags
+        id: generate-tags
+        shell: bash
+        run: |
+          # Generate a timestamp for creating an image version history
+          TIMESTAMP="$(date +%Y%m%d)"
+          COMMIT_TAGS=()
+          BUILD_TAGS=()  
+          # Have tags for tracking builds during pull request
+          SHA_SHORT="${GITHUB_SHA::7}"
+          COMMIT_TAGS+=("pr-${{ github.event.number }}")
+          COMMIT_TAGS+=("${SHA_SHORT}")  
+          # Append matching timestamp tags to keep a version history
+          for TAG in "${BUILD_TAGS[@]}"; do
+              BUILD_TAGS+=("${TAG}-${TIMESTAMP}")
+          done  
+          BUILD_TAGS+=("${TIMESTAMP}")
+          BUILD_TAGS+=("latest")  
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+              echo "Generated the following commit tags: "
+              for TAG in "${COMMIT_TAGS[@]}"; do
+                  echo "${TAG}"
+              done  
+              alias_tags=("${COMMIT_TAGS[@]}")
+          else
+              alias_tags=("${BUILD_TAGS[@]}")
+          fi  
+          echo "Generated the following build tags: "
+          for TAG in "${BUILD_TAGS[@]}"; do
+              echo "${TAG}"
+          done  
+          echo "alias_tags=${alias_tags[*]}" >> $GITHUB_OUTPUT  
+
+      # Build metadata
+      - name: Image Metadata
+        uses: docker/metadata-action@v5
+        id: meta
+        with:
+          images: |
+            ${{ env.MY_IMAGE_NAME }}  
+          labels: |
+            io.artifacthub.package.readme-url=https://raw.githubusercontent.com/${{ github.repository }}/main/README.md
+            org.opencontainers.image.description=${{ env.MY_IMAGE_DESC }}
+            org.opencontainers.image.title=${{ env.MY_IMAGE_NAME }}  
+
+      # Build image using Buildah action
+      - name: Build Image
+        id: build_image
+        uses: redhat-actions/buildah-build@v2
+        with:
+          containerfiles: |
+            ./Containerfile
+          image: ${{ env.MY_IMAGE_NAME }}
+          tags: |
+            ${{ steps.generate-tags.outputs.alias_tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          oci: false
+          build-args: |
+            HYPRLAND_BUILD=${{inputs.hyprland_build}}
+            VIRTUALIZATION=${{inputs.virtualization}}
+            SOURCE_TAG=${{ inputs.source_tag }}
+
+      # Workaround bug where capital letters in your GitHub username make it impossible to push to GHCR.
+      - name: Lowercase Registry
+        id: registry_case
+        uses: ASzc/change-string-case-action@v6
+        with:
+          string: ${{ env.IMAGE_REGISTRY }}  
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}  
+
+      - name: Push Image to GHCR
+        uses: redhat-actions/push-to-registry@v2
+        id: push
+        env:
+          REGISTRY_USER: ${{ github.actor }}
+          REGISTRY_PASSWORD: ${{ github.token }}
+        with:
+          image: ${{ steps.build_image.outputs.image }}
+          tags: ${{ steps.build_image.outputs.tags }}
+          registry: ${{ steps.registry_case.outputs.lowercase }}
+          username: ${{ env.REGISTRY_USER }}
+          password: ${{ env.REGISTRY_PASSWORD }}
+          extra-args: |
+            --disable-content-trust  
+
+      # Sign container
+      - uses: sigstore/cosign-installer@v3.6.0
+        if: github.event_name != 'pull_request'  
+
+      - name: Sign container image
+        if: github.event_name != 'pull_request'
+        run: |
+          cosign sign -y --key env://COSIGN_PRIVATE_KEY ${{ steps.registry_case.outputs.lowercase }}/${{ steps.build_image.outputs.image }}@${TAGS}
+        env:
+          TAGS: ${{ steps.push.outputs.digest }}
+          COSIGN_EXPERIMENTAL: false
+          COSIGN_PRIVATE_KEY: ${{ secrets.SIGNING_SECRET }}
