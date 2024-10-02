@@ -40,7 +40,6 @@ rpm-ostree install \
     socat \
     swaybg \
     swayidle \
-    swaylock \
     system-config-printer \
     polkit-gnome \
     tldr \
@@ -52,19 +51,9 @@ rpm-ostree install \
     yaru-{gtk2,gtk3,gtk4,icon,sound}-theme \
     wl-clipboard
 
-# Add COPR repositories
-for i in cjuniorfox/hyprland-shell solopasha/hyprland tofik/sway; do
-    MAINTAINER="${i%%/*}"
-    REPOSITORY="${i##*/}"
-    curl --output-dir "/etc/yum.repos.d/" --remote-name \
-    "https://copr.fedorainfracloud.org/coprs/${MAINTAINER}/${REPOSITORY}/repo/fedora-${RELEASE}/${MAINTAINER}-${REPOSITORY}-fedora-${RELEASE}.repo"
-done
-
-#Install COPR packages from solopasha
-rpm-ostree install cliphist eww-git hyprshot waypaper
-
 if [[ "${VIRTUALIZATION}" == "yes" ]]; then
-    rpm-ostree install virt-install \
+  rpm-ostree install \
+    virt-install \
     libvirt-daemon-config-network \
     libvirt-daemon-kvm \
     qemu-kvm \
@@ -76,8 +65,9 @@ if [[ "${VIRTUALIZATION}" == "yes" ]]; then
     virt-top
 fi
 
+# Hyprland from Fedora repository
 if [[ "${HYPRLAND_BUILD}" == "fedora" ]]; then
-    rpm-ostree install hyprland
+    rpm-ostree install hyprland hyprlock
 fi
 
 # Add COPR repositories
@@ -91,10 +81,11 @@ done
 #Install COPR packages from solopasha
 rpm-ostree install cliphist eww-git hyprshot waypaper
 
+# Hyprland from solopasha
 if [[ "${HYPRLAND_BUILD}" == "git" ]]; then
-    rpm-ostree install hyprland-git
+    rpm-ostree install hyprland-git hyprlock
 elif [[ "${HYPRLAND_BUILD}" == "solopasha" ]]; then
-    rpm-ostree install hyprland
+    rpm-ostree install hyprland hyprlock
 fi
 
 #Install COPR packages from cjuniorfox/hyprland-shell
