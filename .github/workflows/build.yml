@@ -22,10 +22,13 @@
           image_name: "${{ github.event.repository.name }}"  
           image_desc: "Hyprland Shell Blue Image"
           image_registry: "ghcr.io/${{ github.repository_owner }}"
+        secrets:
+          SIGNING_SECRET: ${{ secrets.SIGNING_SECRET }}
         permissions:
           contents: read
           packages: write
           id-token: write
+        
     
       build_iso:
         uses: ./.github/workflows/build-iso.yml
