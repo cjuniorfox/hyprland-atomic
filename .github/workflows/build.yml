@@ -43,7 +43,7 @@ jobs:
     name: "Build Git"
     uses: ./.github/workflows/build-and-iso.yml
     with:
-      variation: "fedora"
+      variation: "git"
       version: 40
       virtualization: "no"
     permissions:
@@ -67,7 +67,7 @@ jobs:
     name: "Build Git with Virtualization"
     uses: ./.github/workflows/build-and-iso.yml
     with:
-      variation: "fedora"
+      variation: "git"
       version: 40
       virtualization: "yes"
     permissions:
