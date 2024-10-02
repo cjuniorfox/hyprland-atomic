@@ -11,10 +11,10 @@ on:
         type: string
       hyprland_build:
         type: string
-        default: "fedora"
+        required: true
       virtualization:
         type: string
-        default: "no"
+        required: true
       source_tag:
         type: number
         default: 40

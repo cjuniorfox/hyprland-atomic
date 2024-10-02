@@ -12,14 +12,14 @@ on:
       
     inputs:
       hyprland_build:
-        default: "fedora"
         type: string
+        required: true
       version:
         type: number
         required: true
       virtualization:
         type: string
-        default: "no"
+        required: true
 
 jobs:
   set_image_name:
