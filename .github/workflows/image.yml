@@ -1,5 +1,5 @@
 ---
-name: build-push
+name: "Container image"
 on: 
   workflow_call:
     inputs:
@@ -23,8 +23,8 @@ on:
             required: true
 
 jobs:
-  build_push:
-    name: Build and push image
+  image:
+    name: Build and push Image
     runs-on: ubuntu-latest
 
     env:

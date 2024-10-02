@@ -1,5 +1,5 @@
 ---
-name: build-ublue-hyprland
+name: "Image and ISO"
 on:
   workflow_call:
     inputs:
@@ -32,7 +32,7 @@ jobs:
 
   build:
     name: "Build Fedora"
-    uses: ./.github/workflows/build-push.yml
+    uses: ./.github/workflows/image.yml
     needs: set_image_name
     with:
       image_name: "${{ needs.set_image_name.outputs.image_name }}"
@@ -46,7 +46,7 @@ jobs:
 
   build_iso:
     name: "Build ISO for Fedora"
-    uses: ./.github/workflows/build-iso.yml
+    uses: ./.github/workflows/iso.yml
     needs:
       - build
       - set_image_name

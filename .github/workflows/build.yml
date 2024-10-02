@@ -1,5 +1,5 @@
 ---
-name: build-ublue-hyprland
+name: "Build Ublue Hyprland"
 on:
   pull_request:
     branches:
@@ -14,9 +14,9 @@ on:
   workflow_dispatch:
 
 jobs:
-  build_main:
-    name: "Build Main"
-    uses: ./.github/workflows/build-and-iso.yml
+  fedora:
+    name: "Fedora"
+    uses: ./.github/workflows/image-and-iso.yml
     with:
       variation: "fedora"
       version: 40
@@ -26,9 +26,9 @@ jobs:
       packages: write
       id-token: write
 
-  build_solopasha:
-    name: "Build Solopasha"
-    uses: ./.github/workflows/build-and-iso.yml
+  solopasha:
+    name: "Solopasha"
+    uses: ./.github/workflows/image-and-iso.yml
     with:
       variation: "solopasha"
       version: 40
@@ -38,9 +38,9 @@ jobs:
       packages: write
       id-token: write
 
-  build_git:
-    name: "Build Git"
-    uses: ./.github/workflows/build-and-iso.yml
+  git:
+    name: "Git"
+    uses: ./.github/workflows/image-and-iso.yml
     with:
       variation: "git"
       version: 40
@@ -50,9 +50,21 @@ jobs:
       packages: write
       id-token: write
 
-  build_solopasha_virt:
-    name: "Build Solopasha with Virtualization"
-    uses: ./.github/workflows/build-and-iso.yml
+  fedora_virt:
+    name: "Fedora Virtualization"
+    uses: ./.github/workflows/image-and-iso.yml
+    with:
+      variation: "fedora"
+      version: 40
+      virtualization: "yes"
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+
+  solopasha_virt:
+    name: "Solopasha Virtualization"
+    uses: ./.github/workflows/image-and-iso.yml
     with:
       variation: "solopasha"
       version: 40
@@ -62,9 +74,9 @@ jobs:
       packages: write
       id-token: write
 
-  build_git_virt:
-    name: "Build Git with Virtualization"
-    uses: ./.github/workflows/build-and-iso.yml
+  git_virt:
+    name: "Git Virtualization"
+    uses: ./.github/workflows/image-and-iso.yml
     with:
       variation: "git"
       version: 40

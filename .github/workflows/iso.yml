@@ -1,5 +1,5 @@
 ---
-  name: build-iso
+  name: Installer ISO
   on: 
     workflow_call:
       inputs:
@@ -22,11 +22,11 @@
           type: number
       outputs:
         iso_name: 
-          value: ${{ jobs.build_iso.outputs.iso_name }}
+          value: ${{ jobs.iso.outputs.iso_name }}
         checksum: 
-          value: ${{ jobs.build_iso.outputs.checksum }}
+          value: ${{ jobs.iso.outputs.checksum }}
   jobs:
-    build_iso:
+    iso:
       name: Build Installer ISO
       runs-on: ubuntu-latest
       outputs:
