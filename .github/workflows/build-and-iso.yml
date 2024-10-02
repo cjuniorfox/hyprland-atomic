@@ -35,7 +35,7 @@ jobs:
       packages: write
       id-token: write
     name: "Build Fedora"
-    uses: ./.github/workflows/builds/build-push.yml
+    uses: ./.github/workflows/build-push.yml
     needs: set_image_name
     with:
       image_name: "${{ needs.set_image_name.outputs.image_name }}"
@@ -49,7 +49,7 @@ jobs:
 
   build_iso:
     name: "Build ISO for Fedora"
-    uses: ./.github/workflows/builds/build-iso.yml
+    uses: ./.github/workflows/build-iso.yml
     needs: 
       - build
       - set_image_name
@@ -61,7 +61,7 @@ jobs:
 
   upload_iso_to_s3:
     name: "Upload Fedora ISO to S3"
-    uses: ./.github/workflows/builds/upload-iso-to-s3.yml
+    uses: ./.github/workflows/upload-iso-to-s3.yml
     needs: build_iso
     secrets:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
