@@ -2,11 +2,15 @@
   name: build-iso
   on: 
     workflow_call:
-  
+
   jobs:
+    
     build_iso:
       name: Build Installer ISO
       runs-on: ubuntu-latest
+      outputs:
+        iso_name: ${{ steps.build_iso.outputs.iso_name }}
+        checksum: ${{ steps.build_iso.outputs.iso_name }}-CHECKSUM
   
       env:
         ARCH: x86_64
@@ -15,18 +19,14 @@
         IMAGE_TAG: latest
         VARIANT: base-main
         VERSION: 40
-      
-      outputs:
-        iso_name: ${{ steps.build.outputs.iso_name }}
-        checksum: ${{ steps.build.outputs.iso_name }}-CHECKSUM
-  
+
       steps:
         - name: Checkout Push to Registry action
           uses: actions/checkout@v3 # Updated to latest stable version
   
         - name: Build ISO
           uses: jasonn3/build-container-installer@v1.2.2
-          id: build
+          id: build_iso
           with:
             arch: ${{ env.ARCH }}
             image_name: ${{ env.IMAGE_NAME }}
@@ -42,21 +42,21 @@
             flatpak_remote_refs: "com.github.tchx84.Flatseal org.gnome.Calculator org.gnome.Evince org.gnome.FileRoller org.gnome.FontManager org.gnome.Loupe org.gnome.TextEditor org.mozilla.firefox org.freedesktop.Platform.openh264/x86_64/2.3.1 org.freedesktop.Platform.ffmpeg-full/x86_64/22.08"
   
         - name: Move ISOs to Upload Directory
-          id: upload-directory
+          id: upload_directory
           shell: bash
           run: |
             ISO_UPLOAD_DIR=${{ github.workspace }}/upload
             mkdir ${ISO_UPLOAD_DIR}
-            mv ${{ steps.build.outputs.iso_path }}/${{ steps.build.outputs.iso_name }} ${ISO_UPLOAD_DIR}
-            mv ${{ steps.build.outputs.iso_path }}/${{ steps.build.outputs.iso_name }}-CHECKSUM ${ISO_UPLOAD_DIR}
+            mv ${{ steps.build_iso.outputs.iso_path }}/${{ steps.build_iso.outputs.iso_name }} ${ISO_UPLOAD_DIR}
+            mv ${{ steps.build_iso.outputs.iso_path }}/${{ steps.build_iso.outputs.iso_name }}-CHECKSUM ${ISO_UPLOAD_DIR}
             echo "iso-upload-dir=${ISO_UPLOAD_DIR}" >> $GITHUB_OUTPUT
             
         - name: Upload ISO as artifact
           id: upload
           uses: actions/upload-artifact@v4
           with:
-            name: ${{ steps.build.outputs.iso_name }}
-            path: ${{ steps.upload-directory.outputs.iso-upload-dir }}
+            name: ${{ steps.build_iso.outputs.iso_name }}
+            path: ${{ steps.upload_directory.outputs.iso-upload-dir }}
             if-no-files-found: error
             retention-days: 1 # Updated to a valid retention period
   
