@@ -37,8 +37,10 @@
       uses: ./.github/workflows/upload-iso-to-s3.yml
       needs: build_iso
       secrets:
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}  # Corrected secret reference
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}  # Corrected secret reference
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       with:
         s3_bucket: juniorfox-net-isos
-        aws_region: sa-east-1  # Corrected indentation
+        aws_region: sa-east-1
+        iso_name: ${{ needs.build_iso.outputs.iso_name }}
+        checksum: ${{ needs.build_iso.outputs.checksum }}
