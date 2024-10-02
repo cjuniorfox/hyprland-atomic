@@ -12,9 +12,9 @@ on:
       checksum:
         type: string
     secrets:
-      aws_access_key_id:
+      AWS_ACCESS_KEY_ID:
         required: true
-      aws_secret_access_key:
+      AWS_SECRET_ACCESS_KEU:
         required: true
 
 jobs:
@@ -22,8 +22,8 @@ jobs:
     name: Publish ISO Installer
     runs-on: ubuntu-latest
     env:
-      AWS_ACCESS_KEY_ID: ${{ secrets.aws_access_key_id }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.aws_secret_access_key }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       S3_BUCKET: ${{inputs.s3_bucket}}
       AWS_REGION: ${{inputs.aws_region}}
       ISO_NAME: ${{ inputs.iso_name }}
