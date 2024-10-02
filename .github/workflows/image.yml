@@ -11,10 +11,10 @@ on:
         type: string
       hyprland_build:
         type: string
-        required: true
+        default: "fedora"
       virtualization:
         type: string
-        required: true
+        default: "no"
       source_tag:
         type: number
         default: 40
@@ -95,9 +95,9 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           oci: false
           build-args: |
-            HYPRLAND_BUILD:${{inputs.hyprland_build}}
-            VIRTUALIZATION:${{inputs.virtualization}}
-            SOURCE_TAG: ${{ inputs.source_tag }}
+            HYPRLAND_BUILD=${{inputs.hyprland_build}}
+            VIRTUALIZATION=${{inputs.virtualization}}
+            SOURCE_TAG=${{ inputs.source_tag }}
 
       # Workaround bug where capital letters in your GitHub username make it impossible to push to GHCR.
       - name: Lowercase Registry
