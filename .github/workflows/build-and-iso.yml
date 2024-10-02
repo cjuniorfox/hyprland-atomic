@@ -1,0 +1,73 @@
+---
+name: build-ublue-hyprland
+on:
+  workflow_call:
+    inputs:
+      variation:
+        default: "fedora"
+        type: string
+      version:
+        type: number
+        required: true
+      virtualization:
+        type: string
+        default: "no"
+
+jobs:
+  set_image_name:
+    outputs:
+        image_name: ${{ steps.image_name.outputs.image_name }}
+    name: "Set image name"
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Set image name"
+        id: image_name
+        run: |
+          if [ "${{ inputs.virtualization }}" == "yes" ]; then
+            echo "image_name=${{ github.event.repository.name }}-${{ inputs.variation }}-virt" >> $GITHUB_ENV
+          else
+            echo "image_name=${{ github.event.repository.name }}-${{ inputs.variation }}" >> $GITHUB_ENV
+          fi
+
+  build:
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+    name: "Build Fedora"
+    uses: ./.github/workflows/builds/build-push.yml
+    needs: set_image_name
+    with:
+      image_name: "${{ needs.set_image_name.outputs.image_name }}"
+      image_desc: "Hyprland Shell Blue Image ${{ inputs.variation }}"
+      image_registry: "ghcr.io/${{ github.repository_owner }}"
+      hyprland_build: ${{inputs.variation}}
+      source_tag: ${{ inputs.version }}
+      virtualization: ${{ inputs.virtualization }}
+    secrets:
+      SIGNING_SECRET: ${{ secrets.SIGNING_SECRET }}
+
+  build_iso:
+    name: "Build ISO for Fedora"
+    uses: ./.github/workflows/builds/build-iso.yml
+    needs: 
+      - build
+      - set_image_name
+    with:
+      image_name: "${{ needs.set_image_name.outputs.image_name }}"
+      image_repo: "ghcr.io/cjuniorfox"
+      image_tag: "latest"
+      version: ${{ inputs.version }}
+
+  upload_iso_to_s3:
+    name: "Upload Fedora ISO to S3"
+    uses: ./.github/workflows/builds/upload-iso-to-s3.yml
+    needs: build_iso
+    secrets:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    with:
+      s3_bucket: juniorfox-net-isos
+      aws_region: sa-east-1
+      iso_name: ${{ needs.build_iso.outputs.iso_name }}
+      checksum: ${{ needs.build_iso.outputs.checksum }}
