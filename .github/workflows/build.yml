@@ -62,6 +62,40 @@
         source_tag: 40
       secrets:
         SIGNING_SECRET: ${{ secrets.SIGNING_SECRET }}
+    
+    build_solopasha_virtualization:
+      permissions:
+        contents: read
+        packages: write
+        id-token: write
+      name: "Build and Push"
+      uses: ./.github/workflows/build-push.yml
+      with:
+        image_name: "${{ github.event.repository.name }}-solopasha-virtualization"  
+        image_desc: "Hyprland Shell Blue Image"
+        image_registry: "ghcr.io/${{ github.repository_owner }}"
+        hyprland_build: "solopasha"
+        virtualization: "yes"
+        source_tag: 40
+      secrets:
+        SIGNING_SECRET: ${{ secrets.SIGNING_SECRET }}
+    
+    build_git_virtualization:
+      permissions:
+        contents: read
+        packages: write
+        id-token: write
+      name: "Build and Push"
+      uses: ./.github/workflows/build-push.yml
+      with:
+        image_name: "${{ github.event.repository.name }}-solopasha-virtualization"  
+        image_desc: "Hyprland Shell Blue Image"
+        image_registry: "ghcr.io/${{ github.repository_owner }}"
+        hyprland_build: "git"
+        virtualization: "yes"
+        source_tag: 40
+      secrets:
+        SIGNING_SECRET: ${{ secrets.SIGNING_SECRET }}
   
     build_iso:
       uses: ./.github/workflows/build-iso.yml
