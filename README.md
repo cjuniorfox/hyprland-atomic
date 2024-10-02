@@ -23,28 +23,12 @@ You can download the latest version of the distribution and its checksum from th
 - [Hyprland Atomic Solopasha ISO](https://juniorfox-net-isos.s3.sa-east-1.amazonaws.com/hyprland-atomic-git-x86_64-40-latest.iso)
 - [Hyprland Atomic Solopasha ISO Checksum](https://juniorfox-net-isos.s3.sa-east-1.amazonaws.com/hyprland-atomic-git-x86_64-40-latest.iso-CHECKSUM)
 
-### Hyperland Solopasha 40 with Virtualization
-
-- [Hyprland Atomic Solopasha ISO](https://juniorfox-net-isos.s3.sa-east-1.amazonaws.com/hyprland-atomic-solopasha-virt-x86_64-40-latest.iso)
-- [Hyprland Atomic Solopasha ISO Checksum](https://juniorfox-net-isos.s3.sa-east-1.amazonaws.com/hyprland-atomic-solopasha-virt-x86_64-40-latest.iso-CHECKSUM)
-
-### Hyperland Git Build 40 with Virtualization
-
-- [Hyprland Atomic Solopasha ISO](https://juniorfox-net-isos.s3.sa-east-1.amazonaws.com/hyprland-atomic-git-virt-x86_64-40-latest.iso)
-- [Hyprland Atomic Solopasha ISO Checksum](https://juniorfox-net-isos.s3.sa-east-1.amazonaws.com/hyprland-atomic-git-virt-x86_64-40-latest.iso-CHECKSUM)
-
 ## Rebase
 
 If you're using Silverblue or alike, you can rebase to this repository doing the following:
 
 ```sh
 rpm-ostree rebase ostree-unverified-registry:ghcr.io/cjuniorfox/hyprland-atomic-fedora:latest
-```
-
-## Rebase
-If you're using Silverblue or alike, you can rebase to this repository doing the following:
-```sh
-rpm-ostree rebase ostree-unverified-registry:ghcr.io/cjuniorfox/hyprland-atomic:latest
 ```
 
 ## Features
