@@ -20,6 +20,11 @@
           default: base-main
         version:
           type: number
+      outputs:
+        iso_name: 
+          value: ${{ jobs.build_iso.outputs.iso_name }}
+        checksum: 
+          value: ${{ jobs.build_iso.outputs.checksum }}
   jobs:
     build_iso:
       name: Build Installer ISO
