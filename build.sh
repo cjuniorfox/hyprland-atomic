@@ -39,6 +39,7 @@ rpm-ostree install \
     pavucontrol \
     pulseaudio-utils \
     rofi-wayland \
+    rofimoji \
     sddm \
     seahorse \
     socat \
