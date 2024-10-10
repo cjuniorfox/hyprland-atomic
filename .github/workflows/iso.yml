@@ -43,7 +43,7 @@
 
       steps:
         - name: Checkout Push to Registry action
-          uses: actions/checkout@v3 # Updated to latest stable version
+          uses: actions/checkout@v4 # Updated to latest stable version
   
         - name: Build ISO
           uses: jasonn3/build-container-installer@v1.2.2
