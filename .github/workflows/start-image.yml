@@ -1,0 +1,49 @@
+---
+name: "Fedora Hyprland Releases"
+on:
+  schedule:
+    - cron: '05 10 * * *'  # 10:05am UTC every day
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - '**/README.md'
+  workflow_dispatch:
+
+jobs:
+  version_39:
+    name: "Version 39"
+    uses: './.github/workflows/build-image-variants.yml'
+    with:
+      version: 39
+    secrets:
+      SIGNING_SECRET: ${{ secrets.SIGNING_SECRET }}
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+
+  version_40:
+    name: "Version 40"
+    uses: './.github/workflows/build-image-variants.yml'
+    with:
+      version: 40
+    secrets:
+      SIGNING_SECRET: ${{ secrets.SIGNING_SECRET }}
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+
+  version_41:
+    name: "Version 41"
+    if: false
+    uses: './.github/workflows/build-image-variants.yml'
+    with:
+      version: 41
+    secrets:
+      SIGNING_SECRET: ${{ secrets.SIGNING_SECRET }}
+    permissions:
+      contents: read
+      packages: write
+      id-token: write

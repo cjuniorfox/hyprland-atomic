@@ -1,11 +1,8 @@
 ---
-name: "Build Ublue Hyprland"
+name: "Build ISO for Ublue Hyprland"
 on:
-  pull_request:
-    branches:
-      - main
   schedule:
-    - cron: '05 10 * * *'  # 10:05am UTC everyday
+    - cron: '05 12 * * 1/2'  # 12:05am UTC every two weeks on Monday
   push:
     branches:
       - main
@@ -14,15 +11,25 @@ on:
   workflow_dispatch:
 
 jobs:
-  fedora:
-    name: "Fedora"
-    uses: ./.github/workflows/image-and-iso.yml
+  version39:
+    name: "Fedora Hyprland ISO 39"
+    uses: "./.github/workflows/build-iso-variants.yml"
     with:
-      hyprland_build: "fedora"
-      version: 40
-      virtualization: "no"
+      version: 39
     secrets:
-      SIGNING_SECRET: ${{ secrets.SIGNING_SECRET }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+  
+  version40:
+    name: "Fedora Hyprland ISO 40"
+    uses: "./.github/workflows/build-iso-variants.yml"
+    with:
+      version: 40
+    secrets:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
     permissions:
@@ -30,31 +37,13 @@ jobs:
       packages: write
       id-token: write
 
-  solopasha:
-    name: "Solopasha"
-    uses: ./.github/workflows/image-and-iso.yml
+  version41:
+    name: "Fedora Hyprland ISO 41"
+    if: false
+    uses: "./.github/workflows/build-iso-variants.yml"
     with:
-      hyprland_build: "solopasha"
-      version: 40
-      virtualization: "no"
+      version: 41
     secrets:
-      SIGNING_SECRET: ${{ secrets.SIGNING_SECRET }}
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-    permissions:
-      contents: read
-      packages: write
-      id-token: write
-
-  git:
-    name: "Git"
-    uses: ./.github/workflows/image-and-iso.yml
-    with:
-      hyprland_build: "git"
-      version: 40
-      virtualization: "no"
-    secrets:
-      SIGNING_SECRET: ${{ secrets.SIGNING_SECRET }}
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
     permissions:
