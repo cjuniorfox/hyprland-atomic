@@ -12,6 +12,7 @@ on:
 
 jobs:
   version39:
+    if: false
     name: "Fedora Hyprland ISO 39"
     uses: "./.github/workflows/build-iso-variants.yml"
     with:
