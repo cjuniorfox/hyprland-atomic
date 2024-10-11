@@ -78,7 +78,7 @@ fi
 for i in cjuniorfox/hyprland-shell solopasha/hyprland tofik/sway; do
     MAINTAINER="${i%%/*}"
     REPOSITORY="${i##*/}"
-    curl --output-dir "/etc/yum.repos.d/" --remote-name \
+    curl --output "/etc/yum.repos.d/_copr:copr.fedorainfracloud.org:${MAINTAINER}:${REPOSITORY}.repo" --remote-name \
     "https://copr.fedorainfracloud.org/coprs/${MAINTAINER}/${REPOSITORY}/repo/fedora-${RELEASE}/${MAINTAINER}-${REPOSITORY}-fedora-${RELEASE}.repo"
 done
 
