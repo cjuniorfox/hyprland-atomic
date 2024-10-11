@@ -1,13 +1,11 @@
 name: "Build Ublue Hyprland"
 on:
-  pull_request:
-    branches:
-      - main
   schedule:
     - cron: '05 10 * * *'  # 10:05am UTC every day
   push:
     branches:
       - main
+      - develop
     paths-ignore:
       - '**/README.md'
   workflow_dispatch:
