@@ -1,0 +1,54 @@
+name: "Build ISO for Ublue Hyprland"
+on:
+  workflow_call: 
+    inputs:
+      version:
+        type: number
+        required: true
+        description: "Fedora version number"
+
+jobs:
+  fedora:
+    name: "Fedora ISO ${{inputs.version}}"
+    uses: ./.github/workflows/build-iso.yml
+    with:
+      hyprland_build: "fedora"
+      version: ${{inputs.version}}
+      virtualization: "no"
+    secrets:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+
+  solopasha:
+    name: "Solopasha ISO ${{inputs.version}}"
+    uses: ./.github/workflows/build-iso.yml
+    with:
+      hyprland_build: "solopasha"
+      version: ${{inputs.version}}
+      virtualization: "no"
+    secrets:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+
+  git:
+    name: "Git ISO ${{inputs.version}}"
+    uses: ./.github/workflows/build-iso.yml
+    with:
+      hyprland_build: "git"
+      version: ${{inputs.version}}
+      virtualization: "no"
+    secrets:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    permissions:
+      contents: read
+      packages: write
+      id-token: write

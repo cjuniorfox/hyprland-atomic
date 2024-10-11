@@ -1,4 +1,5 @@
-name: "Build Ublue Hyprland"
+---
+name: "Fedora Hyprland Releases"
 on:
   schedule:
     - cron: '05 10 * * *'  # 10:05am UTC every day
@@ -11,44 +12,18 @@ on:
   workflow_dispatch:
 
 jobs:
-  fedora:
-    name: "Fedora"
-    uses: ./.github/workflows/build-image.yml
+  version_39:
+    name: "Version 39"
+    uses: './.github/workflows/build-image-variants.yml'
     with:
-      hyprland_build: "fedora"
-      version: 40
-      virtualization: "no"
-    secrets:
-      SIGNING_SECRET: ${{ secrets.SIGNING_SECRET }}
-    permissions:
-      contents: read
-      packages: write
-      id-token: write
-
-  solopasha:
-    name: "Solopasha"
-    uses: ./.github/workflows/build-image.yml
+      version: 39
+  version_40:
+    name: "Version 40"
+    uses: './.github/workflows/build-image-variants.yml'
     with:
-      hyprland_build: "solopasha"
       version: 40
-      virtualization: "no"
-    secrets:
-      SIGNING_SECRET: ${{ secrets.SIGNING_SECRET }}
-    permissions:
-      contents: read
-      packages: write
-      id-token: write
-
-  git:
-    name: "Git"
-    uses: ./.github/workflows/build-image.yml
+  version_41:
+    name: "Version 41"
+    uses: './.github/workflows/build-image-variants.yml'
     with:
-      hyprland_build: "git"
-      version: 40
-      virtualization: "no"
-    secrets:
-      SIGNING_SECRET: ${{ secrets.SIGNING_SECRET }}
-    permissions:
-      contents: read
-      packages: write
-      id-token: write
+      version: 41

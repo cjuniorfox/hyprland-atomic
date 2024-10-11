@@ -1,0 +1,52 @@
+---
+name: "Build Ublue Hyprland"
+on:
+  workflow_call:
+    inputs:
+      version:
+        type: number
+        required: true
+        description: "Fedora version number"
+
+jobs:
+  fedora:
+    name: "Fedora ${{inputs.version}}"
+    uses: ./.github/workflows/build-image.yml
+    with:
+      hyprland_build: "fedora"
+      version: ${{inputs.version}}
+      virtualization: "no"
+    secrets:
+      SIGNING_SECRET: ${{ secrets.SIGNING_SECRET }}
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+
+  solopasha:
+    name: "Solopasha ${{inputs.version}}"
+    uses: ./.github/workflows/build-image.yml
+    with:
+      hyprland_build: "solopasha"
+      version: ${{inputs.version}}
+      virtualization: "no"
+    secrets:
+      SIGNING_SECRET: ${{ secrets.SIGNING_SECRET }}
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+
+  git:
+    name: "Git ${{inputs.version}}"
+    uses: ./.github/workflows/build-image.yml
+    with:
+      hyprland_build: "git"
+      version: ${{inputs.version}}
+      virtualization: "no"
+    secrets:
+      SIGNING_SECRET: ${{ secrets.SIGNING_SECRET }}
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
