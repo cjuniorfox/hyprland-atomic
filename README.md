@@ -8,20 +8,36 @@ This repository is dedicated to building and customizing a Universal Blue image 
 
 You can download the latest version of the distribution and its checksum from the following links:
 
+
+### Hyperland Fedora 39
+
+- [Hyprland Atomic Fedora ISO](https://juniorfox-net-isos.s3.sa-east-1.amazonaws.com/hyprland-atomic-fedora-x86_64-39.iso)
+- [Hyprland Atomic Fedora ISO Checksum](https://juniorfox-net-isos.s3.sa-east-1.amazonaws.com/hyprland-atomic-fedora-x86_64-39.iso-CHECKSUM)
+
+### Hyperland Solopasha 39
+
+- [Hyprland Atomic Solopasha ISO](https://juniorfox-net-isos.s3.sa-east-1.amazonaws.com/hyprland-atomic-solopasha-x86_64-39.iso)
+- [Hyprland Atomic Solopasha ISO Checksum](https://juniorfox-net-isos.s3.sa-east-1.amazonaws.com/hyprland-atomic-solopasha-x86_64-39.iso-CHECKSUM)
+
+### Hyperland Solopasha Git Build 39
+
+- [Hyprland Atomic Solopasha/Git ISO](https://juniorfox-net-isos.s3.sa-east-1.amazonaws.com/hyprland-atomic-git-x86_64-39.iso)
+- [Hyprland Atomic Solopasha/Git ISO Checksum](https://juniorfox-net-isos.s3.sa-east-1.amazonaws.com/hyprland-atomic-git-x86_64-39.iso-CHECKSUM)
+
 ### Hyperland Fedora 40
 
-- [Hyprland Atomic Fedora ISO](https://juniorfox-net-isos.s3.sa-east-1.amazonaws.com/hyprland-atomic-fedora-x86_64-40-latest.iso)
-- [Hyprland Atomic Fedora ISO Checksum](https://juniorfox-net-isos.s3.sa-east-1.amazonaws.com/hyprland-atomic-fedora-x86_64-40-latest.iso-CHECKSUM)
+- [Hyprland Atomic Fedora ISO](https://juniorfox-net-isos.s3.sa-east-1.amazonaws.com/hyprland-atomic-fedora-x86_64-40.iso)
+- [Hyprland Atomic Fedora ISO Checksum](https://juniorfox-net-isos.s3.sa-east-1.amazonaws.com/hyprland-atomic-fedora-x86_64-40.iso-CHECKSUM)
 
 ### Hyperland Solopasha 40
 
-- [Hyprland Atomic Solopasha ISO](https://juniorfox-net-isos.s3.sa-east-1.amazonaws.com/hyprland-atomic-solopasha-x86_64-40-latest.iso)
-- [Hyprland Atomic Solopasha ISO Checksum](https://juniorfox-net-isos.s3.sa-east-1.amazonaws.com/hyprland-atomic-solopasha-x86_64-40-latest.iso-CHECKSUM)
+- [Hyprland Atomic Solopasha ISO](https://juniorfox-net-isos.s3.sa-east-1.amazonaws.com/hyprland-atomic-solopasha-x86_64-40.iso)
+- [Hyprland Atomic Solopasha ISO Checksum](https://juniorfox-net-isos.s3.sa-east-1.amazonaws.com/hyprland-atomic-solopasha-x86_64-40.iso-CHECKSUM)
 
 ### Hyperland Solopasha Git Build 40
 
-- [Hyprland Atomic Solopasha/Git ISO](https://juniorfox-net-isos.s3.sa-east-1.amazonaws.com/hyprland-atomic-git-x86_64-40-latest.iso)
-- [Hyprland Atomic Solopasha/Git ISO Checksum](https://juniorfox-net-isos.s3.sa-east-1.amazonaws.com/hyprland-atomic-git-x86_64-40-latest.iso-CHECKSUM)
+- [Hyprland Atomic Solopasha/Git ISO](https://juniorfox-net-isos.s3.sa-east-1.amazonaws.com/hyprland-atomic-git-x86_64-40.iso)
+- [Hyprland Atomic Solopasha/Git ISO Checksum](https://juniorfox-net-isos.s3.sa-east-1.amazonaws.com/hyprland-atomic-git-x86_64-40.iso-CHECKSUM)
 
 ## Rebase
 
