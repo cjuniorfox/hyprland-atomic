@@ -27,6 +27,7 @@ jobs:
   solopasha:
     name: "Solopasha ISO ${{inputs.version}}"
     uses: ./.github/workflows/build-iso.yml
+    needs: fedora
     with:
       hyprland_build: "solopasha"
       version: ${{inputs.version}}
@@ -37,6 +38,7 @@ jobs:
   git:
     name: "Git ISO ${{inputs.version}}"
     uses: ./.github/workflows/build-iso.yml
+    needs: solopasha
     with:
       hyprland_build: "git"
       version: ${{inputs.version}}

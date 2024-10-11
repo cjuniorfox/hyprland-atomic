@@ -40,6 +40,7 @@ jobs:
 
   version41:
     name: "Fedora Hyprland ISO 41"
+    if: false
     uses: "./.github/workflows/build-iso-variants.yml"
     with:
       version: 41

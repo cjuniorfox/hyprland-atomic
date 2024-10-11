@@ -38,6 +38,7 @@ jobs:
 
   version_41:
     name: "Version 41"
+    if: false
     uses: './.github/workflows/build-image-variants.yml'
     with:
       version: 41
