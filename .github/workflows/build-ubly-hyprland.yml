@@ -17,13 +17,19 @@ jobs:
     uses: './.github/workflows/build-image-variants.yml'
     with:
       version: 39
+    secrets:
+      SIGNING_SECRET: ${{ secrets.SIGNING_SECRET }}
   version_40:
     name: "Version 40"
     uses: './.github/workflows/build-image-variants.yml'
     with:
       version: 40
+    secrets:
+      SIGNING_SECRET: ${{ secrets.SIGNING_SECRET }}
   version_41:
     name: "Version 41"
     uses: './.github/workflows/build-image-variants.yml'
     with:
       version: 41
+    secrets:
+      SIGNING_SECRET: ${{ secrets.SIGNING_SECRET }}
