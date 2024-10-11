@@ -21,10 +21,6 @@ jobs:
       virtualization: "no"
     secrets:
       SIGNING_SECRET: ${{ secrets.SIGNING_SECRET }}
-    permissions:
-      contents: read
-      packages: write
-      id-token: write
 
   solopasha:
     name: "Solopasha ${{inputs.version}}"
@@ -35,10 +31,6 @@ jobs:
       virtualization: "no"
     secrets:
       SIGNING_SECRET: ${{ secrets.SIGNING_SECRET }}
-    permissions:
-      contents: read
-      packages: write
-      id-token: write
 
   git:
     name: "Git ${{inputs.version}}"
@@ -49,7 +41,3 @@ jobs:
       virtualization: "no"
     secrets:
       SIGNING_SECRET: ${{ secrets.SIGNING_SECRET }}
-    permissions:
-      contents: read
-      packages: write
-      id-token: write
