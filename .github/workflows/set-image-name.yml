@@ -1,0 +1,34 @@
+---
+on:
+  workflow_call:
+    inputs:
+      hyprland_build:
+        default: "fedora"
+        type: string
+      version:
+        type: number
+        required: true
+      virtualization:
+        type: string
+        default: "no"
+    outputs:
+      image_name:
+        description: "Output image name"
+        value: ${{ jobs.set_image_name.outputs.image_name }}
+
+jobs:
+  set_image_name:
+    name: "Set image name"
+    outputs:
+      image_name: ${{ steps.image_name.outputs.image_name }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Set image name"
+        id: image_name
+        run: |
+          if [ "${{ inputs.virtualization }}" == "yes" ]; then
+            IMAGE_NAME="${{ github.event.repository.name }}-${{ inputs.hyprland_build }}-virt"
+          else
+            IMAGE_NAME="${{ github.event.repository.name }}-${{ inputs.hyprland_build }}"
+          fi
+          echo "image_name=" >>   # Set the output for the step

@@ -1,11 +1,10 @@
----
 name: "Build Ublue Hyprland"
 on:
   pull_request:
     branches:
       - main
   schedule:
-    - cron: '05 10 * * *'  # 10:05am UTC everyday
+    - cron: '05 10 * * *'  # 10:05am UTC every day
   push:
     branches:
       - main
@@ -16,15 +15,13 @@ on:
 jobs:
   fedora:
     name: "Fedora"
-    uses: ./.github/workflows/image-and-iso.yml
+    uses: ./.github/workflows/build-image.yml
     with:
       hyprland_build: "fedora"
       version: 40
       virtualization: "no"
     secrets:
       SIGNING_SECRET: ${{ secrets.SIGNING_SECRET }}
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
     permissions:
       contents: read
       packages: write
@@ -32,15 +29,13 @@ jobs:
 
   solopasha:
     name: "Solopasha"
-    uses: ./.github/workflows/image-and-iso.yml
+    uses: ./.github/workflows/build-image.yml
     with:
       hyprland_build: "solopasha"
       version: 40
       virtualization: "no"
     secrets:
       SIGNING_SECRET: ${{ secrets.SIGNING_SECRET }}
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
     permissions:
       contents: read
       packages: write
@@ -48,15 +43,13 @@ jobs:
 
   git:
     name: "Git"
-    uses: ./.github/workflows/image-and-iso.yml
+    uses: ./.github/workflows/build-image.yml
     with:
       hyprland_build: "git"
       version: 40
       virtualization: "no"
     secrets:
       SIGNING_SECRET: ${{ secrets.SIGNING_SECRET }}
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
     permissions:
       contents: read
       packages: write

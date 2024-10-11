@@ -55,12 +55,21 @@
             image_tag: ${{ env.IMAGE_TAG }}
             version: ${{ env.VERSION }}
             variant: ${{ env.VARIANT }}
-            iso_name: ${{ env.IMAGE_NAME }}-${{ env.ARCH }}-${{ env.VERSION }}-${{ env.IMAGE_TAG }}.iso
+            iso_name: ${{ env.IMAGE_NAME }}-${{ env.ARCH }}-${{ env.IMAGE_TAG }}.iso
             secure_boot_key_url: 'https://github.com/ublue-os/akmods/raw/main/certs/public_key.der'
             enrollment_password: 'ublue-os'
             enable_cache_dnf: "false"
             enable_cache_skopeo: "false"
-            flatpak_remote_refs: "com.github.tchx84.Flatseal org.gnome.Calculator org.gnome.Evince org.gnome.FileRoller org.gnome.FontManager org.gnome.Loupe org.gnome.TextEditor org.mozilla.firefox org.freedesktop.Platform.openh264/x86_64/2.3.1 org.freedesktop.Platform.ffmpeg-full/x86_64/22.08"
+            flatpak_remote_refs: "com.github.tchx84.Flatseal \
+              org.gnome.Calculator \
+              org.gnome.Evince \
+              org.gnome.FileRoller \
+              org.gnome.FontManager \
+              org.gnome.Loupe \
+              org.gnome.TextEditor \
+              org.mozilla.firefox \
+              org.freedesktop.Platform.openh264/x86_64/2.4.1 \
+              org.freedesktop.Platform.ffmpeg-full/x86_64/24.08"
   
         - name: Move ISOs to Upload Directory
           id: upload_directory

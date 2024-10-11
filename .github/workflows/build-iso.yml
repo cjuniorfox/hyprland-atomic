@@ -3,8 +3,6 @@ name: "Image and ISO"
 on:
   workflow_call:
     secrets:
-      SIGNING_SECRET:
-        required: true
       AWS_ACCESS_KEY_ID: 
         required: true
       AWS_SECRET_ACCESS_KEY: 
@@ -23,45 +21,21 @@ on:
 
 jobs:
   set_image_name:
-    outputs:
-      image_name: ${{ steps.image_name.outputs.image_name }}
     name: "Set image name"
-    runs-on: ubuntu-latest
-    steps:
-      - name: "Set image name"
-        id: image_name
-        run: |
-          if [ "${{ inputs.virtualization }}" == "yes" ]; then
-            IMAGE_NAME="${{ github.event.repository.name }}-${{ inputs.hyprland_build }}-virt"
-          else
-            IMAGE_NAME="${{ github.event.repository.name }}-${{ inputs.hyprland_build }}"
-          fi
-          echo "image_name=$IMAGE_NAME" >> $GITHUB_OUTPUT  # Set the output for the step
-
-  build:
-    name: "Build Image"
-    uses: ./.github/workflows/image.yml
-    needs: set_image_name
+    uses: "./.github/workflows/set-image-name.yml"
     with:
-      image_name: "${{ needs.set_image_name.outputs.image_name }}"
-      image_desc: "Hyprland Shell Blue Image ${{ inputs.hyprland_build }}"
-      image_registry: "ghcr.io/${{ github.repository_owner }}"
       hyprland_build: ${{ inputs.hyprland_build }}
-      source_tag: ${{ inputs.version }}
-      virtualization: ${{ inputs.virtualization }}
-    secrets:
-      SIGNING_SECRET: ${{ secrets.SIGNING_SECRET }}
+      version: ${{ inputs.version }}
 
   build_iso:
     name: "Build ISO"
-    uses: ./.github/workflows/iso.yml
+    uses: ./.github/workflows/installer-iso.yml
     needs:
-      - build
       - set_image_name
     with:
       image_name: "${{ needs.set_image_name.outputs.image_name }}"
       image_repo: "ghcr.io/cjuniorfox"
-      image_tag: "latest"
+      image_tag: ${{ inputs.version }}
       version: ${{ inputs.version }}
 
   upload_iso_to_s3:

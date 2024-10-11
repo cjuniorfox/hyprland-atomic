@@ -1,0 +1,56 @@
+name: "Build ISO for Ublue Hyprland"
+on:
+  schedule:
+    - cron: '05 12 * * 1/2'  # 12:05am UTC every two weeks on Monday
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - '**/README.md'
+  workflow_dispatch:
+
+jobs:
+  fedora:
+    name: "Fedora"
+    uses: ./.github/workflows/build-iso.yml
+    with:
+      hyprland_build: "fedora"
+      version: 40
+      virtualization: "no"
+    secrets:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+
+  solopasha:
+    name: "Solopasha"
+    uses: ./.github/workflows/build-iso.yml
+    with:
+      hyprland_build: "solopasha"
+      version: 40
+      virtualization: "no"
+    secrets:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+
+  git:
+    name: "Git"
+    uses: ./.github/workflows/build-iso.yml
+    with:
+      hyprland_build: "git"
+      version: 40
+      virtualization: "no"
+    secrets:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
