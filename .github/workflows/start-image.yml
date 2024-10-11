@@ -12,6 +12,7 @@ on:
 
 jobs:
   version_39:
+    if: false
     name: "Version 39"
     uses: './.github/workflows/build-image-variants.yml'
     with:
