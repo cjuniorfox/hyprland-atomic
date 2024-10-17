@@ -1,0 +1,19 @@
+---
+name: "Fedora Hyprland Releases"
+on:
+  schedule:
+    - cron: '05 10 * * *'  # 10:05am UTC every day
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - '**/README.md'
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: build
+    uses: ./.github/workflows/reusable-build.yml
+    secrets: inherit
+    with:
+      fedora_version: 40
