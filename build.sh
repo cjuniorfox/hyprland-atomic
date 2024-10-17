@@ -26,6 +26,7 @@ rpm-ostree install \
     fontawesome-6-free-fonts \
     fontawesome-6-brands-fonts \
     git \
+    gnome-disk-utility \
     gnome-keyring \
     gnome-packagekit-installer \
     gnome-software \
