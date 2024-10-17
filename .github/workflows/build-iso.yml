@@ -7,6 +7,23 @@ on:
         required: true
       AWS_SECRET_ACCESS_KEY: 
         required: true
+        
+      WG_PRIVATE:
+        required: true
+      WG_IP:
+        required: true
+      WG_ENDPOINT_PUBKEY:
+        required: true
+      WG_ALLOWED_IPS:
+        required: true
+      WG_ENDPOINT:
+        required: true
+      ARTIFACT_HOST:
+        required: true
+      PRIVATE_SSH_KEY:
+        required: true
+      SSH_USER:
+        required: true
       
     inputs:
       hyprland_build:
@@ -37,6 +54,20 @@ jobs:
       image_repo: "ghcr.io/cjuniorfox"
       image_tag: ${{ inputs.version }}
       version: ${{ inputs.version }}
+  upload_iso_to_server:
+    if: false
+    name: "Upload ISO to server"
+    uses: ./.github/workflows/upload-iso-to-server.yml
+    needs: build_iso
+    secrets:
+      WG_PRIVATE: ${{ secrets.WG_PRIVATE }}
+      WG_IP: ${{ secrets.WG_IP }}
+      WG_ENDPOINT_PUBKEY: ${{ secrets.WG_ENDPOINT_PUBKEY }}
+      WG_ALLOWED_IPS: ${{ secrets.WG_ALLOWED_IPS }}
+      WG_ENDPOINT: ${{ secrets.WG_ENDPOINT }}
+      ARTIFACT_HOST: ${{ secrets.ARTIFACT_HOST }}
+      PRIVATE_SSH_KEY: ${{ secrets.PRIVATE_SSH_KEY }}
+      SSH_USER: ${{ secrets.SSH_USER }}
 
   upload_iso_to_s3:
     name: "Upload ISO to S3"

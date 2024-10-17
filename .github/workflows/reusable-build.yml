@@ -3,8 +3,6 @@ name: "Build Image"
 on: 
   workflow_call:
     inputs:
-      image_registry:
-        type: string
       virtualization:
         type: string
         default: "no"
@@ -30,8 +28,7 @@ jobs:
         - solopasha
         - git
     env:
-      IMAGE_REGISTRY: "${{ inputs.image_registry }}"
-
+      IMAGE_REGISTRY: ghcr.io/${{ github.repository_owner }}
     steps:
       # Checkout push-to-registry action GitHub repository
       - name: Checkout Push to Registry action
@@ -47,7 +44,7 @@ jobs:
           elif [[ "${{ matrix.variant }}" == "git" ]]; then
               echo "IMAGE_DESC='Hyprland Shell Blue Image Git'" >> $GITHUB_ENV
           fi
-          echo "IMAGE_NAME='${{ github.event.repository.name }}-${{ matrix.variant }}'"
+          echo "IMAGE_NAME=${{ github.event.repository.name }}-${{ matrix.variant }}" >> $GITHUB_ENV
       
       - name: Maximize build space
         if: false
