@@ -1,5 +1,5 @@
 ---
-name: "Fedora Hyprland Releases"
+name: "ublue hyprland 40"
 on:
   schedule:
     - cron: '05 10 * * *'  # 10:05am UTC every day
@@ -12,6 +12,10 @@ on:
 
 jobs:
   build:
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
     name: build
     uses: ./.github/workflows/reusable-build.yml
     secrets: inherit
