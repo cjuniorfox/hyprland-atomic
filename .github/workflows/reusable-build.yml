@@ -20,10 +20,6 @@ jobs:
   build_ublue:
     name: Build and push Image
     runs-on: ubuntu-24.04
-    permissions:
-      contents: read
-      packages: write
-      id-token: write
     strategy:
       fail-fast: false
       matrix:
