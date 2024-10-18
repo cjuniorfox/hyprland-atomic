@@ -8,7 +8,7 @@ on:
         type: string
         required: true
 jobs:
-  iso:
+  build_iso:
     name: Build Installer ISO
     runs-on: ubuntu-latest
     outputs:
@@ -33,7 +33,7 @@ jobs:
 
     steps:
       - name: Checkout Push to Registry action
-        uses: actions/checkout@v4 # Updated to latest stable version
+        uses: actions/checkout@v4
   
       - name: Build ISO
         uses: jasonn3/build-container-installer@v1.2.2
@@ -79,12 +79,15 @@ jobs:
           path: ${{ steps.upload_directory.outputs.iso-upload-dir }}
           if-no-files-found: error
           retention-days: 1 # Updated to a valid retention period
-
-      - name: Upload to S3
-        id: upload_to_s3
-        uses: './.github/workflows/upload-iso-to-s3.yml'
-        with:
-          s3_bucket: juniorfox-net-isos
-          aws_region: sa-east-1
-          iso_name: ${{ steps.build_iso.outputs.iso_name }}
-          checksum: ${{ steps.build_iso.outputs.iso_name }}-CHECKSUM
+  upload_to_s3:
+    uses: './.github/workflows/upload-iso-to-s3.yml'
+    needs:
+      build_iso
+    secrets:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    with:
+      s3_bucket: juniorfox-net-isos
+      aws_region: sa-east-1
+      iso_name: ${{ needs.build_iso.outputs.iso_name }}
+      checksum: ${{ needs.build_iso.outputs.checksum }}
