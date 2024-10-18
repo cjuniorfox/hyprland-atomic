@@ -7,9 +7,9 @@ on:
         type: string
         default: "no"
       fedora_version:
+        description: "The Fedora release version: 39, 40, 41 etc"
         type: string
         required: true
-        description: "The Fedora release version: 39, 40, 41 etc"
     secrets:
         SIGNING_SECRET:
             required: true
@@ -23,7 +23,7 @@ jobs:
       matrix:
         fedora_version:
           - ${{ inputs.fedora_version }}
-        variant:
+        hyprland_build:
         - fedora
         - solopasha
         - git
@@ -37,14 +37,14 @@ jobs:
       - name: Matrix Variables
         shell: bash
         run: |
-          if [[ "${{ matrix.variant }}" == "fedora" ]]; then
+          if [[ "${{ matrix.hyprland_build }}" == "fedora" ]]; then
               echo "IMAGE_DESC='Hyprland Shell Blue Image Fedora'" >> $GITHUB_ENV
-          elif [[ "${{ matrix.variant }}" == "solopasha" ]]; then
+          elif [[ "${{ matrix.hyprland_build }}" == "solopasha" ]]; then
               echo "IMAGE_DESC='Hyprland Shell Blue Image Solopasha'" >> $GITHUB_ENV
-          elif [[ "${{ matrix.variant }}" == "git" ]]; then
+          elif [[ "${{ matrix.hyprland_build }}" == "git" ]]; then
               echo "IMAGE_DESC='Hyprland Shell Blue Image Git'" >> $GITHUB_ENV
           fi
-          echo "IMAGE_NAME=${{ github.event.repository.name }}-${{ matrix.variant }}" >> $GITHUB_ENV
+          echo "IMAGE_NAME=${{ github.event.repository.name }}-${{ matrix.hyprland_build }}" >> $GITHUB_ENV
       
       - name: Maximize build space
         if: false
@@ -147,7 +147,7 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           oci: false
           build-args: |
-            HYPRLAND_BUILD=${{matrix.variant}}
+            HYPRLAND_BUILD=${{matrix.hyprland_build}}
             VIRTUALIZATION=${{inputs.virtualization}}
             SOURCE_TAG=${{ matrix.fedora_version }}
 
