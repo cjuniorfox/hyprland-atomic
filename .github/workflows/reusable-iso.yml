@@ -1,4 +1,3 @@
----
 name: Installer ISO
 on: 
   workflow_call:
@@ -7,22 +6,20 @@ on:
         description: "The Fedora release version: 39, 40, 41 etc"
         type: string
         required: true
+
 jobs:
   build_iso:
     name: Build Installer ISO
     runs-on: ubuntu-latest
-    outputs:
-      iso_name: ${{ steps.build_iso.outputs.iso_name }}
-      checksum: ${{ steps.build_iso.outputs.iso_name }}-CHECKSUM
     strategy:
       fail-fast: false
       matrix:
         fedora_version:
-        - ${{ inputs.fedora_version }}
+          - ${{ inputs.fedora_version }}
         hyprland_build:
-        - fedora
-        - solopasha
-        - git
+          - fedora
+          - solopasha
+          - git
     env:
       ARCH: "x86_64"
       IMAGE_NAME: ${{ github.event.repository.name }}-${{ matrix.hyprland_build }}
@@ -38,7 +35,7 @@ jobs:
     steps:
       - name: Checkout Push to Registry action
         uses: actions/checkout@v4
-  
+
       - name: Build ISO
         uses: jasonn3/build-container-installer@v1.2.2
         id: build_iso
@@ -54,73 +51,55 @@ jobs:
           enrollment_password: 'ublue-os'
           enable_cache_dnf: "false"
           enable_cache_skopeo: "false"
-          flatpak_remote_refs: "com.github.tchx84.Flatseal \
-            org.gnome.Calculator \
-            org.gnome.Evince \
-            org.gnome.FileRoller \
-            org.gnome.FontManager \
-            org.gnome.Loupe \
-            org.gnome.TextEditor \
-            org.mozilla.firefox \
-            org.freedesktop.Platform.openh264/x86_64/2.4.1 \
-            org.freedesktop.Platform.ffmpeg-full/x86_64/24.08"
-  
-      - name: Move ISOs to Upload Directory
-        id: upload_directory
-        shell: bash
+          flatpak_remote_refs: "org.gnome.Calculator"
+
+      - name: Get ISO names
+        id: iso_names
         run: |
-          ISO_UPLOAD_DIR=${{ github.workspace }}/upload
-          mkdir ${ISO_UPLOAD_DIR}
-          mv ${{ steps.build_iso.outputs.iso_path }}/${{ steps.build_iso.outputs.iso_name }} ${ISO_UPLOAD_DIR}
-          mv ${{ steps.build_iso.outputs.iso_path }}/${{ steps.build_iso.outputs.iso_name }}-CHECKSUM ${ISO_UPLOAD_DIR}
-          echo "iso-upload-dir=${ISO_UPLOAD_DIR}" >> $GITHUB_OUTPUT
-            
+          echo "::set-output name=iso_name::${{ steps.build_iso.outputs.iso_name }}"
+          echo "::set-output name=checksum::${{ steps.build_iso.outputs.iso_name }}-CHECKSUM"
+          echo "iso_upload_dir=${{github.workspace }}/upload" >> $GITHUB_ENV
+
+      - name: Move ISOs to Upload Directory
+        run: |
+          mkdir -p ${{ env.iso_upload_dir }}
+          mv ${{ steps.build_iso.outputs.iso_path }}/${{ steps.build_iso.outputs.iso_name }} ${{ env.iso_upload_dir }}
+          mv ${{ steps.build_iso.outputs.iso_path }}/${{ steps.build_iso.outputs.checksum }} ${{ env.iso_upload_dir }}
+
       - name: Upload ISO as artifact
-        id: upload
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ steps.build_iso.outputs.iso_name }}
-          path: ${{ steps.upload_directory.outputs.iso-upload-dir }}
-          if-no-files-found: error
-          retention-days: 1 # Updated to a valid retention period
-      
-      - name: Get ISO names
-        id: get_iso_names
-        run: |
-          echo "iso_name=${{ steps.build_iso.outputs.iso_name }}" >> $GITHUB_OUTPUT
-          echo "checksum=${{ steps.build_iso.outputs.iso_name }}-CHECKSUM" >> $GITHUB_OUTPUT
+          name: ${{ steps.iso_names.outputs.iso_name }}
+          path: ${{ env.iso_upload_dir }}
 
-      - name: Download ISO Artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: ${{ steps.build_iso.outputs.iso_name}}
-          path: ./iso-output
-          
       - name: Upload ISO to S3
-        id: upload_to_s3
         run: |
-          echo "uploading ${{ steps.build_iso.outputs.iso_name }}"
-          aws s3 cp "./iso-output/${{ env.iso_name }}" "s3://${{ env.S3_BUCKET }}/${{ env.iso_name }}"
-          aws s3 cp "./iso-output/${{ env.checksum }}" "s3://${{ env.S3_BUCKET }}/${{ env.checksum }}"
+          aws s3 cp "${{ env.iso_upload_dir }}/${{ steps.iso_names.outputs.iso_name }}" "s3://${{ env.S3_BUCKET }}/${{ steps.iso_names.outputs.iso_name }}"
+          aws s3 cp "${{ env.iso_upload_dir }}/${{ steps.iso_names.outputs.checksum }}" "s3://${{ env.S3_BUCKET }}/${{ steps.iso_names.outputs.checksum }}"
 
       - name: Make ISO public
-        id: make_public
-        run : |
-          aws s3api put-object-acl --bucket ${{ env.S3_BUCKET }} --key "${{ env.iso_name }}" --acl public-read
-          aws s3api put-object-acl --bucket ${{ env.S3_BUCKET }} --key "${{ env.checksum }}" --acl public-read
-        
-      - name: Output ISO url
-        id: upload_iso_url
-        run : |
-          echo "https://${{ env.S3_BUCKET }}.s3.${{ env.AWS_REGION }}.amazonaws.com/${{ env.iso_name }}"
-          echo "https://${{ env.S3_BUCKET }}.s3.${{ env.AWS_REGION }}.amazonaws.com/${{ env.checksum }}"
+        run: |
+          aws s3api put-object-acl --bucket ${{ env.S3_BUCKET }} --key "${{ steps.iso_names.outputs.iso_name }}" --acl public-read
+          aws s3api put-object-acl --bucket ${{ env.S3_BUCKET }} --key "${{ steps.iso_names.outputs.checksum }}" --acl public-read
+
+      - name: Output ISO URL
+        run: |
+          echo "ISO URL: https://${{ env.S3_BUCKET }}.s3.${{ env.AWS_REGION }}.amazonaws.com/${{ steps.iso_names.outputs.iso_name }}"
       
-      - name : Authenticate to ISO Server
-        id: authenticate_to_iso_server
-        run : |
-          echo "TOKEN=$(curl -X POST 'https://${{secrets.UPLOAD_SERVER}}/token' -H 'Content-Type: application/json' -d '{ \"public_key\":\"${{secrets.PUBLIC_KEY_PEM}}\"}' | jq -r .access_token)" >> $GITHUB_ENV
-      - name : Upload_ISO to_Server
+      - name: Authenticate to ISO Server
+        id: auth_iso_server
+        env:
+          UPLOAD_SERVER: ${{ secrets.UPLOAD_SERVER }}
+          PUBLIC_KEY_PEM: ${{ secrets.PUBLIC_KEY_PEM }}
+        run: |
+          token=$(curl -X POST "${UPLOAD_SERVER}/token" -H 'Content-Type: application/json' -d "{ \"public_key\":\"${PUBLIC_KEY_PEM}\"}" | jq -r .access_token)
+          echo "TOKEN=$token" >> $GITHUB_ENV
+
+      - name: Upload_ISO to_Server
         id: upload_iso_to_server
-        run : |
-          curl -X POST -F "file=@./iso-output/${{ env.iso_name }}" -H "Authorization: Bearer ${{env.TOKEN}}" https://${{secrets.UPLOAD_SERVER}}/upload
-          curl -X POST -F "file=@./iso-output/${{ env.checksum }}" -H "Authorization: Bearer ${{env.TOKEN}}" https://${{secrets.UPLOAD_SERVER}}/upload
+        env:
+          TOKEN: ${{ env.TOKEN }}
+          UPLOAD_SERVER: ${{ secrets.UPLOAD_SERVER }}
+        run: |
+          curl -X POST -F "file=@${{ env.iso_upload_dir }}/${{ env.iso_name }}" -H "Authorization: Bearer $TOKEN" "${UPLOAD_SERVER}/upload"
+          curl -X POST -F "file=@${{ env.iso_upload_dir }}/${{ env.checksum }}" -H "Authorization: Bearer $TOKEN" "${UPLOAD_SERVER}/upload"
