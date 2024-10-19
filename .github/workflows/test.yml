@@ -33,8 +33,5 @@ jobs:
     uses: './.github/workflows/process-from-matrix.yml'
     needs:
       transform_matrix
-    strategy:
-      matrix:
-        new_names: ${{ fromJson(needs.transform_matrix.outputs.names) }}
     with:
-      name: ${{ matrix.new_names}}
+      name: ${{ needs.transform_matrix.outputs.names}}
