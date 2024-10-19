@@ -1,0 +1,40 @@
+---
+name: Testing Matrix
+on: 
+  push:
+    branches:
+      - main
+jobs:
+  transform_matrix:
+    name: Transform Matrix
+    runs-on: ubuntu-latest
+    outputs:
+      names : ${{ steps.transform_matrix.outputs.new_matrix }}
+    strategy:
+      fail-fast: false
+      matrix:
+        hyprland_build:
+        - fedora
+        - solopasha
+        - git
+
+    steps:
+      - name: Checkout Push to Registry action
+        uses: actions/checkout@v4
+  
+  
+      - name: Transform Matrix
+        id: transform_matrix
+        shell: bash
+        run: |
+          echo "new_matrix=${{ matrix.hyprland_build }}-from-matrix" >> $GITHUB_OUTPUT
+            
+  process_from_matrix:
+    uses: './.github/workflows/process-from-matrix.yml'
+    needs:
+      transform_matrix
+    strategy:
+      matrix:
+        new_names: ${{needs.transform_matrix.outputs.names}}
+    with:
+      name: ${{ matrix.new_names}}
