@@ -12,7 +12,7 @@ jobs:
     name: Process from matrix
     runs-on: ubuntu-latest
     steps:
-      - name: Upload ISO to S3
-        id: upload
+      - name: process
+        id: process
         run: |
           echo "Naming ${{ inputs.name }}"
