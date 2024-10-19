@@ -35,6 +35,6 @@ jobs:
       transform_matrix
     strategy:
       matrix:
-        new_names: ${{ fromJson(needs.transform_matrix.outputs.names) }}
+        new_names: ${{needs.transform_matrix.outputs.names}}
     with:
       name: ${{ matrix.new_names}}
