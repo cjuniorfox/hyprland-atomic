@@ -3,7 +3,7 @@ name: Testing Matrix
 on: 
   push:
     branches:
-      - main
+      - develop
 jobs:
   transform_matrix:
     name: Transform Matrix
