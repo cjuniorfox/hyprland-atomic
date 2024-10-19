@@ -1,7 +1,7 @@
 name: Reusable Workflow
 
 on:
-  workflow_call:  # Required to indicate this workflow can be called
+  workflow_call:
     inputs:
       message:
         description: "Message to print"
