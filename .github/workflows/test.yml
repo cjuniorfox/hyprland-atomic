@@ -28,7 +28,9 @@ jobs:
         shell: bash
         run: |
           echo "names=${{ matrix.hyprland_build }}" >> $GITHUB_ENV
-            
+      - name: Matrix check
+        run: |
+          echo "Names: ${{ steps.transform_matrix.names }}" >> $GITHUB_ENV
   process_from_matrix:
     uses: './.github/workflows/process-from-matrix.yml'
     needs:
