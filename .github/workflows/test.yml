@@ -27,7 +27,7 @@ jobs:
         id: transform_matrix
         shell: bash
         run: |
-          echo "new_matrix=${{ matrix.hyprland_build }}-from-matrix" >> $GITHUB_OUTPUT
+          echo "names=$(echo '[\"${{ matrix.hyprland_build }}\"]')" >> $GITHUB_ENV
             
   process_from_matrix:
     uses: './.github/workflows/process-from-matrix.yml'
@@ -35,6 +35,6 @@ jobs:
       transform_matrix
     strategy:
       matrix:
-        new_names: ${{needs.transform_matrix.outputs.names}}
+        new_names: ${{ fromJson(needs.transform_matrix.outputs.names) }}
     with:
       name: ${{ matrix.new_names}}
