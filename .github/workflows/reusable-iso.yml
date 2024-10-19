@@ -83,6 +83,12 @@ jobs:
           path: ${{ steps.upload_directory.outputs.iso-upload-dir }}
           if-no-files-found: error
           retention-days: 1 # Updated to a valid retention period
+      
+      - name: Get ISO names
+        id: get_iso_names
+        run: |
+          echo "iso_name=${{ steps.build_iso.outputs.iso_name }}" >> $GITHUB_OUTPUT
+          echo "checksum=${{ steps.build_iso.outputs.iso_name }}-CHECKSUM" >> $GITHUB_OUTPUT
 
       - name: Download ISO Artifact
         uses: actions/download-artifact@v4
@@ -94,20 +100,20 @@ jobs:
         id: upload_to_s3
         run: |
           echo "uploading ${{ steps.build_iso.outputs.iso_name }}"
-          aws s3 cp "./iso-output/${{ steps.build_iso.outputs.iso_name }}" "s3://${{ env.S3_BUCKET }}/${{ steps.build_iso.outputs.iso_name }}"
-          aws s3 cp "./iso-output/${{ steps.build_iso.outputs.iso_name }}.CHECKSUM" "s3://${{ env.S3_BUCKET }}/${{ steps.build_iso.outputs.iso_name }}.CHECKSUM"
+          aws s3 cp "./iso-output/${{ env.iso_name }}" "s3://${{ env.S3_BUCKET }}/${{ env.iso_name }}"
+          aws s3 cp "./iso-output/${{ env.checksum }}" "s3://${{ env.S3_BUCKET }}/${{ env.checksum }}"
 
       - name: Make ISO public
         id: make_public
         run : |
-          aws s3api put-object-acl --bucket ${{ env.S3_BUCKET }} --key "${{ steps.build_iso.outputs.iso_name }}" --acl public-read
-          aws s3api put-object-acl --bucket ${{ env.S3_BUCKET }} --key "${{ steps.build_iso.outputs.iso_name }}" --acl public-read
+          aws s3api put-object-acl --bucket ${{ env.S3_BUCKET }} --key "${{ env.iso_name }}" --acl public-read
+          aws s3api put-object-acl --bucket ${{ env.S3_BUCKET }} --key "${{ env.checksum }}" --acl public-read
         
       - name: Output ISO url
         id: upload_iso_url
         run : |
-          echo "https://${{ env.S3_BUCKET }}.s3.${{ env.AWS_REGION }}.amazonaws.com/${{ steps.build_iso.outputs.iso_name }}"
-          echo "https://${{ env.S3_BUCKET }}.s3.${{ env.AWS_REGION }}.amazonaws.com/${{ steps.build_iso.outputs.iso_name }}"
+          echo "https://${{ env.S3_BUCKET }}.s3.${{ env.AWS_REGION }}.amazonaws.com/${{ env.iso_name }}"
+          echo "https://${{ env.S3_BUCKET }}.s3.${{ env.AWS_REGION }}.amazonaws.com/${{ env.checksum }}"
       
       - name : Authenticate to ISO Server
         id: authenticate_to_iso_server
@@ -116,5 +122,5 @@ jobs:
       - name : Upload_ISO to_Server
         id: upload_iso_to_server
         run : |
-          curl -X POST -F "file=@./iso-output/${{ steps.build_iso.outputs.iso_name }}" -H "Authorization: Bearer ${{env.TOKEN}}" https://${{secrets.UPLOAD_SERVER}}/upload
-          curl -X POST -F "file=@./iso-output/${{ steps.build_iso.outputs.iso_name }}.CHECKSUM" -H "Authorization: Bearer ${{env.TOKEN}}" https://${{secrets.UPLOAD_SERVER}}/upload
+          curl -X POST -F "file=@./iso-output/${{ env.iso_name }}" -H "Authorization: Bearer ${{env.TOKEN}}" https://${{secrets.UPLOAD_SERVER}}/upload
+          curl -X POST -F "file=@./iso-output/${{ env.checksum }}" -H "Authorization: Bearer ${{env.TOKEN}}" https://${{secrets.UPLOAD_SERVER}}/upload
