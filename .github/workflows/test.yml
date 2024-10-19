@@ -9,7 +9,7 @@ jobs:
     name: Transform Matrix
     runs-on: ubuntu-latest
     outputs:
-      names : ${{ steps.transform_matrix.outputs.names }}
+      name : ${{ env.name }}
     strategy:
       fail-fast: false
       matrix:
@@ -34,4 +34,4 @@ jobs:
     needs:
       transform_matrix
     with:
-      name: ${{ needs.transform_matrix.outputs.names}}
+      name: ${{ needs.transform_matrix.outputs.name}}
