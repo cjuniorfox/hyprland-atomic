@@ -34,9 +34,7 @@ jobs:
         run: |
           echo "Names: ${{ steps.transform_matrix.names }}"
 
-  process_from_matrix:
-    uses: './.github/workflows/process-from-matrix.yml'
-    needs:
-      transform_matrix
-    with:
-      name: ${{ needs.transform_matrix.outputs.name}}
+      - name: process_from_matrix
+        uses: './.github/workflows/process-from-matrix.yml'
+        with:
+          name: ${{ env.names }}
