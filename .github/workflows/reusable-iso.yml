@@ -105,5 +105,5 @@ jobs:
           TOKEN: ${{ env.TOKEN }}
           UPLOAD_SERVER: ${{ secrets.UPLOAD_SERVER }}
         run: |
-          curl -X POST -F "file=@${{ env.iso_upload_dir }}/${{ env.iso_name }}" -H "Authorization: Bearer $TOKEN" "${UPLOAD_SERVER}/upload"
           curl -X POST -F "file=@${{ env.iso_upload_dir }}/${{ env.checksum }}" -H "Authorization: Bearer $TOKEN" "${UPLOAD_SERVER}/upload"
+          curl -X POST -F "file=@${{ env.iso_upload_dir }}/${{ env.iso_name }}" -H "Authorization: Bearer $TOKEN" "${UPLOAD_SERVER}/upload"
