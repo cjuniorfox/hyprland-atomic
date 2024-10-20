@@ -3,11 +3,6 @@ name: "Build ISO for Ublue Hyprland"
 on:
   schedule:
     - cron: '05 12 * * 1/2'  # 12:05am UTC every two weeks on Monday
-  push:
-    branches:
-      - main
-    paths-ignore:
-      - '**/README.md'
   workflow_dispatch:
 
 jobs:
