@@ -96,8 +96,7 @@ jobs:
           UPLOAD_SERVER: ${{ secrets.UPLOAD_SERVER }}
           PUBLIC_KEY_JSON: ${{ secrets.PUBLIC_KEY_JSON }}
         run: |
-          curl -X POST "https://${UPLOAD_SERVER}/token" -H 'Content-Type: application/json' -d "${PUBLIC_KEY_JSON}"
-          token=$(curl -X POST "https://${UPLOAD_SERVER}/token" -H 'Content-Type: application/json' -d "${PUBLIC_KEY_JSON}" | jq -r .access_token)
+          token=$(curl -X POST "${UPLOAD_SERVER}/token" -H 'Content-Type: application/json' -d "${PUBLIC_KEY_JSON}" | jq -r .access_token)
           echo "TOKEN=$token" >> $GITHUB_ENV
 
       - name: Upload ISO to_Server
