@@ -41,7 +41,7 @@ jobs:
 
       - name: Build ISO
         uses: jasonn3/build-container-installer@v1.2.2
-        if: false
+        
         id: build_iso
         with:
           arch: ${{ env.ARCH }}
@@ -59,40 +59,34 @@ jobs:
 
       - name: Get ISO names
         id: iso_names
-        if: false
         run: |
           echo "iso_name=${{ steps.build_iso.outputs.iso_name }}" >> $GITHUB_ENV
           echo "checksum=${{ steps.build_iso.outputs.iso_name }}-CHECKSUM" >> $GITHUB_ENV
           echo "iso_upload_dir=${{ github.workspace }}/upload" >> $GITHUB_ENV
 
       - name: Move ISOs to Upload Directory
-        if: false
         run: |
           mkdir -p ${{ env.iso_upload_dir }}
           mv ${{ steps.build_iso.outputs.iso_path }}/${{ env.iso_name }} ${{ env.iso_upload_dir }}
           mv ${{ steps.build_iso.outputs.iso_path }}/${{ env.checksum }} ${{ env.iso_upload_dir }}
 
       - name: Upload ISO as artifact
-        if: false
         uses: actions/upload-artifact@v4
         with:
           name: ${{ env.iso_name }}
           path: ${{ env.iso_upload_dir }}
 
       - name: Upload ISO to S3
-        if: false
         run: |
           aws s3 cp "${{ env.iso_upload_dir }}/${{ env.iso_name }}" "s3://${{ env.S3_BUCKET }}/${{ env.iso_name }}"
           aws s3 cp "${{ env.iso_upload_dir }}/${{ env.checksum }}" "s3://${{ env.S3_BUCKET }}/${{ env.checksum }}"
 
       - name: Make ISO public
-        if: false
         run: |
           aws s3api put-object-acl --bucket ${{ env.S3_BUCKET }} --key "${{ env.iso_name }}" --acl public-read
           aws s3api put-object-acl --bucket ${{ env.S3_BUCKET }} --key "${{ env.checksum }}" --acl public-read
 
       - name: Output ISO URL
-        if: false
         run: |
           echo "ISO URL: https://${{ env.S3_BUCKET }}.s3.${{ env.AWS_REGION }}.amazonaws.com/${{ env.iso_name }}"
       
