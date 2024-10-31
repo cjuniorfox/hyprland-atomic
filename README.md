@@ -18,6 +18,11 @@ You can download the latest version of the distribution and its checksum from th
 - [Hyprland Atomic Solopasha ISO](https://juniorfox-net-isos.s3.sa-east-1.amazonaws.com/hyprland-atomic-solopasha-x86_64-40.iso)
 - [Hyprland Atomic Solopasha ISO Checksum](https://juniorfox-net-isos.s3.sa-east-1.amazonaws.com/hyprland-atomic-solopasha-x86_64-40.iso-CHECKSUM)
 
+### Hyperland Solopasha 40 with Virtualization
+
+- [Hyprland Atomic Solopasha Virt ISO](https://juniorfox-net-isos.s3.sa-east-1.amazonaws.com/hyprland-atomic-solopasha-virt-x86_64-40.iso)
+- [Hyprland Atomic Solopasha Virt ISO Checksum](https://juniorfox-net-isos.s3.sa-east-1.amazonaws.com/hyprland-atomic-solopasha-virt-x86_64-40.iso-CHECKSUM)
+
 ### Hyperland Solopasha Git Build 40
 
 - [Hyprland Atomic Solopasha/Git ISO](https://juniorfox-net-isos.s3.sa-east-1.amazonaws.com/hyprland-atomic-git-x86_64-40.iso)
@@ -37,6 +42,12 @@ rpm-ostree rebase ostree-image-signed:docker://ghcr.io/cjuniorfox/hyprland-atomi
 
 ```sh
 rpm-ostree rebase ostree-image-signed:docker://ghcr.io/cjuniorfox/hyprland-atomic-solopasha:40
+```
+
+### Hyprland Solopasha 40 with Virtualization
+
+```sh
+rpm-ostree rebase ostree-image-signed:docker://ghcr.io/cjuniorfox/hyprland-atomic-solopasha-virt:40
 ```
 
 ### Hyprland Solopasha/Git 40

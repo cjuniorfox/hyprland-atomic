@@ -76,7 +76,8 @@ if [[ "${HYPRLAND_BUILD}" == "fedora" ]]; then
 fi
 
 # Add COPR repositories
-for i in cjuniorfox/hyprland-shell solopasha/hyprland tofik/sway; do
+copr="cjuniorfox/hyprland-shell solopasha/hyprland tofik/sway"
+for i in ${copr}; do
     MAINTAINER="${i%%/*}"
     REPOSITORY="${i##*/}"
     curl --output "/etc/yum.repos.d/_copr:copr.fedorainfracloud.org:${MAINTAINER}:${REPOSITORY}.repo" --remote-name \

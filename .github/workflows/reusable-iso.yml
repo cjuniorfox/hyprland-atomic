@@ -19,6 +19,7 @@ jobs:
         hyprland_build:
           - fedora
           - solopasha
+          - solopasha-virt
           - git
     env:
       ARCH: "x86_64"
@@ -102,6 +103,7 @@ jobs:
       
       - name: Authenticate to ISO Server
         id: auth_iso_server
+        if: false
         env:
           UPLOAD_SERVER: ${{ secrets.UPLOAD_SERVER }}
           PUBLIC_KEY_JSON: ${{ secrets.PUBLIC_KEY_JSON }}
@@ -111,6 +113,7 @@ jobs:
 
       - name: Upload ISO to_Server
         id: upload_iso_to_server
+        if: false
         env:
           TOKEN: ${{ env.TOKEN }}
           UPLOAD_SERVER: ${{ secrets.UPLOAD_SERVER }}
