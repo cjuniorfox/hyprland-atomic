@@ -57,6 +57,7 @@ rpm-ostree install \
     wl-clipboard
 
 if [[ "${VIRTUALIZATION}" == "yes" ]]; then
+  echo "Installing virtualization packages"
   rpm-ostree install \
     libvirt-daemon-config-network \
     libvirt-daemon-kvm \
