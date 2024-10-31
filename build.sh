@@ -58,11 +58,13 @@ rpm-ostree install \
 
 if [[ "${VIRTUALIZATION}" == "yes" ]]; then
   rpm-ostree install \
-    virt-install \
     libvirt-daemon-config-network \
     libvirt-daemon-kvm \
     qemu-kvm \
+    guestfs-tools \
+    virt-install \
     virt-manager \
+    virt-top \
     virt-viewer \
     guestfs-tools \
     python3-tools \
