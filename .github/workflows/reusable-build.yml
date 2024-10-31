@@ -30,7 +30,7 @@ jobs:
       IMAGE_NAME:
       HYPRLAND_BUILD:
       IMAGE_DESC:
-      VIRTUALIZATION:
+      VIRTUALIZATION: 'no'
     steps:
       # Checkout push-to-registry action GitHub repository
       - name: Checkout Push to Registry action
@@ -40,7 +40,6 @@ jobs:
         shell: bash
         run: |
           echo "HYPRLAND_BUILD=${{ matrix.hyprland_build }}" >> $GITHUB_ENV
-          echo "VIRTUALIZATION='no' >> $GITHUB_ENV"
           if [[ "${{ matrix.hyprland_build }}" == "fedora" ]]; then
               echo "IMAGE_DESC='Hyprland Shell Blue Image Fedora'" >> $GITHUB_ENV
           elif [[ "${{ matrix.hyprland_build }}" == "solopasha" ]]; then
