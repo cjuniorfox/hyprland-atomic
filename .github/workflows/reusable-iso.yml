@@ -56,7 +56,17 @@ jobs:
           enrollment_password: 'ublue-os'
           enable_cache_dnf: "false"
           enable_cache_skopeo: "false"
-          flatpak_remote_refs: "org.gnome.Calculator"
+          flatpak_remote_refs: 
+            "com.github.tchx84.Flatseal \
+            org.gnome.Calculator \
+            org.gnome.Evince \
+            org.gnome.FileRoller \
+            org.gnome.FontManager \
+            org.gnome.Loupe \
+            org.gnome.TextEditor \
+            org.mozilla.firefox \
+            org.freedesktop.Platform.openh264/x86_64/2.4.1 \
+            org.freedesktop.Platform.ffmpeg-full/x86_64/24.08"
 
       - name: Get ISO names
         id: iso_names
