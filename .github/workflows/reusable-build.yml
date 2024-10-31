@@ -3,9 +3,6 @@ name: "Build Image"
 on: 
   workflow_call:
     inputs:
-      virtualization:
-        type: string
-        default: "no"
       fedora_version:
         type: string
         required: true
@@ -23,12 +20,17 @@ jobs:
       matrix:
         fedora_version:
           - ${{ inputs.fedora_version }}
-        variant:
+        hyprland_build:
         - fedora
         - solopasha
+        - solopasha-virt
         - git
     env:
       IMAGE_REGISTRY: ghcr.io/${{ github.repository_owner }}
+      IMAGE_NAME:
+      HYPRLAND_BUILD:
+      IMAGE_DESC:
+      VIRTUALIZATION:
     steps:
       # Checkout push-to-registry action GitHub repository
       - name: Checkout Push to Registry action
@@ -37,14 +39,19 @@ jobs:
       - name: Matrix Variables
         shell: bash
         run: |
-          if [[ "${{ matrix.variant }}" == "fedora" ]]; then
+          echo "HYPRLAND_BUILD=${{ matrix.hyprland_build }}" >> $GITHUB_ENV
+          echo "VIRTUALIZATION='no' >> $GITHUB_ENV"
+          if [[ "${{ matrix.hyprland_build }}" == "fedora" ]]; then
               echo "IMAGE_DESC='Hyprland Shell Blue Image Fedora'" >> $GITHUB_ENV
-          elif [[ "${{ matrix.variant }}" == "solopasha" ]]; then
+          elif [[ "${{ matrix.hyprland_build }}" == "solopasha" ]]; then
               echo "IMAGE_DESC='Hyprland Shell Blue Image Solopasha'" >> $GITHUB_ENV
-          elif [[ "${{ matrix.variant }}" == "git" ]]; then
+          elif [[ "${{ matrix.hyprland_build }}" == "solopasha-virt" ]]; then
+              echo "IMAGE_DESC='Hyprland Shell Blue Image Solopasha with Virtualization'" >> $GITHUB_ENV
+              echo "HYPRLAND_BUILD='solopasha'" >> $GITHUB_ENV
+          elif [[ "${{ matrix.hyprland_build }}" == "git" ]]; then
               echo "IMAGE_DESC='Hyprland Shell Blue Image Git'" >> $GITHUB_ENV
           fi
-          echo "IMAGE_NAME=${{ github.event.repository.name }}-${{ matrix.variant }}" >> $GITHUB_ENV
+          echo "IMAGE_NAME=${{ github.event.repository.name }}-${{ matrix.hyprland_build }}" >> $GITHUB_ENV
       
       - name: Maximize build space
         if: false
@@ -147,8 +154,8 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           oci: false
           build-args: |
-            HYPRLAND_BUILD=${{matrix.variant}}
-            VIRTUALIZATION=${{inputs.virtualization}}
+            HYPRLAND_BUILD=${{env.HYPRLAND_BUILD}}
+            VIRTUALIZATION=${{env.VIRTUALIZATION}}
             SOURCE_TAG=${{ matrix.fedora_version }}
 
       # Workaround bug where capital letters in your GitHub username make it impossible to push to GHCR.
