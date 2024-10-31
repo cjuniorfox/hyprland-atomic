@@ -46,8 +46,8 @@ jobs:
               echo "IMAGE_DESC='Hyprland Shell Blue Image Solopasha'" >> $GITHUB_ENV
           elif [[ "${{ matrix.hyprland_build }}" == "solopasha-virt" ]]; then
               echo "IMAGE_DESC='Hyprland Shell Blue Image Solopasha with Virtualization'" >> $GITHUB_ENV
-              echo "HYPRLAND_BUILD='solopasha'" >> $GITHUB_ENV
-              echo "VIRTUALIZATION='yes'" >> $GITHUB_ENV
+              echo "HYPRLAND_BUILD=solopasha" >> $GITHUB_ENV
+              echo "VIRTUALIZATION=yes" >> $GITHUB_ENV
           elif [[ "${{ matrix.hyprland_build }}" == "git" ]]; then
               echo "IMAGE_DESC='Hyprland Shell Blue Image Git'" >> $GITHUB_ENV
           fi
