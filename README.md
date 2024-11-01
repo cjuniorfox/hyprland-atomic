@@ -32,28 +32,28 @@ You can download the latest version of the distribution and its checksum from th
 
 If you're using Silverblue or alike, you can rebase to this repository doing the following:
 
-### Hyprland Fedora 40
+### Hyprland Fedora 41
 
 ```sh
-rpm-ostree rebase ostree-image-signed:docker://ghcr.io/cjuniorfox/hyprland-atomic-fedora:40
+rpm-ostree rebase ostree-image-signed:docker://ghcr.io/cjuniorfox/hyprland-atomic-fedora:41
 ```
 
-### Hyprland Solopasha 40
+### Hyprland Solopasha 41
 
 ```sh
-rpm-ostree rebase ostree-image-signed:docker://ghcr.io/cjuniorfox/hyprland-atomic-solopasha:40
+rpm-ostree rebase ostree-image-signed:docker://ghcr.io/cjuniorfox/hyprland-atomic-solopasha:41
 ```
 
-### Hyprland Solopasha 40 with Virtualization
+### Hyprland Solopasha 41 with Virtualization
 
 ```sh
-rpm-ostree rebase ostree-image-signed:docker://ghcr.io/cjuniorfox/hyprland-atomic-solopasha-virt:40
+rpm-ostree rebase ostree-image-signed:docker://ghcr.io/cjuniorfox/hyprland-atomic-solopasha-virt:41
 ```
 
-### Hyprland Solopasha/Git 40
+### Hyprland Solopasha/Git 41
 
 ```sh
-rpm-ostree rebase ostree-image-signed:docker://ghcr.io/cjuniorfox/hyprland-atomic-git:40
+rpm-ostree rebase ostree-image-signed:docker://ghcr.io/cjuniorfox/hyprland-atomic-git:41
 ```
 
 ## Features
