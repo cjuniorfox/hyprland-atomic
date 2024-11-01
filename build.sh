@@ -10,7 +10,6 @@ echo "Fedora version: ${RELEASE}"
 
 # Install RPM packages
 rpm-ostree install \
-    adwaita-blue-gtk-theme \
     adwaita-gtk2-theme \
     adwaita-icon-theme \
     adwaita-qt5 \
@@ -46,7 +45,7 @@ rpm-ostree install \
     socat \
     swaybg \
     system-config-printer \
-    polkit-gnome \
+    polkit \
     tldr \
     xdg-user-dirs \
     xdg-user-dirs-gtk \
