@@ -42,6 +42,7 @@ rpm-ostree install \
     rofimoji \
     sddm \
     seahorse \
+    setroubleshoot \
     socat \
     swaybg \
     system-config-printer \
