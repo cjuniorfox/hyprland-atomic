@@ -50,7 +50,6 @@ rpm-ostree install \
     tldr \
     xdg-user-dirs \
     xdg-user-dirs-gtk \
-    xdg-desktop-portal-hyprland \
     vulkan-headers vulkan-loader vulkan-tools \
     wlr-randr \
     yaru-{gtk2,gtk3,gtk4,icon,sound}-theme \
@@ -75,7 +74,7 @@ fi
 
 # Hyprland from Fedora repository
 if [[ "${HYPRLAND_BUILD}" == "fedora" ]]; then
-    rpm-ostree install hyprland
+    rpm-ostree install xdg-desktop-portal-hyprland hyprland
 fi
 
 # Add COPR repositories
@@ -92,9 +91,9 @@ rpm-ostree install cliphist eww-git hypridle hyprlock hyprshot waypaper
 
 # Hyprland from solopasha
 if [[ "${HYPRLAND_BUILD}" == "git" ]]; then
-    rpm-ostree install hyprland-git
+    rpm-ostree install xdg-desktop-portal-hyprland hyprland-git
 elif [[ "${HYPRLAND_BUILD}" == "solopasha" ]]; then
-    rpm-ostree install hyprland
+    rpm-ostree install xdg-desktop-portal-hyprland hyprland
 fi
 
 #Install COPR packages from cjuniorfox/hyprland-shell
