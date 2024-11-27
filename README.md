@@ -8,25 +8,25 @@ This repository is dedicated to building and customizing a Universal Blue image 
 
 You can download the latest version of the distribution and its checksum from the following links:
 
-### Hyperland Fedora 40
+### Hyperland Fedora 41
 
-- [Hyprland Atomic Fedora ISO](https://juniorfox-net-isos.s3.sa-east-1.amazonaws.com/hyprland-atomic-fedora-x86_64-40.iso)
-- [Hyprland Atomic Fedora ISO Checksum](https://juniorfox-net-isos.s3.sa-east-1.amazonaws.com/hyprland-atomic-fedora-x86_64-40.iso-CHECKSUM)
+- [Hyprland Atomic Fedora ISO](https://juniorfox-net-isos.s3.sa-east-1.amazonaws.com/hyprland-atomic-fedora-x86_64-41.iso)
+- [Hyprland Atomic Fedora ISO Checksum](https://juniorfox-net-isos.s3.sa-east-1.amazonaws.com/hyprland-atomic-fedora-x86_64-41.iso-CHECKSUM)
 
-### Hyperland Solopasha 40
+### Hyperland Solopasha 41
 
-- [Hyprland Atomic Solopasha ISO](https://juniorfox-net-isos.s3.sa-east-1.amazonaws.com/hyprland-atomic-solopasha-x86_64-40.iso)
-- [Hyprland Atomic Solopasha ISO Checksum](https://juniorfox-net-isos.s3.sa-east-1.amazonaws.com/hyprland-atomic-solopasha-x86_64-40.iso-CHECKSUM)
+- [Hyprland Atomic Solopasha ISO](https://juniorfox-net-isos.s3.sa-east-1.amazonaws.com/hyprland-atomic-solopasha-x86_64-41.iso)
+- [Hyprland Atomic Solopasha ISO Checksum](https://juniorfox-net-isos.s3.sa-east-1.amazonaws.com/hyprland-atomic-solopasha-x86_64-41.iso-CHECKSUM)
 
-### Hyperland Solopasha 40 with Virtualization
+### Hyperland Solopasha 41 with Virtualization
 
-- [Hyprland Atomic Solopasha Virt ISO](https://juniorfox-net-isos.s3.sa-east-1.amazonaws.com/hyprland-atomic-solopasha-virt-x86_64-40.iso)
-- [Hyprland Atomic Solopasha Virt ISO Checksum](https://juniorfox-net-isos.s3.sa-east-1.amazonaws.com/hyprland-atomic-solopasha-virt-x86_64-40.iso-CHECKSUM)
+- [Hyprland Atomic Solopasha Virt ISO](https://juniorfox-net-isos.s3.sa-east-1.amazonaws.com/hyprland-atomic-solopasha-virt-x86_64-41.iso)
+- [Hyprland Atomic Solopasha Virt ISO Checksum](https://juniorfox-net-isos.s3.sa-east-1.amazonaws.com/hyprland-atomic-solopasha-virt-x86_64-41.iso-CHECKSUM)
 
-### Hyperland Solopasha Git Build 40
+### Hyperland Solopasha Git Build 41
 
-- [Hyprland Atomic Solopasha/Git ISO](https://juniorfox-net-isos.s3.sa-east-1.amazonaws.com/hyprland-atomic-git-x86_64-40.iso)
-- [Hyprland Atomic Solopasha/Git ISO Checksum](https://juniorfox-net-isos.s3.sa-east-1.amazonaws.com/hyprland-atomic-git-x86_64-40.iso-CHECKSUM)
+- [Hyprland Atomic Solopasha/Git ISO](https://juniorfox-net-isos.s3.sa-east-1.amazonaws.com/hyprland-atomic-git-x86_64-41.iso)
+- [Hyprland Atomic Solopasha/Git ISO Checksum](https://juniorfox-net-isos.s3.sa-east-1.amazonaws.com/hyprland-atomic-git-x86_64-41.iso-CHECKSUM)
 
 ## Rebase
 
