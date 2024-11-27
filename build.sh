@@ -34,6 +34,7 @@ rpm-ostree install \
     htop \
     kitty \
     liberation-fonts \
+    lxqt-policykit \
     nautilus \
     network-manager-applet \
     pavucontrol \
