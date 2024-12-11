@@ -98,7 +98,7 @@ elif [[ "${HYPRLAND_BUILD}" == "solopasha" ]]; then
 fi
 
 #Install COPR packages from cjuniorfox/hyprland-shell
-rpm-ostree install hyprland-shell-config wol-changer  
+rpm-ostree install bibata-cursor-theme hyprland-shell-config wol-changer  
 
 #Install COPR packages from tofik/sway
 rpm-ostree install sway-audio-idle-inhibit
