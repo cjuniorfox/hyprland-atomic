@@ -12,7 +12,6 @@ echo "Fedora version: ${RELEASE}"
 rpm-ostree install \
     adwaita-gtk2-theme \
     adwaita-icon-theme \
-    adwaita-qt5 \
     bash-completion \
     blueman \
     breeze-cursor-theme \
