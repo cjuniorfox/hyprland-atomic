@@ -55,7 +55,7 @@ jobs:
       
       - name: Maximize build space
         if: false
-        uses: ublue-os/remove-unwanted-software@v7
+        uses: ublue-os/remove-unwanted-software@v8
 
       - name: Generate tags
         id: generate-tags
