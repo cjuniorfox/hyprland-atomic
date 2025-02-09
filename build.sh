@@ -31,6 +31,8 @@ rpm-ostree install \
     gvfs-smb \
     gvfs-nfs \
     htop \
+    joystick-support \
+    kernel-modules-extra \
     kitty \
     liberation-fonts \
     lxqt-policykit \
