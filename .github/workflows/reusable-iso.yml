@@ -62,6 +62,7 @@ jobs:
             org.gnome.Evince \
             org.gnome.FileRoller \
             org.gnome.FontManager \
+            org.gnome.SimpleScan \
             org.gnome.Loupe \
             org.gnome.TextEditor \
             org.mozilla.firefox \
