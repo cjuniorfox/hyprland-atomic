@@ -80,7 +80,7 @@ if [[ "${HYPRLAND_BUILD}" == "fedora" ]]; then
 fi
 
 # Add COPR repositories
-copr="cjuniorfox/hyprland-shell solopasha/hyprland tofik/sway"
+copr="cjuniorfox/hyprland-shell solopasha/hyprland"
 for i in ${copr}; do
     MAINTAINER="${i%%/*}"
     REPOSITORY="${i##*/}"
@@ -100,9 +100,6 @@ fi
 
 #Install COPR packages from cjuniorfox/hyprland-shell
 rpm-ostree install bibata-cursor-theme hyprland-shell-config wol-changer  
-
-#Install COPR packages from tofik/sway
-rpm-ostree install sway-audio-idle-inhibit
 
 # Remove the Firefox related packages (will be installed over flatpak)
 rpm-ostree override remove firefox-langpacks firefox
