@@ -89,13 +89,13 @@ for i in ${copr}; do
 done
 
 #Install COPR packages from solopasha
-rpm-ostree install cliphist eww-git hyprlock hyprshot waypaper 
+rpm-ostree install cliphist eww-git hypridle hyprshot waypaper 
 
 # Hyprland from solopasha
 if [[ "${HYPRLAND_BUILD}" == "git" ]]; then
-    rpm-ostree install hypridle xdg-desktop-portal-hyprland hyprland-git
+    rpm-ostree install hyprlock xdg-desktop-portal-hyprland hyprland-git
 elif [[ "${HYPRLAND_BUILD}" == "solopasha" ]]; then
-    rpm-ostree install hypridle xdg-desktop-portal-hyprland hyprland
+    rpm-ostree install hyprlock xdg-desktop-portal-hyprland hyprland
 fi
 
 #Install COPR packages from cjuniorfox/hyprland-shell
