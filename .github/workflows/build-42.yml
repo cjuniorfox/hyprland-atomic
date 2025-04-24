@@ -17,7 +17,7 @@ jobs:
       packages: write
       id-token: write
     name: build
-    uses: ./.github/workflows/reusable-build-no-git.yml
+    uses: ./.github/workflows/reusable-build.yml
     secrets: inherit
     with:
       fedora_version: 42
