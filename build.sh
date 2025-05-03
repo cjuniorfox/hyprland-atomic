@@ -18,7 +18,6 @@ rpm-ostree install \
     breeze-gtk \
     breeze-icon-theme \
     chrony \
-    dunst \
     firewall-config \
     flatpak \
     fontawesome-6-free-fonts \
@@ -47,6 +46,7 @@ rpm-ostree install \
     setroubleshoot \
     socat \
     swaybg \
+    swapnc \
     system-config-printer \
     polkit \
     tldr \
