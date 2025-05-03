@@ -46,7 +46,7 @@ rpm-ostree install \
     setroubleshoot \
     socat \
     swaybg \
-    swapnc \
+    swaync \
     system-config-printer \
     polkit \
     tldr \
