@@ -187,7 +187,7 @@ jobs:
             --disable-content-trust  
 
       # Sign container
-      - uses: sigstore/cosign-installer@v3.8.2
+      - uses: sigstore/cosign-installer@v3.9.1
         if: github.event_name != 'pull_request'  
 
       - name: Sign container image
