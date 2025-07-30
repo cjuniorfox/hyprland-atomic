@@ -1,7 +1,11 @@
-name: Build Custom ISO
-
-on:
-  workflow_dispatch:
+name: Installer ISO
+on: 
+  workflow_call:
+    inputs:
+      fedora_version:
+        description: "The Fedora release version: 39, 40, 41 etc"
+        type: string
+        required: true
 
 jobs:
   build-iso:
