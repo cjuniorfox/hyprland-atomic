@@ -58,16 +58,16 @@ jobs:
         id: flatpaks
         run: |
           refs=$(cat <<EOF
-          app/com.github.tchx84.Flatseal/x86_64/stable
-          app/org.gnome.Calculator/x86_64/stable
-          app/org.gnome.Evince/x86_64/stable
-          app/org.gnome.FileRoller/x86_64/stable
-          app/org.gnome.Logs/x86_64/stable
-          app/org.gnome.Loupe/x86_64/stable
-          app/org.gnome.NautilusPreviewer/x86_64/stable
-          app/org.gnome.FontManager/x86_64/stable
-          app/org.gnome.SimpleScan/x86_64/stable
-          app/org.gnome.TextEditor/x86_64/stable
+          app/com.github.tchx84.Flatseal/x86_64/stable \
+          app/org.gnome.Calculator/x86_64/stable \
+          app/org.gnome.Evince/x86_64/stable \
+          app/org.gnome.FileRoller/x86_64/stable \
+          app/org.gnome.Logs/x86_64/stable \
+          app/org.gnome.Loupe/x86_64/stable \
+          app/org.gnome.NautilusPreviewer/x86_64/stable \
+          app/org.gnome.FontManager/x86_64/stable \
+          app/org.gnome.SimpleScan/x86_64/stable \
+          app/org.gnome.TextEditor/x86_64/stable \
           app/org.mozilla.firefox/x86_64/stable
           EOF
           )
