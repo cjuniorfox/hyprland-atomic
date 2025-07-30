@@ -69,8 +69,8 @@ jobs:
           enrollment_password: 'ublue-os'
           enable_cache_dnf: "false"
           enable_cache_skopeo: "false"
-          flatpak_remote_refs: |
-            app/com.github.tchx84.Flatseal/x86_64/stable \
+          flatpak_remote_refs: 
+            "app/com.github.tchx84.Flatseal/x86_64/stable \
             app/org.gnome.Calculator/x86_64/stable \
             app/org.gnome.Evince/x86_64/stable \
             app/org.gnome.FileRoller/x86_64/stable \
@@ -80,7 +80,7 @@ jobs:
             app/org.gnome.FontManager/x86_64/stable \
             app/org.gnome.SimpleScan/x86_64/stable \
             app/org.gnome.TextEditor/x86_64/stable \
-            org.freedesktop.Platform.ffmpeg-full/x86_64/24.08
+            org.freedesktop.Platform.ffmpeg-full/x86_64/24.08"
 
       - name: Get ISO names
         id: iso_names
