@@ -20,7 +20,7 @@ jobs:
           - fedora
           - solopasha
           - solopasha-virt
-          #- git
+
     env:
       ARCH: "x86_64"
       IMAGE_NAME: ${{ github.event.repository.name }}-${{ matrix.hyprland_build }}
@@ -37,12 +37,31 @@ jobs:
       iso_upload_dir:
 
     steps:
-      - name: Checkout Push to Registry action
+      - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Generate Flatpak Refs Without openh264
+        run: |
+          mkdir -p output
+          cat <<EOF > output/flatpak_refs.txt
+          app/com.github.tchx84.Flatseal/x86_64/stable
+          app/org.gnome.Calculator/x86_64/stable
+          app/org.gnome.Evince/x86_64/stable
+          app/org.gnome.FileRoller/x86_64/stable
+          app/org.gnome.Logs/x86_64/stable
+          app/org.gnome.Loupe/x86_64/stable
+          app/org.gnome.NautilusPreviewer/x86_64/stable
+          app/org.gnome.FontManager/x86_64/stable
+          app/org.gnome.SimpleScan/x86_64/stable
+          app/org.gnome.TextEditor/x86_64/stable
+          app/org.mozilla.firefox/x86_64/stable
+          EOF
+
+          # Remove any refs with openh264
+          grep -v openh264 output/flatpak_refs.txt > output/flatpaks_with_deps
 
       - name: Build ISO
         uses: jasonn3/build-container-installer@v1.3.0
-        
         id: build_iso
         with:
           arch: ${{ env.ARCH }}
@@ -56,17 +75,7 @@ jobs:
           enrollment_password: 'ublue-os'
           enable_cache_dnf: "false"
           enable_cache_skopeo: "false"
-          flatpak_remote_refs: 
-            "com.github.tchx84.Flatseal \
-            org.gnome.Calculator \
-            org.gnome.Evince \
-            org.gnome.FileRoller \
-            org.gnome.FontManager \
-            org.gnome.SimpleScan \
-            org.gnome.Loupe \
-            org.gnome.TextEditor \
-            org.mozilla.firefox \
-            org.freedesktop.Platform.ffmpeg-full/x86_64/24.08"
+          flatpak_remote_refs_path: output/flatpaks_with_deps
 
       - name: Get ISO names
         id: iso_names
@@ -100,23 +109,3 @@ jobs:
       - name: Output ISO URL
         run: |
           echo "ISO URL: https://${{ env.S3_BUCKET }}.s3.${{ env.AWS_REGION }}.amazonaws.com/${{ env.iso_name }}"
-      
-      - name: Authenticate to ISO Server
-        id: auth_iso_server
-        if: false
-        env:
-          UPLOAD_SERVER: ${{ secrets.UPLOAD_SERVER }}
-          PUBLIC_KEY_JSON: ${{ secrets.PUBLIC_KEY_JSON }}
-        run: |
-          token=$(curl -X POST "${UPLOAD_SERVER}/token" -H 'Content-Type: application/json' -d "${PUBLIC_KEY_JSON}" | jq -r .access_token)
-          echo "TOKEN=$token" >> $GITHUB_ENV
-
-      - name: Upload ISO to_Server
-        id: upload_iso_to_server
-        if: false
-        env:
-          TOKEN: ${{ env.TOKEN }}
-          UPLOAD_SERVER: ${{ secrets.UPLOAD_SERVER }}
-        run: |
-          curl -X POST -F "file=@${{ env.iso_upload_dir }}/${{ env.checksum }}" -H "Authorization: Bearer $TOKEN" "${UPLOAD_SERVER}/upload"
-          curl -X POST -F "file=@${{ env.iso_upload_dir }}/${{ env.iso_name }}" -H "Authorization: Bearer $TOKEN" "${UPLOAD_SERVER}/upload"
