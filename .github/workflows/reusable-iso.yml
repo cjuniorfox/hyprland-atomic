@@ -66,7 +66,6 @@ jobs:
             org.gnome.Loupe \
             org.gnome.TextEditor \
             org.mozilla.firefox \
-            org.freedesktop.Platform.openh264/x86_64/2.4.1 \
             org.freedesktop.Platform.ffmpeg-full/x86_64/24.08"
 
       - name: Get ISO names
