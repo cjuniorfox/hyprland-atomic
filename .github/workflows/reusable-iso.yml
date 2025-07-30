@@ -20,7 +20,7 @@ jobs:
           - fedora
           - solopasha
           - solopasha-virt
-          - git
+          #- git
     env:
       ARCH: "x86_64"
       IMAGE_NAME: ${{ github.event.repository.name }}-${{ matrix.hyprland_build }}
