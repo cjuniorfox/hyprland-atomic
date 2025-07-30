@@ -11,10 +11,19 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up QEMU
+      - name: Set up QEMU for aarch64 builds (optional)
         uses: docker/setup-qemu-action@v3
         with:
           platforms: all
+
+      # Optional: cache Flatpak and DNF to speed up builds
+      - name: Set up cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/flatpak
+            ~/.cache/dnf
+          key: ${{ runner.os }}-flatpak-dnf-cache
 
       - name: Set up Flatpak Refs
         id: setup-flatpaks
