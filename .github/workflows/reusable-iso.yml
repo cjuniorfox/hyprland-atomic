@@ -53,9 +53,7 @@ EOF
       - name: Debug Flatpak Refs
         run: echo "${{ steps.setup-flatpaks.outputs.flatpak_refs }}"
 
-      - name: Build ISO
-        uses: jasonn3/build-container-installer@v1.3.0
-        id: build_iso
+       id: build_iso
         with:
           arch: ${{ env.ARCH }}
           image_name: ${{ env.IMAGE_NAME }}
@@ -68,7 +66,7 @@ EOF
           enrollment_password: 'ublue-os'
           enable_cache_dnf: "false"
           enable_cache_skopeo: "false"
-          flatpak_remote_refs: "${{ env.FLATPAKS }}"
+          flatpak_remote_refs:  "${{ env.FLATPAKS }}"
 
       - name: Get ISO names
         id: iso_names
