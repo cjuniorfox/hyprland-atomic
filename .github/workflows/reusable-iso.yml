@@ -41,9 +41,9 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Generate Flatpak Refs Without openh264
+        id: flatpaks
         run: |
-          mkdir -p output
-          cat <<EOF > output/flatpak_refs.txt
+          refs=$(cat <<EOF
           app/com.github.tchx84.Flatseal/x86_64/stable
           app/org.gnome.Calculator/x86_64/stable
           app/org.gnome.Evince/x86_64/stable
@@ -56,10 +56,11 @@ jobs:
           app/org.gnome.TextEditor/x86_64/stable
           app/org.mozilla.firefox/x86_64/stable
           EOF
+          )
 
-          # Remove any refs with openh264
-          grep -v openh264 output/flatpak_refs.txt > output/flatpaks_with_deps
-
+          filtered=$(echo "$refs" | grep -v openh264 | sed ':a;N;$!ba;s/\n/\\n/g')
+          echo "FLATPAKS=${filtered}" >> $GITHUB_ENV
+          
       - name: Build ISO
         uses: jasonn3/build-container-installer@v1.3.0
         id: build_iso
@@ -75,7 +76,7 @@ jobs:
           enrollment_password: 'ublue-os'
           enable_cache_dnf: "false"
           enable_cache_skopeo: "false"
-          flatpak_remote_refs_path: output/flatpaks_with_deps
+          flatpak_remote_refs: ${{ env.FLATPAKS }}
 
       - name: Get ISO names
         id: iso_names
