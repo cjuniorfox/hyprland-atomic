@@ -50,10 +50,9 @@ EOF
           echo "$refs" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
 
-      - name: Debug Flatpak Refs
-        run: echo "${{ steps.setup-flatpaks.outputs.flatpak_refs }}"
-
-       id: build_iso
+      - name: Build ISO
+      uses: jasonn3/build-container-installer@v1.3.0
+      id: build_iso
         with:
           arch: ${{ env.ARCH }}
           image_name: ${{ env.IMAGE_NAME }}
