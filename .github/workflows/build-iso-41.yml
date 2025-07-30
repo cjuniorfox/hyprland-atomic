@@ -1,5 +1,5 @@
 ---
-name: "Build ISO for Ublue Hyprland"
+name: "Build ISO for Ublue Hyprland 41"
 on:
   schedule:
     - cron: '05 12 * * 1/2'  # 12:05am UTC every two weeks on Monday
