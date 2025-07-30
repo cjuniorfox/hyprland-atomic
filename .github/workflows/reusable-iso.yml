@@ -11,25 +11,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up QEMU for aarch64 builds (optional)
+      - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
         with:
           platforms: all
 
-      # Optional: cache Flatpak and DNF to speed up builds
-      - name: Set up cache
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.cache/flatpak
-            ~/.cache/dnf
-          key: ${{ runner.os }}-flatpak-dnf-cache
-
-      # Generate the list of Flatpak refs WITHOUT openh264 dependency
-      - name: Generate Flatpak Refs Without openh264
-        id: flatpaks
+      - name: Set up Flatpak Refs
+        id: setup-flatpaks
         run: |
-          refs=$(cat <<EOF
+          echo "flatpak_refs<<EOF" >> $GITHUB_OUTPUT
+          cat <<EOL >> $GITHUB_OUTPUT
 app/com.github.tchx84.Flatseal/x86_64/stable
 app/org.gnome.Calculator/x86_64/stable
 app/org.gnome.Evince/x86_64/stable
@@ -41,17 +32,12 @@ app/org.gnome.FontManager/x86_64/stable
 app/org.gnome.SimpleScan/x86_64/stable
 app/org.gnome.TextEditor/x86_64/stable
 app/org.mozilla.firefox/x86_64/stable
-EOF
-          )
-          echo "FLATPAKS<<EOF" >> $GITHUB_ENV
-          echo "$refs" >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
+EOL
+          echo "EOF" >> $GITHUB_OUTPUT
 
-      # Optional: Debug the list
       - name: Debug Flatpak Refs
-        run: echo "${{ env.FLATPAKS }}"
+        run: echo "${{ steps.setup-flatpaks.outputs.flatpak_refs }}"
 
-      # Build the custom ISO
       - name: Build ISO
         uses: jasonn3/build-container-installer@v1.3.0
         with:
@@ -63,4 +49,4 @@ EOF
           enable_flatpak_dependencies: true
           flatpak_remote_name: "flathub"
           flatpak_remote_url: "https://dl.flathub.org/repo/flathub.flatpakrepo"
-          flatpak_remote_refs: "${{ env.FLATPAKS }}"
+          flatpak_remote_refs: "${{ steps.setup-flatpaks.outputs.flatpak_refs }}"
