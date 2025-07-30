@@ -21,18 +21,18 @@ jobs:
         run: |
           echo "flatpak_refs<<EOF" >> $GITHUB_OUTPUT
           cat <<EOL >> $GITHUB_OUTPUT
-app/com.github.tchx84.Flatseal/x86_64/stable
-app/org.gnome.Calculator/x86_64/stable
-app/org.gnome.Evince/x86_64/stable
-app/org.gnome.FileRoller/x86_64/stable
-app/org.gnome.Logs/x86_64/stable
-app/org.gnome.Loupe/x86_64/stable
-app/org.gnome.NautilusPreviewer/x86_64/stable
-app/org.gnome.FontManager/x86_64/stable
-app/org.gnome.SimpleScan/x86_64/stable
-app/org.gnome.TextEditor/x86_64/stable
-app/org.mozilla.firefox/x86_64/stable
-EOL
+          app/com.github.tchx84.Flatseal/x86_64/stable
+          app/org.gnome.Calculator/x86_64/stable
+          app/org.gnome.Evince/x86_64/stable
+          app/org.gnome.FileRoller/x86_64/stable
+          app/org.gnome.Logs/x86_64/stable
+          app/org.gnome.Loupe/x86_64/stable
+          app/org.gnome.NautilusPreviewer/x86_64/stable
+          app/org.gnome.FontManager/x86_64/stable
+          app/org.gnome.SimpleScan/x86_64/stable
+          app/org.gnome.TextEditor/x86_64/stable
+          app/org.mozilla.firefox/x86_64/stable
+          EOL
           echo "EOF" >> $GITHUB_OUTPUT
 
       - name: Debug Flatpak Refs
@@ -40,13 +40,50 @@ EOL
 
       - name: Build ISO
         uses: jasonn3/build-container-installer@v1.3.0
+        id: build_iso
         with:
-          image_name: "my-custom-iso"
-          image_tag: "latest"
-          iso_name: "CustomImage"
-          arch: "x86_64"
-          variant: "gnome"
-          enable_flatpak_dependencies: true
-          flatpak_remote_name: "flathub"
-          flatpak_remote_url: "https://dl.flathub.org/repo/flathub.flatpakrepo"
-          flatpak_remote_refs: "${{ steps.setup-flatpaks.outputs.flatpak_refs }}"
+          arch: ${{ env.ARCH }}
+          image_name: ${{ env.IMAGE_NAME }}
+          image_repo: ${{ env.IMAGE_REPO }}
+          image_tag: ${{ env.IMAGE_TAG }}
+          version: ${{ env.VERSION }}
+          variant: ${{ env.VARIANT }}
+          iso_name: ${{ env.IMAGE_NAME }}-${{ env.ARCH }}-${{ env.IMAGE_TAG }}.iso
+          secure_boot_key_url: 'https://github.com/ublue-os/akmods/raw/main/certs/public_key.der'
+          enrollment_password: 'ublue-os'
+          enable_cache_dnf: "false"
+          enable_cache_skopeo: "false"
+          flatpak_remote_refs: ${{ env.FLATPAKS }}
+
+      - name: Get ISO names
+        id: iso_names
+        run: |
+          echo "iso_name=${{ steps.build_iso.outputs.iso_name }}" >> $GITHUB_ENV
+          echo "checksum=${{ steps.build_iso.outputs.iso_name }}-CHECKSUM" >> $GITHUB_ENV
+          echo "iso_upload_dir=${{ github.workspace }}/upload" >> $GITHUB_ENV
+
+      - name: Move ISOs to Upload Directory
+        run: |
+          mkdir -p ${{ env.iso_upload_dir }}
+          mv ${{ steps.build_iso.outputs.iso_path }}/${{ env.iso_name }} ${{ env.iso_upload_dir }}
+          mv ${{ steps.build_iso.outputs.iso_path }}/${{ env.checksum }} ${{ env.iso_upload_dir }}
+
+      - name: Upload ISO as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.iso_name }}
+          path: ${{ env.iso_upload_dir }}
+
+      - name: Upload ISO to S3
+        run: |
+          aws s3 cp "${{ env.iso_upload_dir }}/${{ env.iso_name }}" "s3://${{ env.S3_BUCKET }}/${{ env.iso_name }}"
+          aws s3 cp "${{ env.iso_upload_dir }}/${{ env.checksum }}" "s3://${{ env.S3_BUCKET }}/${{ env.checksum }}"
+
+      - name: Make ISO public
+        run: |
+          aws s3api put-object-acl --bucket ${{ env.S3_BUCKET }} --key "${{ env.iso_name }}" --acl public-read
+          aws s3api put-object-acl --bucket ${{ env.S3_BUCKET }} --key "${{ env.checksum }}" --acl public-read
+
+      - name: Output ISO URL
+        run: |
+          echo "ISO URL: https://${{ env.S3_BUCKET }}.s3.${{ env.AWS_REGION }}.amazonaws.com/${{ env.iso_name }}"
