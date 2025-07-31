@@ -96,7 +96,8 @@ jobs:
           enrollment_password: 'ublue-os'
           enable_cache_dnf: "false"
           enable_cache_skopeo: "false"
-          flatpak_remote_refs_dir: "installer/hyprland"
+          flatpak_remote_refs_dir: "/output"
+          enable_flatpak_dependencies: "false"
 
       - name: Get ISO names
         id: iso_names
