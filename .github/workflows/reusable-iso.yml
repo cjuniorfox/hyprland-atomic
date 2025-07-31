@@ -80,7 +80,7 @@ jobs:
             app/org.gnome.FontManager/x86_64/stable \
             app/org.gnome.SimpleScan/x86_64/stable \
             app/org.gnome.TextEditor/x86_64/stable \
-            org.freedesktop.Platform.ffmpeg-full/x86_64/24.08"
+            app/org.mozilla.firefox/x86_64/stable"
 
       - name: Get ISO names
         id: iso_names
