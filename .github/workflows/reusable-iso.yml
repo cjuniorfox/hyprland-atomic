@@ -23,6 +23,7 @@ jobs:
           #- git
     env:
       ARCH: "x86_64"
+      FLATPAK_REFS_DIR: "installer/hyprland"
       IMAGE_NAME: ${{ github.event.repository.name }}-${{ matrix.hyprland_build }}
       IMAGE_REPO: "ghcr.io/cjuniorfox"
       IMAGE_TAG: ${{ matrix.fedora_version }}
@@ -58,7 +59,7 @@ jobs:
           # Make temp space
           TEMP_FLATPAK_INSTALL_DIR=$(mktemp -d -p ${{ github.workspace }} flatpak.XXX)
           # Get list of refs from directory
-          FLATPAK_REFS_DIR=${{ github.workspace }}/installer/hyprland/
+          FLATPAK_REFS_DIR=${{ github.workspace }}${{env.FLATPAK_REFS_DIR}}
           FLATPAK_REFS_DIR_LIST=$(cat ${FLATPAK_REFS_DIR}/* | tr '\n' ' ' )
           # Generate install script
           cat << EOF > ${TEMP_FLATPAK_INSTALL_DIR}/script.sh
@@ -96,7 +97,7 @@ jobs:
           enrollment_password: 'ublue-os'
           enable_cache_dnf: "false"
           enable_cache_skopeo: "false"
-          flatpak_remote_refs_dir: "/output"
+          flatpak_remote_refs_dir: ${{env.FLATPAK_REFS_DIR}}
           enable_flatpak_dependencies: "false"
 
       - name: Get ISO names
