@@ -85,7 +85,7 @@ jobs:
         id: read_flatpak_packages
         shell: bash
         run: |
-          for i in ${{env.FLATPAK_REFS_DIR}}/*; do
+          for i in ${{ github.workspace }}/${{env.FLATPAK_REFS_DIR}}/*; do
             echo -e "\n$i\n------";
             cat $i;
           done;
