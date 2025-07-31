@@ -106,6 +106,6 @@ rpm-ostree install bibata-cursor-theme hyprland-shell-config install-flatpak-pac
 rpm-ostree override remove firefox-langpacks firefox
 
 #Enable the Installation of the flatpak component org.freedesktop.Platform.openh264 
-# after the first boot this is needed because the flatpak version of Firefox depends # 
-# of the openh264 codec which is not available for offline installation
-systemctl enable install-flatpak-package@org.freedesktop.Platform.openh264
+# after the first boot, this is needed because the flatpak version of Firefox depends # 
+# of the openh264 codec, which is not available for offline installation
+systemctl enable install-flatpak-package@runtime-org.freedesktop.Platform.openh264-x86_64-2.5.1
