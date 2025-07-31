@@ -85,7 +85,10 @@ jobs:
         id: read_flatpak_packages
         shell: bash
         run: |
-          for i in installer/hyprland/*; do echo -e "$i\n------"; cat $i; done;
+          for i in ${{env.FLATPAK_REFS_DIR}}/*; do
+            echo -e "\n$i\n------";
+            cat $i;
+          done;
 
       - name: Build ISO
         uses: jasonn3/build-container-installer@v1.3.0
