@@ -80,7 +80,12 @@ jobs:
             --volume ${TEMP_FLATPAK_INSTALL_DIR}:/temp_flatpak_install_dir \
             ${image} /temp_flatpak_install_dir/script.sh
           docker rmi ${image}
-
+      
+      - name: List Flatpak packages with dependencies
+        id: read_flatpak_packages
+        shell: bash
+        run: |
+          for i in installer/hyprland/*; do echo -e "$i\n------"; cat $i; done;
 
       - name: Build ISO
         uses: jasonn3/build-container-installer@v1.3.0
