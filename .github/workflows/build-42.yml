@@ -1,5 +1,5 @@
 ---
-name: "ublue hyprland 42"
+name: "Build Hyprland Atomic Image 42"
 on:
   schedule:
     - cron: '05 10 * * *'  # 10:05am UTC every day
