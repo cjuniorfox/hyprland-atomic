@@ -10,23 +10,23 @@ You can download the latest version of the distribution and its checksum from th
 
 ### Hyperland Fedora 42
 
-- [Hyprland Atomic Fedora ISO](https://juniorfox-net-isos.s3.sa-east-1.amazonaws.com/hyprland-atomic-fedora-x86_64-42.iso)
-- [Hyprland Atomic Fedora ISO Checksum](https://juniorfox-net-isos.s3.sa-east-1.amazonaws.com/hyprland-atomic-fedora-x86_64-42.iso-CHECKSUM)
+- [Hyprland Atomic Fedora ISO](https://isos.juniorfox.net/hyprland-atomic-fedora-x86_64-42.iso)
+- [Hyprland Atomic Fedora ISO Checksum](https://isos.juniorfox.net/hyprland-atomic-fedora-x86_64-42.iso-CHECKSUM)
 
 ### Hyperland Solopasha 42
 
-- [Hyprland Atomic Solopasha ISO](https://juniorfox-net-isos.s3.sa-east-1.amazonaws.com/hyprland-atomic-solopasha-x86_64-42.iso)
-- [Hyprland Atomic Solopasha ISO Checksum](https://juniorfox-net-isos.s3.sa-east-1.amazonaws.com/hyprland-atomic-solopasha-x86_64-42.iso-CHECKSUM)
+- [Hyprland Atomic Solopasha ISO](https://isos.juniorfox.net/hyprland-atomic-solopasha-x86_64-42.iso)
+- [Hyprland Atomic Solopasha ISO Checksum](https://isos.juniorfox.net/hyprland-atomic-solopasha-x86_64-42.iso-CHECKSUM)
 
 ### Hyperland Solopasha 42 with Virtualization
 
-- [Hyprland Atomic Solopasha Virt ISO](https://juniorfox-net-isos.s3.sa-east-1.amazonaws.com/hyprland-atomic-solopasha-virt-x86_64-42.iso)
-- [Hyprland Atomic Solopasha Virt ISO Checksum](https://juniorfox-net-isos.s3.sa-east-1.amazonaws.com/hyprland-atomic-solopasha-virt-x86_64-42.iso-CHECKSUM)
+- [Hyprland Atomic Solopasha Virt ISO](https://isos.juniorfox.net/hyprland-atomic-solopasha-virt-x86_64-42.iso)
+- [Hyprland Atomic Solopasha Virt ISO Checksum](https://isos.juniorfox.net/hyprland-atomic-solopasha-virt-x86_64-42.iso-CHECKSUM)
 
 ### Hyperland Solopasha Git Build 42
 
-- [Hyprland Atomic Solopasha/Git ISO](https://juniorfox-net-isos.s3.sa-east-1.amazonaws.com/hyprland-atomic-git-x86_64-42.iso)
-- [Hyprland Atomic Solopasha/Git ISO Checksum](https://juniorfox-net-isos.s3.sa-east-1.amazonaws.com/hyprland-atomic-git-x86_64-42.iso-CHECKSUM)
+- [Hyprland Atomic Solopasha/Git ISO](https://isos.juniorfox.net/hyprland-atomic-git-x86_64-42.iso)
+- [Hyprland Atomic Solopasha/Git ISO Checksum](https://isos.juniorfox.net/hyprland-atomic-git-x86_64-42.iso-CHECKSUM)
 
 ## Rebase
 
