@@ -18,6 +18,7 @@ rpm-ostree install \
     breeze-gtk \
     breeze-icon-theme \
     chrony \
+    desktop-backgrounds-basic \
     dunst \
     firewall-config \
     flatpak \
