@@ -24,7 +24,6 @@ jobs:
         - fedora
         - solopasha
         - solopasha-virt
-        - git
     env:
       IMAGE_REGISTRY: ghcr.io/${{ github.repository_owner }}
       IMAGE_NAME:
@@ -63,8 +62,8 @@ jobs:
           echo "IMAGE_NAME=${{ github.event.repository.name }}-${{ matrix.hyprland_build }}" >> $GITHUB_ENV
       
       - name: Maximize build space
-        if: false
-        uses: ublue-os/remove-unwanted-software@v8
+        if: true
+        uses: ublue-os/remove-unwanted-software@v9
 
       - name: Generate tags
         id: generate-tags
@@ -76,17 +75,17 @@ jobs:
           FEDORA_VERSION=${{ matrix.fedora_version }}
           BRANCH_NAME="${GITHUB_REF##*/}"
           case "${FEDORA_VERSION}" in
-            39)
-              IS_LATEST_VERSION=false
-              IS_STABLE_VERSION=true
-              IS_GTS_VERSION=true
-              ;;
             40)
               IS_LATEST_VERSION=false
               IS_STABLE_VERSION=true
               IS_GTS_VERSION=true
               ;;
             41)
+              IS_LATEST_VERSION=false
+              IS_STABLE_VERSION=true
+              IS_GTS_VERSION=true
+              ;;
+            42)
               IS_LATEST_VERSION=true
               IS_STABLE_VERSION=true
               IS_GTS_VERSION=false
@@ -213,7 +212,7 @@ jobs:
             --disable-content-trust  
 
       # Sign container
-      - uses: sigstore/cosign-installer@v3.7.0
+      - uses: sigstore/cosign-installer@v3.9.2
         if: github.event_name != 'pull_request'  
 
       - name: Sign container image

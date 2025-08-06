@@ -1,5 +1,5 @@
 ---
-name: "ublue hyprland 42"
+name: "Build Hyprland Atomic Image 42"
 on:
   schedule:
     - cron: '05 10 * * *'  # 10:05am UTC every day
@@ -17,7 +17,7 @@ jobs:
       packages: write
       id-token: write
     name: build
-    uses: ./.github/workflows/reusable-build-no-git.yml
+    uses: ./.github/workflows/reusable-build.yml
     secrets: inherit
     with:
       fedora_version: 42

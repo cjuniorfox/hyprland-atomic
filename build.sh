@@ -19,7 +19,6 @@ rpm-ostree install \
     breeze-icon-theme \
     chrony \
     desktop-backgrounds-basic \
-    dunst \
     firewall-config \
     flatpak \
     fontawesome-6-free-fonts \
@@ -48,6 +47,7 @@ rpm-ostree install \
     setroubleshoot \
     socat \
     swaybg \
+    swaync \
     system-config-printer \
     polkit \
     tldr \
@@ -81,7 +81,7 @@ if [[ "${HYPRLAND_BUILD}" == "fedora" ]]; then
 fi
 
 # Add COPR repositories
-copr="cjuniorfox/hyprland-shell solopasha/hyprland tofik/sway"
+copr="cjuniorfox/hyprland-shell solopasha/hyprland"
 for i in ${copr}; do
     MAINTAINER="${i%%/*}"
     REPOSITORY="${i##*/}"
@@ -90,20 +90,23 @@ for i in ${copr}; do
 done
 
 #Install COPR packages from solopasha
-rpm-ostree install cliphist eww-git hypridle hyprlock hyprshot waypaper 
+rpm-ostree install cliphist eww-git 
 
 # Hyprland from solopasha
 if [[ "${HYPRLAND_BUILD}" == "git" ]]; then
-    rpm-ostree install xdg-desktop-portal-hyprland hyprland-git
+    rpm-ostree install hyprlock hypridle hyprland-qtutils hyprpaper hyprshot xdg-desktop-portal-hyprland hyprland-git
 elif [[ "${HYPRLAND_BUILD}" == "solopasha" ]]; then
-    rpm-ostree install xdg-desktop-portal-hyprland hyprland
+    rpm-ostree install hyprlock hypridle hyprland-qtutils hyprpaper hyprshot xdg-desktop-portal-hyprland hyprland
 fi
 
 #Install COPR packages from cjuniorfox/hyprland-shell
-rpm-ostree install bibata-cursor-theme hyprland-shell-config wol-changer  
+rpm-ostree install bibata-cursor-theme hyprland-shell-config install-flatpak-package wol-changer
 
-#Install COPR packages from tofik/sway
-rpm-ostree install sway-audio-idle-inhibit
 
 # Remove the Firefox related packages (will be installed over flatpak)
 rpm-ostree override remove firefox-langpacks firefox
+
+#Enable the Installation of the flatpak component org.freedesktop.Platform.openh264 
+# after the first boot, this is needed because the flatpak version of Firefox depends # 
+# of the openh264 codec, which is not available for offline installation
+systemctl enable install-flatpak-package@runtime-org.freedesktop.Platform.openh264-x86_64-2.5.1

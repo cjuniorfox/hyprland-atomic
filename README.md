@@ -8,52 +8,52 @@ This repository is dedicated to building and customizing a Universal Blue image 
 
 You can download the latest version of the distribution and its checksum from the following links:
 
-### Hyperland Fedora 41
+### Hyperland Fedora 42
 
-- [Hyprland Atomic Fedora ISO](https://juniorfox-net-isos.s3.sa-east-1.amazonaws.com/hyprland-atomic-fedora-x86_64-41.iso)
-- [Hyprland Atomic Fedora ISO Checksum](https://juniorfox-net-isos.s3.sa-east-1.amazonaws.com/hyprland-atomic-fedora-x86_64-41.iso-CHECKSUM)
+- [Hyprland Atomic Fedora ISO](https://isos.juniorfox.net/hyprland-atomic-fedora-x86_64-42.iso)
+- [Hyprland Atomic Fedora ISO Checksum](https://isos.juniorfox.net/hyprland-atomic-fedora-x86_64-42.iso-CHECKSUM)
 
-### Hyperland Solopasha 41
+### Hyperland Solopasha 42
 
-- [Hyprland Atomic Solopasha ISO](https://juniorfox-net-isos.s3.sa-east-1.amazonaws.com/hyprland-atomic-solopasha-x86_64-41.iso)
-- [Hyprland Atomic Solopasha ISO Checksum](https://juniorfox-net-isos.s3.sa-east-1.amazonaws.com/hyprland-atomic-solopasha-x86_64-41.iso-CHECKSUM)
+- [Hyprland Atomic Solopasha ISO](https://isos.juniorfox.net/hyprland-atomic-solopasha-x86_64-42.iso)
+- [Hyprland Atomic Solopasha ISO Checksum](https://isos.juniorfox.net/hyprland-atomic-solopasha-x86_64-42.iso-CHECKSUM)
 
-### Hyperland Solopasha 41 with Virtualization
+### Hyperland Solopasha 42 with Virtualization
 
-- [Hyprland Atomic Solopasha Virt ISO](https://juniorfox-net-isos.s3.sa-east-1.amazonaws.com/hyprland-atomic-solopasha-virt-x86_64-41.iso)
-- [Hyprland Atomic Solopasha Virt ISO Checksum](https://juniorfox-net-isos.s3.sa-east-1.amazonaws.com/hyprland-atomic-solopasha-virt-x86_64-41.iso-CHECKSUM)
+- [Hyprland Atomic Solopasha Virt ISO](https://isos.juniorfox.net/hyprland-atomic-solopasha-virt-x86_64-42.iso)
+- [Hyprland Atomic Solopasha Virt ISO Checksum](https://isos.juniorfox.net/hyprland-atomic-solopasha-virt-x86_64-42.iso-CHECKSUM)
 
-### Hyperland Solopasha Git Build 41
+### Hyperland Solopasha Git Build 42
 
-- [Hyprland Atomic Solopasha/Git ISO](https://juniorfox-net-isos.s3.sa-east-1.amazonaws.com/hyprland-atomic-git-x86_64-41.iso)
-- [Hyprland Atomic Solopasha/Git ISO Checksum](https://juniorfox-net-isos.s3.sa-east-1.amazonaws.com/hyprland-atomic-git-x86_64-41.iso-CHECKSUM)
+- [Hyprland Atomic Solopasha/Git ISO](https://isos.juniorfox.net/hyprland-atomic-git-x86_64-42.iso)
+- [Hyprland Atomic Solopasha/Git ISO Checksum](https://isos.juniorfox.net/hyprland-atomic-git-x86_64-42.iso-CHECKSUM)
 
 ## Rebase
 
 If you're using Silverblue or alike, you can rebase to this repository doing the following:
 
-### Hyprland Fedora 41
+### Hyprland Fedora 42
 
 ```sh
-rpm-ostree rebase ostree-image-signed:docker://ghcr.io/cjuniorfox/hyprland-atomic-fedora:41
+rpm-ostree rebase ostree-image-signed:docker://ghcr.io/cjuniorfox/hyprland-atomic-fedora:42
 ```
 
-### Hyprland Solopasha 41
+### Hyprland Solopasha 42
 
 ```sh
-rpm-ostree rebase ostree-image-signed:docker://ghcr.io/cjuniorfox/hyprland-atomic-solopasha:41
+rpm-ostree rebase ostree-image-signed:docker://ghcr.io/cjuniorfox/hyprland-atomic-solopasha:42
 ```
 
-### Hyprland Solopasha 41 with Virtualization
+### Hyprland Solopasha 42 with Virtualization
 
 ```sh
-rpm-ostree rebase ostree-image-signed:docker://ghcr.io/cjuniorfox/hyprland-atomic-solopasha-virt:41
+rpm-ostree rebase ostree-image-signed:docker://ghcr.io/cjuniorfox/hyprland-atomic-solopasha-virt:42
 ```
 
-### Hyprland Solopasha/Git 41
+### Hyprland Solopasha/Git 42
 
 ```sh
-rpm-ostree rebase ostree-image-signed:docker://ghcr.io/cjuniorfox/hyprland-atomic-git:41
+rpm-ostree rebase ostree-image-signed:docker://ghcr.io/cjuniorfox/hyprland-atomic-git:42
 ```
 
 ## Features

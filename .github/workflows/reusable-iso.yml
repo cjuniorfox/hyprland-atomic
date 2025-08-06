@@ -20,17 +20,15 @@ jobs:
           - fedora
           - solopasha
           - solopasha-virt
-          - git
+          #- git
     env:
       ARCH: "x86_64"
+      FLATPAK_REFS_DIR: "installer/hyprland"
       IMAGE_NAME: ${{ github.event.repository.name }}-${{ matrix.hyprland_build }}
       IMAGE_REPO: "ghcr.io/cjuniorfox"
       IMAGE_TAG: ${{ matrix.fedora_version }}
       VARIANT: "base-main"
       VERSION: ${{ matrix.fedora_version }}
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      S3_BUCKET: juniorfox-net-isos
       AWS_REGION: sa-east-1
       iso_name:
       checksum:
@@ -40,9 +38,57 @@ jobs:
       - name: Checkout Push to Registry action
         uses: actions/checkout@v4
 
+      - name: Set up cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/flatpak
+            ~/.cache/dnf
+          key: ${{ runner.os }}-flatpak-dnf-cache
+      
+      # From ublue/bazzite: https://github.com/ublue-os/bazzite/blob/unstable-42.20250620.1/.github/workflows/build_iso.yml
+      - name: Determine Flatpak Dependencies
+        id: flatpak_dependencies
+        shell: bash
+        run: |
+          set -ex
+          image="${{ env.IMAGE_REPO }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}"
+          # Make temp space
+          TEMP_FLATPAK_INSTALL_DIR=$(mktemp -d -p ${{ github.workspace }} flatpak.XXX)
+          # Get list of refs from directory
+          FLATPAK_REFS_DIR=${{ github.workspace }}/${{env.FLATPAK_REFS_DIR}}
+          FLATPAK_REFS_DIR_LIST=$(cat ${FLATPAK_REFS_DIR}/* | tr '\n' ' ' )
+          # Generate install script
+          cat << EOF > ${TEMP_FLATPAK_INSTALL_DIR}/script.sh
+          cat /temp_flatpak_install_dir/script.sh
+          mkdir -p /flatpak/flatpak /flatpak/triggers
+          mkdir /var/tmp || true
+          chmod -R 1777 /var/tmp
+          flatpak config --system --set languages "*"
+          flatpak remote-add --system flathub https://flathub.org/repo/flathub.flatpakrepo
+          flatpak install --system -y ${FLATPAK_REFS_DIR_LIST}
+          ostree refs --repo=\${FLATPAK_SYSTEM_DIR}/repo | grep '^deploy/' | grep -v 'org\.freedesktop\.Platform\.openh264' | sed 's/^deploy\///g' > /output/flatpaks_with_deps
+          EOF
+          docker run --rm --privileged \
+            --entrypoint bash \
+            -e FLATPAK_SYSTEM_DIR=/flatpak/flatpak \
+            -e FLATPAK_TRIGGERSDIR=/flatpak/triggers \
+            --volume ${FLATPAK_REFS_DIR}:/output \
+            --volume ${TEMP_FLATPAK_INSTALL_DIR}:/temp_flatpak_install_dir \
+            ${image} /temp_flatpak_install_dir/script.sh
+          docker rmi ${image}
+      
+      - name: List Flatpak packages with dependencies
+        id: read_flatpak_packages
+        shell: bash
+        run: |
+          for i in ${{ github.workspace }}/${{env.FLATPAK_REFS_DIR}}/*; do
+            echo -e "\n$i\n------";
+            cat $i;
+          done;
+
       - name: Build ISO
-        uses: jasonn3/build-container-installer@v1.2.4
-        
+        uses: jasonn3/build-container-installer@v1.3.0
         id: build_iso
         with:
           arch: ${{ env.ARCH }}
@@ -56,18 +102,8 @@ jobs:
           enrollment_password: 'ublue-os'
           enable_cache_dnf: "false"
           enable_cache_skopeo: "false"
-          flatpak_remote_refs: 
-            "com.github.tchx84.Flatseal \
-            org.gnome.Calculator \
-            org.gnome.Evince \
-            org.gnome.FileRoller \
-            org.gnome.FontManager \
-            org.gnome.SimpleScan \
-            org.gnome.Loupe \
-            org.gnome.TextEditor \
-            org.mozilla.firefox \
-            org.freedesktop.Platform.openh264/x86_64/2.4.1 \
-            org.freedesktop.Platform.ffmpeg-full/x86_64/24.08"
+          flatpak_remote_refs_dir: ${{env.FLATPAK_REFS_DIR}}
+          enable_flatpak_dependencies: "false"
 
       - name: Get ISO names
         id: iso_names
@@ -88,36 +124,17 @@ jobs:
           name: ${{ env.iso_name }}
           path: ${{ env.iso_upload_dir }}
 
-      - name: Upload ISO to S3
-        run: |
-          aws s3 cp "${{ env.iso_upload_dir }}/${{ env.iso_name }}" "s3://${{ env.S3_BUCKET }}/${{ env.iso_name }}"
-          aws s3 cp "${{ env.iso_upload_dir }}/${{ env.checksum }}" "s3://${{ env.S3_BUCKET }}/${{ env.checksum }}"
-
-      - name: Make ISO public
-        run: |
-          aws s3api put-object-acl --bucket ${{ env.S3_BUCKET }} --key "${{ env.iso_name }}" --acl public-read
-          aws s3api put-object-acl --bucket ${{ env.S3_BUCKET }} --key "${{ env.checksum }}" --acl public-read
-
-      - name: Output ISO URL
-        run: |
-          echo "ISO URL: https://${{ env.S3_BUCKET }}.s3.${{ env.AWS_REGION }}.amazonaws.com/${{ env.iso_name }}"
-      
-      - name: Authenticate to ISO Server
-        id: auth_iso_server
-        if: false
+      - name: Upload ISOs and Checksum to R2
+        shell: bash
         env:
-          UPLOAD_SERVER: ${{ secrets.UPLOAD_SERVER }}
-          PUBLIC_KEY_JSON: ${{ secrets.PUBLIC_KEY_JSON }}
+          RCLONE_CONFIG_R2_TYPE: s3
+          RCLONE_CONFIG_R2_PROVIDER: Cloudflare
+          RCLONE_CONFIG_R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          RCLONE_CONFIG_R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          RCLONE_CONFIG_R2_REGION: auto
+          RCLONE_CONFIG_R2_ENDPOINT: ${{ secrets.R2_ENDPOINT }}
+          SOURCE_DIR: ${{ env.iso_upload_dir }}
         run: |
-          token=$(curl -X POST "${UPLOAD_SERVER}/token" -H 'Content-Type: application/json' -d "${PUBLIC_KEY_JSON}" | jq -r .access_token)
-          echo "TOKEN=$token" >> $GITHUB_ENV
-
-      - name: Upload ISO to_Server
-        id: upload_iso_to_server
-        if: false
-        env:
-          TOKEN: ${{ env.TOKEN }}
-          UPLOAD_SERVER: ${{ secrets.UPLOAD_SERVER }}
-        run: |
-          curl -X POST -F "file=@${{ env.iso_upload_dir }}/${{ env.checksum }}" -H "Authorization: Bearer $TOKEN" "${UPLOAD_SERVER}/upload"
-          curl -X POST -F "file=@${{ env.iso_upload_dir }}/${{ env.iso_name }}" -H "Authorization: Bearer $TOKEN" "${UPLOAD_SERVER}/upload"
+          sudo apt-get update
+          sudo apt-get install -y rclone
+          rclone copy $SOURCE_DIR R2:isos
