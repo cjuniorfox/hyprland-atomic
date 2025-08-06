@@ -39,21 +39,30 @@ jobs:
         shell: bash
         run: |
           echo "HYPRLAND_BUILD=${{ matrix.hyprland_build }}" >> $GITHUB_ENV
-          if [[ "${{ matrix.hyprland_build }}" == "fedora" ]]; then
+          case "${{ matrix.hyprland_build }}" in 
+            "fedora")
               echo "IMAGE_DESC='Hyprland Shell Blue Image Fedora'" >> $GITHUB_ENV
-          elif [[ "${{ matrix.hyprland_build }}" == "solopasha" ]]; then
+              ;;
+            "solopasha")
               echo "IMAGE_DESC='Hyprland Shell Blue Image Solopasha'" >> $GITHUB_ENV
-          elif [[ "${{ matrix.hyprland_build }}" == "solopasha-virt" ]]; then
+              ;;
+            "solopasha-virt")
               echo "IMAGE_DESC='Hyprland Shell Blue Image Solopasha with Virtualization'" >> $GITHUB_ENV
               echo "HYPRLAND_BUILD=solopasha" >> $GITHUB_ENV
               echo "VIRTUALIZATION=yes" >> $GITHUB_ENV
-          elif [[ "${{ matrix.hyprland_build }}" == "git" ]]; then
+              ;;
+            "git")
               echo "IMAGE_DESC='Hyprland Shell Blue Image Git'" >> $GITHUB_ENV
-          fi
+              ;;
+            *)
+              echo "Error: Unsupported build type: ${{ matrix.hyprland_build }}" >&2
+              exit 1
+              ;;
+          esac
           echo "IMAGE_NAME=${{ github.event.repository.name }}-${{ matrix.hyprland_build }}" >> $GITHUB_ENV
       
       - name: Maximize build space
-        if: false
+        if: true
         uses: ublue-os/remove-unwanted-software@v9
 
       - name: Generate tags
@@ -62,40 +71,50 @@ jobs:
         run: |
           # Generate a timestamp for creating an image version history
           TIMESTAMP="$(date +%Y%m%d)"
-          VARIANT="${{ matrix.fedora_version }}"
-
-          if [[ "${{ matrix.fedora_version }}" -eq "40" ]]; then
-            IS_LATEST_VERSION=false
-            IS_STABLE_VERSION=true
-            IS_GTS_VERSION=true
-          elif [[ "${{ matrix.fedora_version }}" -eq "41" ]]; then
-            IS_LATEST_VERSION=false
-            IS_STABLE_VERSION=true
-            IS_GTS_VERSION=true
-          elif [[ "${{ matrix.fedora_version }}" -eq "42" ]]; then
-            IS_LATEST_VERSION=true
-            IS_STABLE_VERSION=true
-            IS_GTS_VERSION=false
-          fi
+          GITHUB_EVENT_NAME=${{ github.event_name }}
+          FEDORA_VERSION=${{ matrix.fedora_version }}
+          BRANCH_NAME="${GITHUB_REF##*/}"
+          case "${FEDORA_VERSION}" in
+            40)
+              IS_LATEST_VERSION=false
+              IS_STABLE_VERSION=true
+              IS_GTS_VERSION=true
+              ;;
+            41)
+              IS_LATEST_VERSION=false
+              IS_STABLE_VERSION=true
+              IS_GTS_VERSION=true
+              ;;
+            42)
+              IS_LATEST_VERSION=true
+              IS_STABLE_VERSION=true
+              IS_GTS_VERSION=false
+              ;;
+            *)
+              echo "Error: Unsupported Fedora version: ${FEDORA_VERSION}" >&2
+              exit 1
+              ;;
+          esac
 
           COMMIT_TAGS=()
           BUILD_TAGS=()
 
           # Have tags for tracking builds during pull request
           SHA_SHORT="${GITHUB_SHA::7}"
-          COMMIT_TAGS+=("pr-${{ github.event.number }}-${VARIANT}")
-          COMMIT_TAGS+=("${SHA_SHORT}-${VARIANT}")
+          COMMIT_TAGS+=("pr--${FEDORA_VERSION}")
+          COMMIT_TAGS+=("${SHA_SHORT}-${FEDORA_VERSION}")
 
           if [[ "${IS_LATEST_VERSION}" == "true" ]] && \
              [[ "${IS_STABLE_VERSION}" == "true" ]]; then
-              COMMIT_TAGS+=("pr-${{ github.event.number }}")
+              COMMIT_TAGS+=("pr-${GITHUB_EVENT_NUMBER}")
               COMMIT_TAGS+=("${SHA_SHORT}")
           fi
 
-          BUILD_TAGS=("${VARIANT}")
+          BUILD_TAGS=("${FEDORA_VERSION}")
 
           # Append matching timestamp tags to keep a version history
-          for TAG in "${BUILD_TAGS[@]}"; do
+          TEMP_TAGS=("${BUILD_TAGS[@]}")
+          for TAG in "${TEMP_TAGS[@]}"; do
               BUILD_TAGS+=("${TAG}-${TIMESTAMP}")
           done
 
@@ -110,23 +129,29 @@ jobs:
               echo "DEFAULT_TAG=gts" >> $GITHUB_ENV
           fi
 
-          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
-              echo "Generated the following commit tags: "
-              for TAG in "${COMMIT_TAGS[@]}"; do
-                  echo "${TAG}"
+          # If the branch is not main, add the branch name to the tags
+          if [[ "${BRANCH_NAME}" != "main" ]]; then
+              TMP_BUILD_TAGS=()
+              for TAG in ${BUILD_TAGS[@]}; do
+                  if [[ "${TAG}" != *"latest"* ]] && \
+                     [[ "${TAG}" != *"gts"* ]]; then
+                      TMP_BUILD_TAGS+=("${TAG}-${BRANCH_NAME}")
+                  fi
               done
-              alias_tags=("${COMMIT_TAGS[@]}")
-              echo "DEFAULT_TAG=${SHA_SHORT}-${VARIANT}" >> $GITHUB_ENV
-          else
-              alias_tags=("${BUILD_TAGS[@]}")
+              TMP_BUILD_TAGS+=("${BRANCH_NAME}")
+              echo "DEFAULT_TAG=${BRANCH_NAME}" >> $GITHUB_ENV
+              BUILD_TAGS=("${TMP_BUILD_TAGS[@]}")
           fi
 
+          alias_tags=("${BUILD_TAGS[@]}")
+          
           echo "Generated the following build tags: "
           for TAG in "${BUILD_TAGS[@]}"; do
               echo "${TAG}"
           done
 
           echo "alias_tags=${alias_tags[*]}" >> $GITHUB_OUTPUT
+
 
       # Build metadata
       - name: Image Metadata

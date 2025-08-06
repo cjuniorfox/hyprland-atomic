@@ -18,6 +18,7 @@ rpm-ostree install \
     breeze-gtk \
     breeze-icon-theme \
     chrony \
+    desktop-backgrounds-basic \
     firewall-config \
     flatpak \
     fontawesome-6-free-fonts \
