@@ -30,11 +30,13 @@ rpm-ostree install \
     gnome-software \
     gvfs-smb \
     gvfs-nfs \
+    gvfs-mtp \
     htop \
     joystick-support \
     kernel-modules-extra \
     kitty \
     liberation-fonts \
+    libmtp \
     lxqt-policykit \
     nautilus \
     network-manager-applet \

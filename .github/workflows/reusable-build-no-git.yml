@@ -34,7 +34,7 @@ jobs:
     steps:
       # Checkout push-to-registry action GitHub repository
       - name: Checkout Push to Registry action
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       
       - name: Matrix Variables
         shell: bash
@@ -188,7 +188,7 @@ jobs:
             --disable-content-trust  
 
       # Sign container
-      - uses: sigstore/cosign-installer@v3.9.2
+      - uses: sigstore/cosign-installer@v3.10.0
         if: github.event_name != 'pull_request'  
 
       - name: Sign container image
