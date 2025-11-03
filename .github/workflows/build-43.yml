@@ -17,7 +17,7 @@ jobs:
       contents: read
       packages: write
       id-token: write
-    name: build-solopasha
+    name: "Build Solopasha 43"
     uses: ./.github/workflows/reusable-build.yml
     secrets: inherit
     with:
@@ -29,7 +29,7 @@ jobs:
       contents: read
       packages: write
       id-token: write
-    name: build-solopasha-virt
+    name: "Build Solopasha Virt 43"
     uses: ./.github/workflows/reusable-build.yml
     secrets: inherit
     with:
@@ -41,7 +41,7 @@ jobs:
       contents: read
       packages: write
       id-token: write
-    name: build-git
+    name: "Build Git 43"
     uses: ./.github/workflows/reusable-build.yml
     secrets: inherit
     with:

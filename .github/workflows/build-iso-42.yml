@@ -6,11 +6,48 @@ on:
   workflow_dispatch:
 
 jobs:
-  build_iso:
+  build_iso_fedora:
     name: "Fedora Hyprland ISO 42"
     uses: "./.github/workflows/reusable-iso.yml"
     with:
       fedora_version: 42
+      hyprland_build: fedora
+    secrets: inherit
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+
+  build_iso_solopasha:
+    name: "Solopasha Hyprland ISO 42"
+    uses: "./.github/workflows/reusable-iso.yml"
+    with:
+      fedora_version: 42
+      hyprland_build: solopasha
+    secrets: inherit
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+
+  build_iso_solopasha_virt:
+    name: "Solopasha Virt Hyprland ISO 42"
+    uses: "./.github/workflows/reusable-iso.yml"
+    with:
+      fedora_version: 42
+      hyprland_build: solopasha-virt
+    secrets: inherit
+    permissions:  
+      contents: read
+      packages: write
+      id-token: write
+
+  build_iso_git:
+    name: "Git Hyprland ISO 42"
+    uses: "./.github/workflows/reusable-iso.yml"
+    with:
+      fedora_version: 42
+      hyprland_build: git
     secrets: inherit
     permissions:
       contents: read

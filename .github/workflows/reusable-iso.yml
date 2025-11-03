@@ -6,6 +6,10 @@ on:
         description: "The Fedora release version: 39, 40, 41 etc"
         type: string
         required: true
+      hyprland_build:
+        description: "The Hyprland build type: fedora, solopasha, solopasha-virt, git"
+        type: string
+        required: true
 
 jobs:
   build_iso:
@@ -17,10 +21,7 @@ jobs:
         fedora_version:
           - ${{ inputs.fedora_version }}
         hyprland_build:
-          - fedora
-          - solopasha
-          - solopasha-virt
-          #- git
+          - ${{ inputs.hyprland_build }}
     env:
       ARCH: "x86_64"
       FLATPAK_REFS_DIR: "installer/hyprland"
