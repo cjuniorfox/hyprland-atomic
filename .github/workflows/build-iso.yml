@@ -1,8 +1,12 @@
 ---
-name: "Build ISO for Ublue Hyprland 43"
+name: "Build ISO"
 on:
   schedule:
     - cron: '05 12 * * 1/2'  # 12:05am UTC every two weeks on Monday
+  push:
+    branches:
+      - main
+      - develop
   workflow_dispatch:
 
 jobs:
