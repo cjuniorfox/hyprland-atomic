@@ -12,7 +12,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  build-fedora:
     permissions:
       contents: read
       packages: write
@@ -22,3 +22,40 @@ jobs:
     secrets: inherit
     with:
       fedora_version: 41
+      hyprland_build: fedora
+
+  build-solopasha:
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+    name: build-solopasha
+    uses: ./.github/workflows/reusable-build.yml
+    secrets: inherit
+    with:
+      fedora_version: 41
+      hyprland_build: solopasha
+
+  build-solopasha-virt:
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+    name: build-solopasha-virt
+    uses: ./.github/workflows/reusable-build.yml
+    secrets: inherit
+    with:
+      fedora_version: 41
+      hyprland_build: solopasha-virt
+
+  build-git:
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+    name: build-git
+    uses: ./.github/workflows/reusable-build.yml
+    secrets: inherit
+    with:
+      fedora_version: 41
+      hyprland_build: git
