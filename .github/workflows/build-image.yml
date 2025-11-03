@@ -32,6 +32,9 @@ jobs:
           # Fedora 43 doesn't include fedora build
           - fedora_version: 43
             hyprland_build: fedora
+          # Fedora 41 doesn't include git build
+          - fedora_version: 41
+            hyprland_build: git
 
     uses: ./.github/workflows/reusable-build.yml
     with:
