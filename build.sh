@@ -95,10 +95,11 @@ done
 rpm-ostree install cliphist eww-git 
 
 # Hyprland from solopasha
+# removed hyprland-qtutils from Fedora 43 release because of compatiblity issues
 if [[ "${HYPRLAND_BUILD}" == "git" ]]; then
-    rpm-ostree install hyprlock hypridle hyprland-qtutils hyprpaper hyprshot xdg-desktop-portal-hyprland hyprland-git
+    rpm-ostree install hyprlock hypridle hyprpaper hyprshot xdg-desktop-portal-hyprland hyprland-git
 elif [[ "${HYPRLAND_BUILD}" == "solopasha" ]]; then
-    rpm-ostree install hyprlock hypridle hyprland-qtutils hyprpaper hyprshot xdg-desktop-portal-hyprland hyprland
+    rpm-ostree install hyprlock hypridle hyprpaper hyprshot xdg-desktop-portal-hyprland hyprland
 fi
 
 #Install COPR packages from cjuniorfox/hyprland-shell
