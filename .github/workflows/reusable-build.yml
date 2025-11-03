@@ -75,17 +75,17 @@ jobs:
           FEDORA_VERSION=${{ matrix.fedora_version }}
           BRANCH_NAME="${GITHUB_REF##*/}"
           case "${FEDORA_VERSION}" in
-            40)
-              IS_LATEST_VERSION=false
-              IS_STABLE_VERSION=true
-              IS_GTS_VERSION=true
-              ;;
             41)
               IS_LATEST_VERSION=false
               IS_STABLE_VERSION=true
               IS_GTS_VERSION=true
               ;;
             42)
+              IS_LATEST_VERSION=false
+              IS_STABLE_VERSION=true
+              IS_GTS_VERSION=true
+              ;;
+            43)
               IS_LATEST_VERSION=true
               IS_STABLE_VERSION=true
               IS_GTS_VERSION=false
