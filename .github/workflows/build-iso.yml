@@ -1,0 +1,32 @@
+---
+name: "Build ISO for Ublue Hyprland 43"
+on:
+  schedule:
+    - cron: '05 12 * * 1/2'  # 12:05am UTC every two weeks on Monday
+  workflow_dispatch:
+
+jobs:
+  build_iso:
+    name: "${{ matrix.hyprland_build }} Hyprland ISO ${{ matrix.fedora_version }}"
+    strategy:
+      fail-fast: false
+      matrix:
+        fedora_version: [41, 42, 43]
+        hyprland_build:
+          - fedora
+          - solopasha
+          - solopasha-virt
+          - git
+        exclude:
+          # Fedora 43 doesn't include fedora build
+          - fedora_version: 43
+            hyprland_build: fedora
+    uses: "./.github/workflows/reusable-iso.yml"
+    with:
+      fedora_version: ${{ matrix.fedora_version }}
+      hyprland_build: ${{ matrix.hyprland_build }}
+    secrets: inherit
+    permissions:
+      contents: read
+      packages: write
+      id-token: write

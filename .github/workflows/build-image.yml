@@ -1,0 +1,40 @@
+---
+name: "Build Hyprland Atomic Image 43"
+on:
+  schedule:
+    - cron: '05 10 * * *'  # 10:05am UTC every day
+  push:
+    branches:
+      - main
+      - develop
+    paths-ignore:
+      - '**/README.md'
+  workflow_dispatch:
+
+jobs:
+  build-solopasha:
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+    name: "${{ matrix.hyprland_build }} Hyprland Build ${{ matrix.fedora_version }}"
+    secrets: inherit
+    strategy:
+      fail-fast: false
+      matrix:
+        fedora_version: [41, 42, 43]
+        hyprland_build:
+          - fedora
+          - solopasha
+          - solopasha-virt
+          - git
+        exclude:
+          # Fedora 43 doesn't include fedora build
+          - fedora_version: 43
+            hyprland_build: fedora
+
+    uses: ./.github/workflows/reusable-build.yml
+    with:
+      fedora_version: ${{ matrix.fedora_version }}
+      hyprland_build: ${{ matrix.hyprland_build }}
+
