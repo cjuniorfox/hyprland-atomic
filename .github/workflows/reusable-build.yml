@@ -65,7 +65,7 @@ jobs:
       
       - name: Maximize build space
         if: true
-        uses: ublue-os/remove-unwanted-software@v9
+        uses: ublue-os/remove-unwanted-software@v10
 
       - name: Generate tags
         id: generate-tags
@@ -214,7 +214,7 @@ jobs:
             --disable-content-trust  
 
       # Sign container
-      - uses: sigstore/cosign-installer@v3.10.0
+      - uses: sigstore/cosign-installer@v4.0.0
         if: github.event_name != 'pull_request'  
 
       - name: Sign container image
