@@ -22,7 +22,7 @@ You can download the latest version of the distribution and its checksum from th
 - [Hyprland Atomic Solopasha Virt ISO](https://isos.juniorfox.net/hyprland-atomic-solopasha-virt-x86_64-43.iso)
 - [Hyprland Atomic Solopasha Virt ISO Checksum](https://isos.juniorfox.net/hyprland-atomic-solopasha-virt-x86_64-43.iso-CHECKSUM)
 
-### Hyperland Solopasha 43 Git release
+### Hyperland 43 Git release
 
 - [Hyprland Atomic Solopasha Virt ISO](https://isos.juniorfox.net/hyprland-atomic-git-x86_64-43.iso)
 - [Hyprland Atomic Solopasha Virt ISO Checksum](https://isos.juniorfox.net/hyprland-atomic-git-x86_64-43.iso-CHECKSUM)
@@ -46,6 +46,12 @@ rpm-ostree rebase ostree-image-signed:docker://ghcr.io/cjuniorfox/hyprland-atomi
 
 ```sh
 rpm-ostree rebase ostree-image-signed:docker://ghcr.io/cjuniorfox/hyprland-atomic-solopasha-virt:43
+```
+
+### Hyprland 43 Git release
+
+```sh
+rpm-ostree rebase ostree-image-signed:docker://ghcr.io/cjuniorfox/hyprland-atomic-git:43
 ```
 
 ### Hyprland Fedora 42
