@@ -7,6 +7,10 @@ on:
         type: string
         required: true
         description: "The Fedora release version: 39, 40, 41 etc"
+      hyprland_build:
+        type: string
+        required: true
+        description: "The Hyprland build type: fedora, solopasha, solopasha-virt, git"
     secrets:
         SIGNING_SECRET:
             required: true
@@ -21,9 +25,7 @@ jobs:
         fedora_version:
           - ${{ inputs.fedora_version }}
         hyprland_build:
-        - fedora
-        - solopasha
-        - solopasha-virt
+          - ${{ inputs.hyprland_build }}
     env:
       IMAGE_REGISTRY: ghcr.io/${{ github.repository_owner }}
       IMAGE_NAME:
@@ -75,17 +77,17 @@ jobs:
           FEDORA_VERSION=${{ matrix.fedora_version }}
           BRANCH_NAME="${GITHUB_REF##*/}"
           case "${FEDORA_VERSION}" in
-            40)
-              IS_LATEST_VERSION=false
-              IS_STABLE_VERSION=true
-              IS_GTS_VERSION=true
-              ;;
             41)
               IS_LATEST_VERSION=false
               IS_STABLE_VERSION=true
               IS_GTS_VERSION=true
               ;;
             42)
+              IS_LATEST_VERSION=false
+              IS_STABLE_VERSION=true
+              IS_GTS_VERSION=true
+              ;;
+            43)
               IS_LATEST_VERSION=true
               IS_STABLE_VERSION=true
               IS_GTS_VERSION=false

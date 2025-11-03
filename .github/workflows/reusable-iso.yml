@@ -6,6 +6,10 @@ on:
         description: "The Fedora release version: 39, 40, 41 etc"
         type: string
         required: true
+      hyprland_build:
+        description: "The Hyprland build type: fedora, solopasha, solopasha-virt, git"
+        type: string
+        required: true
 
 jobs:
   build_iso:
@@ -17,18 +21,15 @@ jobs:
         fedora_version:
           - ${{ inputs.fedora_version }}
         hyprland_build:
-          - fedora
-          - solopasha
-          - solopasha-virt
-          #- git
+          - ${{ inputs.hyprland_build }}
     env:
       ARCH: "x86_64"
       FLATPAK_REFS_DIR: "installer/hyprland"
-      IMAGE_NAME: ${{ github.event.repository.name }}-${{ matrix.hyprland_build }}
+      IMAGE_NAME: ${{ github.event.repository.name }}-${{ inputs.hyprland_build }}
       IMAGE_REPO: "ghcr.io/cjuniorfox"
-      IMAGE_TAG: ${{ matrix.fedora_version }}
+      IMAGE_TAG: ${{ inputs.fedora_version }}
       VARIANT: "base-main"
-      VERSION: ${{ matrix.fedora_version }}
+      VERSION: ${{ inputs.fedora_version }}
       AWS_REGION: sa-east-1
       iso_name:
       checksum:
@@ -119,7 +120,7 @@ jobs:
           mv ${{ steps.build_iso.outputs.iso_path }}/${{ env.checksum }} ${{ env.iso_upload_dir }}
 
       - name: Upload ISO as artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: ${{ env.iso_name }}
           path: ${{ env.iso_upload_dir }}
