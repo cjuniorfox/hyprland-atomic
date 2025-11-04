@@ -6,7 +6,7 @@ This repository is dedicated to building and customizing a Universal Blue image 
 
 ## Disclaimer
 
-Because until this moment, Fedora did not released Hyprland for the version 43, I still maintaing the ISOs for the version 42 of Fedora Hyprland. To get the latest experience with Fedora, please install the Hypraland version instead
+Because Fedora has not released Hyprland 43 yet, I am still maintaining the ISOs for Fedora Hyprland 42. To get the latest experience with Fedora, please install the Solopasha version instead.
 
 ## Download Links
 
