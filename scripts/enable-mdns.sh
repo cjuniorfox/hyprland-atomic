@@ -78,7 +78,7 @@ else
     if grep -q "^hosts:.*mdns" "${NSSWITCH_CONF}"; then
         echo "  NSSwitch already configured with mdns, skipping backup and modification"
     else
-        # Create backup before modification
+        # Create timestamped backup before modification (only once per run due to idempotency check above)
         cp -p "${NSSWITCH_CONF}" "${NSSWITCH_BACKUP}"
         echo "  Created backup: ${NSSWITCH_BACKUP}"
         
@@ -138,5 +138,5 @@ echo "  3. Test hostname resolution via NSSwitch:"
 echo "     getent hosts <hostname>.local"
 echo ""
 echo "Note: mDNS requires avahi-daemon to be installed and running."
-echo "Install with: rpm-ostree install avahi (or use your package manager)"
+echo "Install with your package manager (e.g., 'rpm-ostree install avahi' or 'dnf install avahi')"
 echo ""

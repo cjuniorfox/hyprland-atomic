@@ -109,9 +109,9 @@ rpm-ostree install bibata-cursor-theme hyprland-shell-config install-flatpak-pac
 # Remove the Firefox related packages (will be installed over flatpak)
 rpm-ostree override remove firefox-langpacks firefox
 
-#Enable the Installation of the flatpak component org.freedesktop.Platform.openh264 
-# after the first boot, this is needed because the flatpak version of Firefox depends # 
-# of the openh264 codec, which is not available for offline installation
+# Enable the Installation of the flatpak component org.freedesktop.Platform.openh264
+# after the first boot, this is needed because the flatpak version of Firefox depends
+# on the openh264 codec, which is not available for offline installation.
 systemctl enable install-flatpak-package@runtime-org.freedesktop.Platform.openh264-x86_64-2.5.1
 
 # ============================================================================
@@ -180,7 +180,7 @@ else
     if grep -q "^hosts:.*mdns" "${NSSWITCH_CONF}"; then
         echo "  NSSwitch already configured with mdns, skipping modification"
     else
-        # Create timestamped backup before modification
+        # Create timestamped backup before modification (only once per run due to idempotency check above)
         NSSWITCH_BACKUP="${NSSWITCH_CONF}.backup-$(date +%Y%m%d-%H%M%S)"
         cp -p "${NSSWITCH_CONF}" "${NSSWITCH_BACKUP}"
         echo "  Created backup: ${NSSWITCH_BACKUP}"
