@@ -30,7 +30,6 @@ jobs:
       IMAGE_TAG: ${{ inputs.fedora_version }}
       VARIANT: "base-main"
       VERSION: ${{ inputs.fedora_version }}
-      AWS_REGION: sa-east-1
 
     steps:
       - name: Checkout Push to Registry action
@@ -86,7 +85,7 @@ jobs:
           done;
 
       - name: Build ISO
-        uses: jasonn3/build-container-installer@c9ef3de33236e66781ec37bd0485e8009eaefe24
+        uses: jasonn3/build-container-installer@v1.4.0
         id: build_iso
         with:
           arch: ${{ env.ARCH }}
