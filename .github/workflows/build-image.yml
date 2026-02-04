@@ -1,5 +1,5 @@
 ---
-name: "Build Hyprland Atomic Image 43"
+name: "Build Hyprland Atomic Image"
 on:
   schedule:
     - cron: '05 10 * * *'  # 10:05am UTC every day
@@ -22,7 +22,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        fedora_version: [42, 43, 44]
+        fedora_version: [42, 43]
         hyprland_build:
           - fedora
           - solopasha
@@ -32,9 +32,6 @@ jobs:
           # Fedora 43 doesn't include fedora build
           - fedora_version: 43
             hyprland_build: fedora
-          # Fedora 41 doesn't include git build
-          - fedora_version: 41
-            hyprland_build: git
 
     uses: ./.github/workflows/reusable-build.yml
     with:
