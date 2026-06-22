@@ -33,7 +33,7 @@ jobs:
 
     steps:
       - name: Checkout Push to Registry action
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Set up cache
         uses: actions/cache@v5
