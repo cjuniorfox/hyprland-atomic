@@ -85,7 +85,7 @@ jobs:
           done;
 
       - name: Build ISO
-        uses: jasonn3/build-container-installer@v1.4.0
+        uses: jasonn3/build-container-installer@v1.5.0
         id: build_iso
         with:
           arch: ${{ env.ARCH }}
