@@ -10,7 +10,6 @@ echo "Fedora version: ${RELEASE}"
 
 # Install RPM packages
 rpm-ostree install \
-    adwaita-gtk2-theme \
     adwaita-icon-theme \
     bash-completion \
     blueman \
@@ -57,7 +56,7 @@ rpm-ostree install \
     xdg-user-dirs-gtk \
     vulkan-headers vulkan-loader vulkan-tools \
     wlr-randr \
-    yaru-{gtk2,gtk3,gtk4,icon,sound}-theme \
+    yaru-{gtk3,gtk4,icon,sound}-theme \
     wl-clipboard
 
 if [[ "${VIRTUALIZATION}" == "yes" ]]; then
