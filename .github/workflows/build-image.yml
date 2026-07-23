@@ -22,7 +22,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        fedora_version: [42, 43, 44]
+        fedora_version: [43, 44]
         hyprland_build:
           - fedora
           - solopasha
@@ -33,7 +33,7 @@ jobs:
           - fedora_version: 44
             hyprland_build: fedora
           # Fedora 41 doesn't include git build
-          - fedora_version: 42
+          - fedora_version: 43
             hyprland_build: git
 
     uses: ./.github/workflows/reusable-build.yml
