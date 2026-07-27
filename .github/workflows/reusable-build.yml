@@ -199,7 +199,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}  
 
       - name: Push Image to GHCR
-        uses: redhat-actions/push-to-registry@v2
+        uses: redhat-actions/push-to-registry@v3
         id: push
         env:
           REGISTRY_USER: ${{ github.actor }}
